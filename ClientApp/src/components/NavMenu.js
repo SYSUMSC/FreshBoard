@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import * as Dom from 'react-router-dom';
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
 
 export class NavMenu extends Component {
@@ -22,27 +22,27 @@ export class NavMenu extends Component {
         return (
             <Navbar color="dark" dark expand="md" collapseOnSelect>
                 <NavbarBrand>
-                    <Link className="navbar-brand" to={'/'}>
+                    <Dom.Link className="navbar-brand" to={'/'}>
                         <span>SYSU 微软学生俱乐部</span>
-                    </Link>
+                    </Dom.Link>
                 </NavbarBrand>
                 <NavbarToggler onClick={this.toggle} />
                 <Collapse isOpen={this.state.isOpen} navbar>
                     <Nav navbar>
                         <NavItem>
-                            <Link to={'/'}>
+                            <Dom.NavLink activeClassName="active" exact to={'/'}>
                                 <NavLink>主页</NavLink>
-                            </Link>
+                            </Dom.NavLink>
                         </NavItem>
                         <NavItem>
-                            <Link to={'/counter'}>
+                            <Dom.NavLink activeClassName="active" to={'/counter'}>
                                 <NavLink>Counter</NavLink>
-                            </Link>
+                            </Dom.NavLink>
                         </NavItem>
                         <NavItem>
-                            <Link to={'/fetchdata'}>
+                            <Dom.NavLink activeClassName="active" to={'/fetchdata'}>
                                 <NavLink>Fetch Data</NavLink>
-                            </Link>
+                            </Dom.NavLink>
                         </NavItem>
                     </Nav>
                 </Collapse>
