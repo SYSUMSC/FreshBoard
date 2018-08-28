@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Container } from 'reactstrap';
 
 export class FetchData extends Component {
   displayName = FetchData.name
@@ -46,9 +47,11 @@ export class FetchData extends Component {
 
     return (
       <div>
-        <h1>Weather forecast</h1>
-        <p>This component demonstrates fetching data from the server.</p>
-        {contents}
+        <Container>
+          <h1>Weather forecast</h1>
+          <p>This component demonstrates fetching data from the server.</p>
+          {contents}
+        </Container>
       </div>
     );
   }
