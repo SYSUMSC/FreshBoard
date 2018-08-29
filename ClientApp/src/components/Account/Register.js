@@ -1,6 +1,5 @@
 ﻿import React, { Component } from "react";
 import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap";
-import { DOMAIN } from "../../config";
 import { Post } from "../../utils/HttpRequest"
 
 
@@ -10,7 +9,7 @@ export class Register extends Component {
     render() {
         return (
             <div>
-                <Form method="post" action={`${DOMAIN}/Account/RegisterAsync`}>
+                <Form method="post" action='/Account/RegisterAsync'>
                     <FormGroup>
                         <Label for="name">姓名</Label>
                         <Input type="text" name="name" id="name" />

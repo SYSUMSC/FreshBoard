@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import * as Dom from 'react-router-dom';
 import { Jumbotron, Button, Container, Modal, ModalBody, ModalHeader, ModalFooter, Nav, NavItem, NavLink, TabContent, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
 import TabPane from 'reactstrap/lib/TabPane';
@@ -37,7 +37,10 @@ export class Home extends Component {
     render() {
         let loginPortal = this.props.user == null ? null :
             this.props.user.isSignedIn
-                ? <Button color="primary">查看详情</Button>
+                ?
+                <Dom.NavLink to={'/portal'}>
+                    <Button color="primary">进入账户</Button>
+                </Dom.NavLink>
                 : <Button color="primary" onClick={this.toggleLogin}>立即上车</Button>;
         return (
             <div>
