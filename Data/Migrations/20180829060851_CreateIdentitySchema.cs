@@ -39,7 +39,10 @@ namespace mscfreshman.Data.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Grade = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    QQ = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace mscfreshman.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<FreshBoardUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
