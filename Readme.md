@@ -28,15 +28,16 @@ dotnet build -r 目标系统 -c 发布类型
 发布类型可为 Debug 或 Release，默认为 Debug
 
 ## Run & Debug
-vsc 可以直接运行调试
+vsc 可以直接按 F5 运行调试，注意打开项目文件夹的时候右下角的提示窗，需要选择 Yes 才可以
 #### Run
 ```
 dotnet run
 ```
+不需要单独运行前端，直接使用此命令即可将网站运行在 http://localhost:5000 或 https://localhost:5001 （如果安装了证书） 上
 
 ## Publish
 ```
 dotnet publish -r 目标系统 -c 发布类型
 ```
-发布完成后会生成到 ./bin/发布类型/netcoreapp2.1/publish 中  
-复制里面的所有文件到目标机器上，运行 mscfreshman，网站将会自动启动并运行在 localhost:5000，可使用 nginx 等做反向代理将其映射至 80/443 端口
+发布完成后会生成到 ./bin/发布类型/netcoreapp2.1/目标系统/publish 中  
+复制 publish 里面的所有文件到目标机器上，运行 mscfreshman 主程序，网站将会自动启动并运行在 localhost:5000，可使用 nginx 等做反向代理将其映射至 80/443 端口
