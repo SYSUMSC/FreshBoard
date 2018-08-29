@@ -19,6 +19,22 @@ export class NavMenu extends Component {
     }
 
     render() {
+        let accountPortal = this.props.user == null ? null :
+            this.props.user.isSignedIn ?
+                <Nav navbar className="ml-auto">
+                    <NavItem>
+                        <Dom.NavLink activeClassName="active" to={'/portal'}>
+                            <NavLink>Hi, {this.props.user.userInfo.userName}!</NavLink>
+                        </Dom.NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <form method="post" action="/Account/LogoutAsync">
+                            <button className="btn btn-link nav-link">退出</button>
+                        </form>
+                    </NavItem>
+                </Nav>
+                : null;
+
         return (
             <Navbar color="dark" dark expand="md">
                 <NavbarBrand>
@@ -45,6 +61,7 @@ export class NavMenu extends Component {
                             </Dom.NavLink>
                         </NavItem>
                     </Nav>
+                    {accountPortal}
                 </Collapse>
             </Navbar>
         );

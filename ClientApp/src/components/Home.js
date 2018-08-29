@@ -35,6 +35,10 @@ export class Home extends Component {
     }
 
     render() {
+        let loginPortal = this.props.user == null ? null :
+            this.props.user.isSignedIn
+                ? <Button color="primary">查看详情</Button>
+                : <Button color="primary" onClick={this.toggleLogin}>立即上车</Button>;
         return (
             <div>
                 <Jumbotron>
@@ -43,7 +47,8 @@ export class Home extends Component {
                         <p className="lead">这里是中山大学微软学生俱乐部 —— 中山大学最 cool 的社团</p>
                         <hr />
                         <p>2018 的小朋友们，策划部、媒传部、技术部等你来加入</p>
-                        <Button color="primary" onClick={this.toggleLogin}>立即上车</Button>
+
+                        {loginPortal}
                     </Container>
                 </Jumbotron>
 
@@ -59,7 +64,7 @@ export class Home extends Component {
                                         onClick={() => { this.switchTab('1'); }}
                                         href='#'
                                     >
-                                        注册
+                                        登录
                                 </NavLink>
                                 </NavItem>
                                 <NavItem>
@@ -68,7 +73,7 @@ export class Home extends Component {
                                         onClick={() => { this.switchTab('2'); }}
                                         href='#'
                                     >
-                                        登录
+                                        注册
                                 </NavLink>
                                 </NavItem>
                             </Nav>
@@ -77,14 +82,14 @@ export class Home extends Component {
                                 <TabPane tabId="1">
                                     <Row>
                                         <Col sm="12">
-                                            <Register />
+                                            <Login />
                                         </Col>
                                     </Row>
                                 </TabPane>
                                 <TabPane tabId="2">
                                     <Row>
                                         <Col sm="12">
-                                            <Login />
+                                            <Register />
                                         </Col>
                                     </Row>
                                 </TabPane>

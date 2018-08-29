@@ -22,14 +22,22 @@ namespace mscfreshman.Controllers
             _emailSender = emailSender;
         }
 
+        [HttpPost]
+        public async Task<IActionResult> LogoutAsync()
+        {
+            await _signInManager.SignOutAsync();
+            return Redirect("/");
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetUserInfoAsync()
         {
-            return Json(new
+            var data = new
             {
                 isSignedIn = _signInManager.IsSignedIn(User),
                 userInfo = await _userManager.GetUserAsync(User)
-            });
+            };
+            return Json(data);
         }
 
         [HttpPost]
@@ -85,7 +93,7 @@ namespace mscfreshman.Controllers
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 var callbackUrl = Url.Page("/Account/ConfirmEmail", null, new { userId = user.Id, code }, Request.Scheme);
 
-                await _emailSender.SendEmailAsync(email, "验证邮箱", $"请点击 <a href='{callbackUrl}'></a> 验证你的邮箱地址");
+                //await _emailSender.SendEmailAsync(email, "验证邮箱", $"请点击 <a href='{callbackUrl}'></a> 验证你的邮箱地址");
 
                 var signInResult = await _signInManager.PasswordSignInAsync(email, password, false, false);
                 if (signInResult.Succeeded)

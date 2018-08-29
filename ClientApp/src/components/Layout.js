@@ -3,10 +3,11 @@ import { NavMenu } from './NavMenu';
 
 export class Layout extends Component {
     displayName = Layout.name
+
     render() {
         return (
             <div>
-                <NavMenu />
+                <NavMenu user={this.props.user} />
                 {this.props.children}
             </div>
         );
