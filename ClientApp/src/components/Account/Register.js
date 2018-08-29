@@ -43,6 +43,7 @@ export class Register extends Component {
                         <Input type="password" name="confirmpassword" id="confirmpassword" />
                     </FormGroup>
 
+                    <p>TODO: 政治面貌、学院、专业、性别</p>
 
                     <Button className="float-right" color="primary">注册</Button>
                 </Form>

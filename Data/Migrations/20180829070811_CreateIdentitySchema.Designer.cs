@@ -9,7 +9,7 @@ using mscfreshman.Data;
 namespace mscfreshman.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180829060851_CreateIdentitySchema")]
+    [Migration("20180829070811_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -129,12 +129,14 @@ namespace mscfreshman.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("mscfreshman.Data.FreshBoardUser", b =>
+            modelBuilder.Entity("mscfreshman.Data.Identity.FreshBoardUser", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AccessFailedCount");
+
+                    b.Property<int>("CPCLevel");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
@@ -146,9 +148,13 @@ namespace mscfreshman.Data.Migrations
 
                     b.Property<int>("Grade");
 
+                    b.Property<string>("Institute");
+
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<string>("Majority");
 
                     b.Property<string>("Name");
 
@@ -166,7 +172,11 @@ namespace mscfreshman.Data.Migrations
 
                     b.Property<string>("QQ");
 
+                    b.Property<int>("SchoolNumber");
+
                     b.Property<string>("SecurityStamp");
+
+                    b.Property<int>("Sexual");
 
                     b.Property<bool>("TwoFactorEnabled");
 
@@ -195,7 +205,7 @@ namespace mscfreshman.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("mscfreshman.Data.FreshBoardUser")
+                    b.HasOne("mscfreshman.Data.Identity.FreshBoardUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -203,7 +213,7 @@ namespace mscfreshman.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("mscfreshman.Data.FreshBoardUser")
+                    b.HasOne("mscfreshman.Data.Identity.FreshBoardUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -216,7 +226,7 @@ namespace mscfreshman.Data.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("mscfreshman.Data.FreshBoardUser")
+                    b.HasOne("mscfreshman.Data.Identity.FreshBoardUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -224,7 +234,7 @@ namespace mscfreshman.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("mscfreshman.Data.FreshBoardUser")
+                    b.HasOne("mscfreshman.Data.Identity.FreshBoardUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);

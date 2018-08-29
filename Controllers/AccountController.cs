@@ -45,7 +45,19 @@ namespace mscfreshman.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterAsync(string name, string email, int grade, string phone, string qq, string password, string confirmpassword)
+        public async Task<IActionResult> RegisterAsync(
+            string name, //姓名
+            string email, //email
+            int grade, //年级
+            string phone, //电话
+            string qq, //QQ
+            int cpclevel, //政治面貌
+            string institute, //学院
+            string majority, //专业
+            int sexual, //性别
+            int schnum, //学号
+            string password, //密码
+            string confirmpassword) // 确认密码
         {
             if (password != confirmpassword)
             {
@@ -58,7 +70,12 @@ namespace mscfreshman.Controllers
                 Name = name,
                 Grade = grade,
                 PhoneNumber = phone,
-                QQ = qq
+                QQ = qq,
+                Sexual = sexual,
+                CPCLevel = cpclevel,
+                Institute = institute,
+                Majority = majority,
+                SchoolNumber = schnum
             };
             var result = await _userManager.CreateAsync(user, password);
             if (result.Succeeded)
