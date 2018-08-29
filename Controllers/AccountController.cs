@@ -51,6 +51,7 @@ namespace mscfreshman.Controllers
             int grade, //年级
             string phone, //电话
             string qq, //QQ
+            string wechat,
             int cpclevel, //政治面貌
             string institute, //学院
             string majority, //专业
@@ -70,6 +71,7 @@ namespace mscfreshman.Controllers
                 Name = name,
                 Grade = grade,
                 PhoneNumber = phone,
+                WeChat = wechat,
                 QQ = qq,
                 Sexual = sexual,
                 CPCLevel = cpclevel,

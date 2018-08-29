@@ -18,6 +18,9 @@ namespace mscfreshman.Data.Identity
         public string QQ { get; set; } //QQ
 
         [PersonalData]
+        public string WeChat { get; set; } //微信号
+
+        [PersonalData]
         public int CPCLevel { get; set; } //政治面貌 0 -- 群众, 1 -- 共青团员, 2 -- 党员
 
         [PersonalData]
