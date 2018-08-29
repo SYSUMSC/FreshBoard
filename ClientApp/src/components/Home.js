@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { Jumbotron, Button, Container, Modal, ModalBody, ModalHeader, ModalFooter, Nav, NavItem, NavLink, TabContent, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
 import TabPane from 'reactstrap/lib/TabPane';
-import { Register } from './Register';
-import { Login } from './Login';
+import { Register } from './Account/Register';
+import { Login } from './Account/Login';
 
 export class Home extends Component {
     displayName = Home.name
@@ -72,6 +72,7 @@ export class Home extends Component {
                                 </NavLink>
                                 </NavItem>
                             </Nav>
+                            <br />
                             <TabContent activeTab={this.state.activeTab}>
                                 <TabPane tabId="1">
                                     <Row>

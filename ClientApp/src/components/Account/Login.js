@@ -9,8 +9,8 @@ export class Login extends Component {
             <div>
                 <Form method="post" action="/Account/Login">
                     <FormGroup>
-                        <Label for="username">用户名/邮箱</Label>
-                        <Input type="text" name="username" id="username" />
+                        <Label for="email">电子邮箱</Label>
+                        <Input type="email" name="email" id="email" />
                     </FormGroup>
 
                     <FormGroup>

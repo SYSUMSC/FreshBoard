@@ -9,13 +9,18 @@ export class Register extends Component {
             <div>
                 <Form method="post" action="/Account/Register">
                     <FormGroup>
-                        <Label for="username">用户名</Label>
-                        <Input type="text" name="username" id="username" />
+                        <Label for="name">姓名</Label>
+                        <Input type="text" name="name" id="name" />
                     </FormGroup>
 
                     <FormGroup>
                         <Label for="email">电子邮箱</Label>
                         <Input type="email" name="email" id="email" />
+                    </FormGroup>
+
+                    <FormGroup>
+                        <Label for="grade">年级</Label>
+                        <Input type="number" name="grade" id="grade" min="2015" max="2018" />
                     </FormGroup>
 
                     <FormGroup>
@@ -32,6 +37,12 @@ export class Register extends Component {
                         <Label for="password">密码</Label>
                         <Input type="password" name="password" id="password" />
                     </FormGroup>
+
+                    <FormGroup>
+                        <Label for="confirmpassword">确认密码</Label>
+                        <Input type="password" name="confirmpassword" id="confirmpassword" />
+                    </FormGroup>
+
 
                     <Button className="float-right" color="primary">注册</Button>
                 </Form>
