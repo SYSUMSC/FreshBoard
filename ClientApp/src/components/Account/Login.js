@@ -7,7 +7,7 @@ export class Login extends Component {
     render() {
         return (
             <div>
-                <Form method="post" action="/Account/Login">
+                <Form method="post" action="/Account/LoginAsync">
                     <FormGroup>
                         <Label for="email">电子邮箱</Label>
                         <Input type="email" name="email" id="email" />

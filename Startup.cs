@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using mscfreshman.Data;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using mscfreshman.Services;
 
 namespace mscfreshman
 {
@@ -42,7 +44,12 @@ namespace mscfreshman
             services.AddDefaultIdentity<FreshBoardUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddEntityFrameworkSqlite();
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddSession();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddSignalR();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -63,10 +70,20 @@ namespace mscfreshman
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
+            
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                OnPrepareResponse = ctx =>
+                {
+                    ctx.Context.Response.Headers.Append("Cache-Control", "public,max-age=864000");
+                    ctx.Context.Response.Headers.Add("Expires", new[] { DateTime.UtcNow.AddDays(10).ToString("R") });
+                }
+            });
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseSession();
+            app.UseSignalR(routes => { routes.MapHub<SignalRHub>("/hub"); });
+
             app.UseSpaStaticFiles();
 
             app.UseAuthentication();

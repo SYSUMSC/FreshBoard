@@ -7,7 +7,7 @@ export class Register extends Component {
     render() {
         return (
             <div>
-                <Form method="post" action="/Account/Register">
+                <Form method="post" action="/Account/RegisterAsync">
                     <FormGroup>
                         <Label for="name">姓名</Label>
                         <Input type="text" name="name" id="name" />
