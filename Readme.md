@@ -11,8 +11,9 @@ SDK 下载：https://www.microsoft.com/net/download
 ```
 
 ## Coding & Build
-想用什么编辑器就用什么编辑器，以 vsc 举例，直接打开本项目文件夹即可。  
-需要安装 C# 插件。  
+想用什么编辑器就用什么编辑器，以 vsc 举例，直接打开本项目文件夹即可  
+需要安装 C# 插件  
+如果使用 vs，则直接运行 mscfreshman.sln 即可
 #### Restore Packages
 ```
 dotnet restore
@@ -33,6 +34,7 @@ vsc 可以直接按 F5 运行调试，注意打开项目文件夹的时候右下
 ```
 dotnet run
 ```
+注意运行此命令前，当前目录需要切换到项目根目录下  
 不需要单独运行前端，直接使用此命令即可将网站运行在 http://localhost:5000 和 https://localhost:5001 （如果安装了证书） 上
 
 ## Publish
