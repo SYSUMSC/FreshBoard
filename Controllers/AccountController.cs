@@ -54,7 +54,7 @@ namespace mscfreshman.Controllers
             string wechat,
             int cpclevel, //政治面貌
             string institute, //学院
-            string majority, //专业
+            string major, //专业
             int sexual, //性别
             int schnum, //学号
             string password, //密码
@@ -76,7 +76,7 @@ namespace mscfreshman.Controllers
                 Sexual = sexual,
                 CPCLevel = cpclevel,
                 Institute = institute,
-                Majority = majority,
+                Major = major,
                 SchoolNumber = schnum
             };
             var result = await _userManager.CreateAsync(user, password);

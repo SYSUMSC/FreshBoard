@@ -43,11 +43,12 @@ namespace mscfreshman.Data.Migrations
                     Name = table.Column<string>(nullable: true),
                     Grade = table.Column<int>(nullable: false),
                     QQ = table.Column<string>(nullable: true),
+                    WeChat = table.Column<string>(nullable: true),
                     CPCLevel = table.Column<int>(nullable: false),
                     Sexual = table.Column<int>(nullable: false),
                     SchoolNumber = table.Column<int>(nullable: false),
                     Institute = table.Column<string>(nullable: true),
-                    Majority = table.Column<string>(nullable: true)
+                    Major = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

@@ -1,3 +1,3 @@
 const DEV = true;
 
-exports.DOMAIN = DEV ? "http://localhost:5000" : "";
+export const DOMAIN = DEV ? "http://localhost:5000" : "";

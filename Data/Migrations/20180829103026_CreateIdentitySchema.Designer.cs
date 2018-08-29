@@ -9,8 +9,8 @@ using mscfreshman.Data;
 namespace mscfreshman.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180829071936_UpdateIdentitySchema")]
-    partial class UpdateIdentitySchema
+    [Migration("20180829103026_CreateIdentitySchema")]
+    partial class CreateIdentitySchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -154,7 +154,7 @@ namespace mscfreshman.Data.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
 
-                    b.Property<string>("Majority");
+                    b.Property<string>("Major");
 
                     b.Property<string>("Name");
 

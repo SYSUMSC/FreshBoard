@@ -20,7 +20,7 @@ export class NavMenu extends Component {
 
     render() {
         return (
-            <Navbar color="dark" dark expand="md" collapseOnSelect>
+            <Navbar color="dark" dark expand="md">
                 <NavbarBrand>
                     <Dom.Link className="navbar-brand" to={'/'}>
                         <span>SYSU 微软学生俱乐部</span>

@@ -1,6 +1,6 @@
 ﻿import React, { Component } from "react";
 import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap";
-import {DOMAIN} from "../../config";
+import { DOMAIN } from "../../config";
 
 export class Login extends Component {
     displayName = Login.name

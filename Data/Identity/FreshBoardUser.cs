@@ -33,7 +33,7 @@ namespace mscfreshman.Data.Identity
         public string Institute { get; set; } //学院
 
         [PersonalData]
-        public string Majority { get; set; } //专业
+        public string Major { get; set; } //专业
 
 
     }

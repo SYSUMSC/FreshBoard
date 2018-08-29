@@ -1,6 +1,7 @@
 ﻿import React, { Component } from "react";
 import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap";
-import {DOMAIN} from "../../config";
+import { DOMAIN } from "../../config";
+import { Post } from "../../utils/HttpRequest"
 
 
 export class Register extends Component {
@@ -27,42 +28,66 @@ export class Register extends Component {
 
                     <FormGroup>
                         <Label for="phone">电话</Label>
-                        <Input type="string" name="phone" id="phone" />
+                        <Input type="text" name="phone" id="phone" />
                     </FormGroup>
 
                     <FormGroup>
                         <Label for="wechat">WeChat</Label>
-                        <Input type="string" name="wechat" id="wechat" />
+                        <Input type="text" name="wechat" id="wechat" />
                     </FormGroup>
 
                     <FormGroup>
                         <Label for="qq">QQ</Label>
-                        <Input type="string" name="qq" id="qq" />
+                        <Input type="text" name="qq" id="qq" />
                     </FormGroup>
 
                     <FormGroup>
-                        <Label for="sexual">性别</Label>
-                        <Input type="number" name="sexual" id="sexual" />
+                        <Label for="sexual">性别</Label>&nbsp;
+                        <div class="form-check-inline">
+                            <label class="form-check-label">
+                                <Input type="radio" name="sexual" id="sexual1" value="1" defaultChecked />男
+                            </label>
+                        </div>
+
+                        <div class="form-check-inline">
+                            <label class="form-check-label">
+                                <Input type="radio" name="sexual" id="sexual2" value="2" />女
+                            </label>
+                        </div>
                     </FormGroup>
 
                     <FormGroup>
-                        <Label for="cpclevel">政治面貌</Label>
-                        <Input type="number" name="cpclevel" id="cpclevel" />
+                        <Label for="cpclevel">政治面貌</Label>&nbsp;
+                        <div class="form-check-inline">
+                            <label class="form-check-label">
+                                <Input type="radio" name="cpclevel" id="cpclevel0" value="0" defaultChecked />群众
+                            </label>
+                        </div>
+                        <div class="form-check-inline">
+                            <label class="form-check-label">
+                                <Input type="radio" name="cpclevel" id="cpclevel1" value="1" />共青团员
+                            </label>
+                        </div>
+                        <div class="form-check-inline">
+                            <label class="form-check-label">
+                                <Input type="radio" name="cpclevel" id="cpclevel2" value="2" />共产党员
+                            </label>
+                        </div>
                     </FormGroup>
 
                     <FormGroup>
                         <Label for="schnum">学号</Label>
-                        <Input type="string" name="schnum" id="schnum" />
+                        <Input type="text" name="schnum" id="schnum" />
                     </FormGroup>
 
                     <FormGroup>
                         <Label for="institute">学院</Label>
-                        <Input type="string" name="institute" id="institute" />
+                        <Input type="text" name="institute" id="institute" />
                     </FormGroup>
 
                     <FormGroup>
-                        <Label for="majority">专业</Label>
-                        <Input type="string" name="majority" id="majority" />
+                        <Label for="major">专业</Label>
+                        <Input type="text" name="major" id="major" />
                     </FormGroup>
 
                     <FormGroup>
@@ -75,7 +100,7 @@ export class Register extends Component {
                         <Input type="password" name="confirmpassword" id="confirmpassword" />
                     </FormGroup>
 
-                    <Button className="float-right" color="primary">注册</Button>
+                    <Button className="float-right" color="primary" onClick={this.register}>注册</Button>
                 </Form>
             </div>
         );
