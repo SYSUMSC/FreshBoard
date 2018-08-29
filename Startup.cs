@@ -1,12 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using mscfreshman.Data;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using mscfreshman.Services;
+using mscfreshman.Data.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace mscfreshman
 {
@@ -42,7 +40,9 @@ namespace mscfreshman
                     Configuration.GetConnectionString("DefaultConnection")));
                     
             services.AddDefaultIdentity<FreshBoardUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders()
+                .AddErrorDescriber<TranslatedIdentityErrorDescriber>();
 
             services.AddEntityFrameworkSqlite();
             services.AddTransient<IEmailSender, EmailSender>();

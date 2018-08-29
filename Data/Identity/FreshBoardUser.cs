@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace mscfreshman.Data
+namespace mscfreshman.Data.Identity
 {
     //如需为用户信息添加字段，请在这里添加对应属性
     //添加完成后需要更新数据库定义：

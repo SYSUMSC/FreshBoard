@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
-using mscfreshman.Data;
+using mscfreshman.Data.Identity;
+using System.Threading.Tasks;
 
 namespace mscfreshman.Controllers
 {
@@ -25,11 +22,25 @@ namespace mscfreshman.Controllers
             _emailSender = emailSender;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetUserInfoAsync()
+        {
+            return Json(new
+            {
+                isSignedIn = _signInManager.IsSignedIn(User),
+                userInfo = await _userManager.GetUserAsync(User)
+            });
+        }
+
         [HttpPost]
         public async Task<IActionResult> LoginAsync(string email, string password)
         {
             var result = await _signInManager.PasswordSignInAsync(email, password, false, false);
-            if (result.Succeeded) return Redirect("/");
+            if (result.Succeeded)
+            {
+                return Redirect("/");
+            }
+
             return Json(new { code = 1, message = "用户名或密码不正确" });
         }
 
@@ -58,10 +69,13 @@ namespace mscfreshman.Controllers
                 await _emailSender.SendEmailAsync(email, "验证邮箱", $"请点击 <a href='{callbackUrl}'></a> 验证你的邮箱地址");
 
                 var signInResult = await _signInManager.PasswordSignInAsync(email, password, false, false);
-                if (signInResult.Succeeded) return Redirect("/");
+                if (signInResult.Succeeded)
+                {
+                    return Redirect("/");
+                }
             }
 
-            return Json(new { code = 3, message = "注册失败" });
+            return Json(new { code = 3, message = "注册失败", errors = result.Errors });
         }
     }
 }
