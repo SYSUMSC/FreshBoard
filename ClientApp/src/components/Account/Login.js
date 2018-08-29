@@ -1,5 +1,6 @@
 ﻿import React, { Component } from "react";
 import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap";
+import {DOMAIN} from "../../config";
 
 export class Login extends Component {
     displayName = Login.name
@@ -7,7 +8,7 @@ export class Login extends Component {
     render() {
         return (
             <div>
-                <Form method="post" action="/Account/LoginAsync">
+                <Form method="post" action={`${DOMAIN}/Account/LoginAsync`}>
                     <FormGroup>
                         <Label for="email">电子邮箱</Label>
                         <Input type="email" name="email" id="email" />
