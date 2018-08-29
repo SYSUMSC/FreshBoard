@@ -9,6 +9,44 @@
 ```
 SDK 下载：https://www.microsoft.com/net/download
 ```
+#### 其他说明
+```
+mscfreshman
+│   .gitignore -- git 忽略文件
+│   app.db -- 网站数据库
+│   appsettings.Development.json -- 应用配置（调试用）
+│   appsettings.json -- 应用配置
+│   mscfreshman.csproj -- 项目属性及配置
+│   mscfreshman.sln -- 解决方案
+│   Program.cs -- 后端主程序
+│   Readme.md -- README
+│   Startup.cs -- web 启动配置
+│       
+├───bin -- 编译输出目录
+│   
+├───ClientApp -- 前端（React）
+│   ├───public -- 静态页面
+│   └───src -- 前端代码
+│   
+├───Controllers -- 后端控制器
+│   
+├───Data -- 数据库相关
+│   │   ApplicationDbContext.cs -- 数据库强类型上下文
+│   │   
+│   ├───Identity -- 账户相关
+│   │       FreshBoardUser.cs -- 账户信息字段
+│   │       TranslatedIdentityErrorDescriber.cs -- 一些错误的翻译
+│   │       
+│   └───Migrations -- 数据库合并自动化脚本
+│           
+├───obj -- .NET Core 包的临时目录，类似 node_modules
+│                           
+├───Pages -- 内建页面，如内部错误页面（500）
+│       
+└───Services -- 服务
+        EmailSender.cs -- 邮件发信服务器
+        SignalRHub.cs -- WebSocket 后端处理函数
+```
 
 ## Coding & Build
 想用什么编辑器就用什么编辑器，以 vsc 举例，直接打开本项目文件夹即可  
