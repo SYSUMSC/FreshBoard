@@ -17,10 +17,11 @@ namespace mscfreshman.Services
         {
             var msg = new MailMessage
             {
-                From = new MailAddress("sender email", "sender name"), // TODO: 填写发送者邮箱和名称
+                From = new MailAddress("services@sysums.club", "中山大学微软学生俱乐部"),
                 Subject = subject,
                 SubjectEncoding = Encoding.UTF8,
-                Body = message.Replace("http://localhost:5000", "destination host"), // TODO: 因为做了反向代理，所以这里要将 localhost 替换成真实域名
+                Body = message.Replace("http://localhost:5000", "https://sysums.club")
+                    .Replace("https://localhost:5001", "https://sysums.club"),
                 BodyEncoding = Encoding.UTF8,
                 IsBodyHtml = true
             };
@@ -28,11 +29,11 @@ namespace mscfreshman.Services
 
             var smtp = new SmtpClient
             {
-                Host = "smtp server", // TODO: 发信服务器
+                Host = "in-v3.mailjet.com",
                 Port = 587,
                 EnableSsl = true,
                 Credentials =
-                    new NetworkCredential("username", "password")
+                    new NetworkCredential("username", "password") //TODO
             };
 
             return smtp.SendMailAsync(msg);
