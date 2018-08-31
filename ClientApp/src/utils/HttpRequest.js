@@ -24,9 +24,9 @@ export function Post(url, headers = {}, data = {}) {
 }
 
 export function Get(url, headers = {}, data = {}) {
-    var myFormData = new FormData();
+    var paramStr = '?';
     for (var x in data) {
-        myFormData.append(x, data[x]);
+        paramStr += `${x}=${escape(data[x])}&`;
     }
 
     var myHeaders = new Headers();
@@ -38,12 +38,11 @@ export function Get(url, headers = {}, data = {}) {
         method: 'GET',
         headers: myHeaders,
         credentials: "same-origin",
-        data: myFormData,
         mode: 'cors',
         cache: 'default'
     };
 
-    var myRequest = new Request(url);
+    var myRequest = new Request(url + paramStr);
 
     return fetch(myRequest, myInit);
 }

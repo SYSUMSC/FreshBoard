@@ -38,7 +38,7 @@ export class Home extends Component {
         let loginPortal = this.props.user == null ? null :
             this.props.user.isSignedIn
                 ?
-                <Dom.NavLink to={'/portal'}>
+                <Dom.NavLink to={'/Portal'}>
                     <Button color="primary">进入账户</Button>
                 </Dom.NavLink>
                 : <Button color="primary" onClick={this.toggleLogin}>立即上车</Button>;
@@ -58,7 +58,7 @@ export class Home extends Component {
                 <Modal isOpen={this.state.loginShown} toggle={this.toggleLogin} className={this.props.className}>
                     <ModalHeader toggle={this.toggleLogin}>加入 MSC！</ModalHeader>
                     <ModalBody>
-                        <p>注册 MSC Freshman 账号可以方便的查看面试状态、查看录取结果以及收取相关通知</p>
+                        <p>注册 MSC Freshman 账号可以方便的申请入部、查看面试状态、查看录取结果以及收取相关通知</p>
                         <div>
                             <Nav tabs>
                                 <NavItem>

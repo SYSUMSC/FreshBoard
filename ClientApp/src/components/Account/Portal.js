@@ -30,8 +30,8 @@ export class Portal extends Component {
         let userInfo = this.props.user == null ? <em>Loading...</em> : Portal.UserInfoList(this.props.user.userInfo);
         return (
             <Container>
-                <p>账户信息：</p>
-                {userInfo}
+                <h1>账户信息：</h1>
+                
             </Container>
         )
     }

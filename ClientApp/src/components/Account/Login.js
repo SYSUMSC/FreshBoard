@@ -18,6 +18,15 @@ export class Login extends Component {
                         <Input type="password" name="password" id="password" />
                     </FormGroup>
 
+                    <FormGroup>
+                        <Label for="persistent">记住登录状态</Label>&nbsp;
+                        <div class="form-check-inline">
+                            <label class="form-check-label">
+                                <Input type="radio" name="persistent" id="persistent" />
+                            </label>
+                        </div>
+                    </FormGroup>
+
                     <Button className="float-right" color="primary">登录</Button>
                 </Form>
             </div>

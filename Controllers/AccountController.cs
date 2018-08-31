@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using mscfreshman.Data.Identity;
+using System;
 using System.Threading.Tasks;
 
 namespace mscfreshman.Controllers
@@ -41,15 +42,32 @@ namespace mscfreshman.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LoginAsync(string email, string password)
+        public async Task<IActionResult> LoginAsync(string email, string password, bool persistent = true)
         {
-            var result = await _signInManager.PasswordSignInAsync(email, password, false, false);
+            var result = await _signInManager.PasswordSignInAsync(email, password, persistent, false);
             if (result.Succeeded)
             {
                 return Redirect("/");
             }
 
             return Json(new { code = 1, message = "用户名或密码不正确" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendRegisterEmailAsync()
+        {
+            if (!_signInManager.IsSignedIn(User)) return Json(new { succeeded = false, message = "未登录" });
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Json(new { succeeded = false, message = "发生未知错误" });
+
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var email = user.Email;
+            var callbackUrl = Url.Page("/Account/ConfirmEmail", null, new { userId = user.Id, code }, Request.Scheme);
+
+            await _emailSender.SendEmailAsync(email, "验证邮箱", $"<h2>中山大学微软学生俱乐部</h2><p>感谢您的注册，请点击 <a href='{callbackUrl}'></a> 验证你的邮箱地址。</p><hr /><p>请勿回复本邮件</p><p>{DateTime.Now} - SYSU MSC</p>");
+
+            return Json(new { succeeded = true });
+
         }
 
         [HttpPost]
@@ -70,7 +88,7 @@ namespace mscfreshman.Controllers
         {
             if (password != confirmpassword)
             {
-                return Json(new { code = 2, message = "密码和确认密码不匹配" });
+                return Json(new { succeeded = false, message = "密码和确认密码不匹配" });
             }
             var user = new FreshBoardUser
             {
@@ -93,16 +111,13 @@ namespace mscfreshman.Controllers
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 var callbackUrl = Url.Page("/Account/ConfirmEmail", null, new { userId = user.Id, code }, Request.Scheme);
 
-                //await _emailSender.SendEmailAsync(email, "验证邮箱", $"请点击 <a href='{callbackUrl}'></a> 验证你的邮箱地址");
+                await _emailSender.SendEmailAsync(email, "验证邮箱", $"<h2>中山大学微软学生俱乐部</h2><p>感谢您的注册，请点击 <a href='{callbackUrl}'></a> 验证你的邮箱地址。</p><hr /><p>请勿回复本邮件</p><p>{DateTime.Now} - SYSU MSC</p>");
 
-                var signInResult = await _signInManager.PasswordSignInAsync(email, password, false, false);
-                if (signInResult.Succeeded)
-                {
-                    return Redirect("/");
-                }
+                var signInResult = await _signInManager.PasswordSignInAsync(email, password, true, false);
+                return Redirect("/");
             }
 
-            return Json(new { code = 3, message = "注册失败", errors = result.Errors });
+            return Json(new { succeeded = false, message = "注册失败", errors = result.Errors });
         }
     }
 }

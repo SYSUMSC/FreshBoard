@@ -51,13 +51,13 @@ export class NavMenu extends Component {
                             </Dom.NavLink>
                         </NavItem>
                         <NavItem>
-                            <Dom.NavLink activeClassName="active" to={'/counter'}>
-                                <NavLink>Counter</NavLink>
+                            <Dom.NavLink activeClassName="active" to={'/Notification'}>
+                                <NavLink>通知</NavLink>
                             </Dom.NavLink>
                         </NavItem>
                         <NavItem>
-                            <Dom.NavLink activeClassName="active" to={'/fetchdata'}>
-                                <NavLink>Fetch Data</NavLink>
+                            <Dom.NavLink activeClassName="active" to={'/Blogs'}>
+                                <NavLink>干货</NavLink>
                             </Dom.NavLink>
                         </NavItem>
                     </Nav>
