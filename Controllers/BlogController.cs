@@ -50,10 +50,21 @@ namespace mscfreshman.Controllers
                 if (!Directory.Exists(dir)) return Json(null);
                 var fileList = Directory.GetFiles(dir, "*.md")
                     .Where(i => i.ToLower() != "readme.md")
-                    .Select(i => new BlogsRepo { FileName = Path.GetFileName(i), Type = 1, Time = new FileInfo(i).LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss") })
+                    .Select(i =>
+                        new BlogsRepo
+                        {
+                            FileName = Path.GetFileName(i),
+                            Type = 1,
+                            Time = new FileInfo(i).LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss")
+                        })
                     .Concat(
-                        Directory.GetDirectories(dir)
-                            .Select(i => new BlogsRepo { FileName = Path.GetFileName(i), Type = 0, Time = new DirectoryInfo(i).LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss") })
+                        Directory.GetDirectories(dir).Select(i =>
+                            new BlogsRepo
+                            {
+                                FileName = Path.GetFileName(i),
+                                Type = 0,
+                                Time = new DirectoryInfo(i).LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss")
+                            })
                     );
                 return Json(new { CurrentPath = path, FileList = fileList });
             }
@@ -64,6 +75,7 @@ namespace mscfreshman.Controllers
         {
             if (string.IsNullOrEmpty(path)) path = string.Empty;
             while (path.StartsWith("/") || path.StartsWith("\\")) path = path.Substring(1);
+            if (Path.GetExtension(path).ToLower() != ".md") return Json(null);
             if (Program.GitRepos.ContainsKey("Blogs"))
             {
                 path = Path.Combine(Program.GitRepos["Blogs"], path);
