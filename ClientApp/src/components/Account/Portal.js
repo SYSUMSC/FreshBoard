@@ -27,12 +27,12 @@ export class Portal extends Component {
     }
 
     render() {
-        let userInfo = this.props.user == null ? <em>Loading...</em> : Portal.UserInfoList(this.props.user.userInfo);
+        let userInfo = this.props.user === null ? <em>Loading...</em> : Portal.UserInfoList(this.props.user.userInfo);
         return (
             <Container>
                 <h1>账户信息：</h1>
-                
+
             </Container>
-        )
+        );
     }
 }

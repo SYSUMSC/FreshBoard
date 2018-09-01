@@ -20,8 +20,8 @@ export class Login extends Component {
 
                     <FormGroup>
                         <Label for="persistent">记住登录状态</Label>&nbsp;
-                        <div class="form-check-inline">
-                            <label class="form-check-label">
+                        <div className="form-check-inline">
+                            <label className="form-check-label">
                                 <Input type="radio" name="persistent" id="persistent" />
                             </label>
                         </div>

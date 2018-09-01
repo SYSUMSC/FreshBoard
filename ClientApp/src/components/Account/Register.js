@@ -1,6 +1,6 @@
 ﻿import React, { Component } from "react";
 import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap";
-import { Post } from "../../utils/HttpRequest"
+import { Post } from "../../utils/HttpRequest";
 
 
 export class Register extends Component {
@@ -42,14 +42,14 @@ export class Register extends Component {
 
                     <FormGroup>
                         <Label for="sexual">性别</Label>&nbsp;
-                        <div class="form-check-inline">
-                            <label class="form-check-label">
+                        <div className="form-check-inline">
+                            <label className="form-check-label">
                                 <Input type="radio" name="sexual" id="sexual1" value="1" defaultChecked />男
                             </label>
                         </div>
 
-                        <div class="form-check-inline">
-                            <label class="form-check-label">
+                        <div className="form-check-inline">
+                            <label className="form-check-label">
                                 <Input type="radio" name="sexual" id="sexual2" value="2" />女
                             </label>
                         </div>
@@ -57,18 +57,18 @@ export class Register extends Component {
 
                     <FormGroup>
                         <Label for="cpclevel">政治面貌</Label>&nbsp;
-                        <div class="form-check-inline">
-                            <label class="form-check-label">
+                        <div className="form-check-inline">
+                            <label className="form-check-label">
                                 <Input type="radio" name="cpclevel" id="cpclevel0" value="0" defaultChecked />群众
                             </label>
                         </div>
-                        <div class="form-check-inline">
-                            <label class="form-check-label">
+                        <div className="form-check-inline">
+                            <label className="form-check-label">
                                 <Input type="radio" name="cpclevel" id="cpclevel1" value="1" />共青团员
                             </label>
                         </div>
-                        <div class="form-check-inline">
-                            <label class="form-check-label">
+                        <div className="form-check-inline">
+                            <label className="form-check-label">
                                 <Input type="radio" name="cpclevel" id="cpclevel2" value="2" />共产党员
                             </label>
                         </div>

@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using mscfreshman.Data;
 using mscfreshman.Data.Identity;
-using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -41,15 +40,31 @@ namespace mscfreshman.Controllers
 
         public IActionResult GetBlogTree(string path)
         {
-            if (string.IsNullOrEmpty(path)) path = string.Empty;
-            while (path.StartsWith("/") || path.StartsWith("\\")) path = path.Substring(1);
-            if (path.Contains("../") || path.Contains("..\\") || path.Contains("/..") || path.Contains("\\..")) path = "";
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                path = string.Empty;
+            }
+
+            while (path.StartsWith("/") || path.StartsWith("\\"))
+            {
+                path = path.Substring(1);
+            }
+
+            if (path.Contains("../") || path.Contains("..\\") || path.Contains("/..") || path.Contains("\\.."))
+            {
+                path = "";
+            }
+
             if (Program.GitRepos.ContainsKey("Blogs"))
             {
                 var dir = Path.Combine(Program.GitRepos["Blogs"], path);
-                if (!Directory.Exists(dir)) return Json(null);
+                if (!Directory.Exists(dir))
+                {
+                    return Json(null);
+                }
+
                 var fileList = Directory.GetFiles(dir, "*.md")
-                    .Where(i => i.ToLower() != "readme.md")
+                    .Where(i => Path.GetFileName(i).ToLower() != "readme.md")
                     .Select(i =>
                         new BlogsRepo
                         {
@@ -58,39 +73,68 @@ namespace mscfreshman.Controllers
                             Time = new FileInfo(i).LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss")
                         })
                     .Concat(
-                        Directory.GetDirectories(dir).Select(i =>
+                        Directory.GetDirectories(dir)
+                        .Where(i => !Path.GetFileName(i).StartsWith("."))
+                        .Select(i =>
                             new BlogsRepo
                             {
                                 FileName = Path.GetFileName(i),
                                 Type = 0,
                                 Time = new DirectoryInfo(i).LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss")
                             })
-                    );
+                    ).ToList();
                 return Json(new { CurrentPath = path, FileList = fileList });
             }
-            else return Json(null);
+            else
+            {
+                return Json(null);
+            }
         }
 
         public async Task<IActionResult> GetBlogContentAsync(string path)
         {
-            if (string.IsNullOrEmpty(path)) path = string.Empty;
-            while (path.StartsWith("/") || path.StartsWith("\\")) path = path.Substring(1);
-            if (Path.GetExtension(path).ToLower() != ".md") return Json(null);
+            if (path == null)
+            {
+                path = string.Empty;
+            }
+
+            while (path.StartsWith("/") || path.StartsWith("\\"))
+            {
+                path = path.Substring(1);
+            }
+
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return Json(null);
+            }
+
+            if (Path.GetExtension(path).ToLower() != ".md")
+            {
+                return Json(null);
+            }
+
             if (Program.GitRepos.ContainsKey("Blogs"))
             {
-                path = Path.Combine(Program.GitRepos["Blogs"], path);
-                if (string.IsNullOrEmpty(path) || !System.IO.File.Exists(path)) return Json(null);
+                var file = Path.Combine(Program.GitRepos["Blogs"], path);
+                if (string.IsNullOrEmpty(file) || !System.IO.File.Exists(file))
+                {
+                    return Json(null);
+                }
+
                 try
                 {
-                    var content = await System.IO.File.ReadAllTextAsync(path, new UTF8Encoding(false));
-                    return Json(new { path = path, name = Path.GetFileName(path), time = new FileInfo(path).LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss"), content = content });
+                    var content = await System.IO.File.ReadAllTextAsync(file, new UTF8Encoding(false));
+                    return Json(new { path, name = Path.GetFileName(file), time = new FileInfo(file).LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss"), content });
                 }
                 catch
                 {
                     return Json(null);
                 }
             }
-            else return Json(null);
+            else
+            {
+                return Json(null);
+            }
         }
     }
 }
