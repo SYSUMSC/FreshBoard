@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using mscfreshman.Data;
 using mscfreshman.Data.Identity;
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -123,8 +125,41 @@ namespace mscfreshman.Controllers
 
                 try
                 {
+                    string fileInfo = string.Empty;
+                    using (var process = new Process
+                    {
+                        StartInfo = new ProcessStartInfo
+                        {
+                            FileName = "git",
+                            Arguments = $"log --pretty=email \"{path}\"",
+                            RedirectStandardOutput = true,
+                            UseShellExecute = false,
+                            WorkingDirectory = Program.GitRepos["Blogs"]
+                        }
+                    })
+                    {
+                        process.Start();
+                        fileInfo = await process.StandardOutput.ReadToEndAsync();
+                        process.WaitForExit();
+                    }
+
+                    string author = string.Empty;
+                    DateTime? date = null;
+                    string subject = string.Empty;
+                    foreach (var i in fileInfo.Split('\n', StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        if (i.StartsWith("From:")) author = i.Substring(6);
+                        if (i.StartsWith("Date:")) date = DateTime.Parse(i.Substring(6));
+                        if (i.StartsWith("Subject:"))
+                        {
+                            subject = i.Substring(9);
+                            break;
+                        }
+                    }
+                    if (date == null) date = new FileInfo(file).LastWriteTime;
+
                     var content = await System.IO.File.ReadAllTextAsync(file, new UTF8Encoding(false));
-                    return Json(new { path, name = Path.GetFileName(file), time = new FileInfo(file).LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss"), content });
+                    return Json(new { path, name = Path.GetFileName(file), time = date?.ToString("yyyy/MM/dd HH:mm:ss"), content, author, subject });
                 }
                 catch
                 {

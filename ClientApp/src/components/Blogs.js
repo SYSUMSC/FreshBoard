@@ -18,7 +18,9 @@ export class Blogs extends Component {
             content: '',
             fileTree: [],
             fileName: '',
-            fileTime: ''
+            fileTime: '',
+            author: '',
+            subject: ''
         };
 
         Marked.setOptions({
@@ -32,7 +34,6 @@ export class Blogs extends Component {
                 displayContent: false,
                 loading: false,
                 path: response.currentPath,
-                content: '',
                 fileTree: response.fileList
             });
         });
@@ -65,6 +66,11 @@ export class Blogs extends Component {
                     this.setState({
                         displayContent: false,
                         loading: false,
+                        content: '',
+                        fileName: '',
+                        fileTime: '',
+                        author: '',
+                        subject: '',
                         path: response.currentPath,
                         fileTree: response.fileList
                     });
@@ -79,7 +85,10 @@ export class Blogs extends Component {
                         loading: false,
                         content: response.content,
                         fileName: response.name,
-                        fileTime: response.time
+                        fileTime: response.time,
+                        author: response.author,
+                        subject: response.subject,
+                        fileTree: []
                     });
                     if (window.MathJax) {
                         window.MathJax.Hub.Config({
@@ -102,7 +111,7 @@ export class Blogs extends Component {
         let content = this.state.loading ? <em>Loading...</em> :
             this.state.displayContent ?
                 <div>
-                    <p>{this.state.fileName} - {this.state.fileTime}</p>
+                    <p>{this.state.fileName} - {this.state.fileTime}, {this.state.author}: {this.state.subject}</p>
                     <div dangerouslySetInnerHTML={{ __html: Marked(this.state.content) }} />
                     <hr />
                     <Button color="primary" onClick={() => this.setState({ displayContent: false })}>Return</Button>
