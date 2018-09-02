@@ -20,8 +20,7 @@ export default class App extends Component {
         Get('/Account/GetUserInfoAsync')
             .then(data => data.json())
             .then(data => {
-                this.setState({ user: data, loading: false });
-                console.log(data);
+                this.setState({ user: data });
             });
             
     }

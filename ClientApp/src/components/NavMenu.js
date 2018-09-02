@@ -23,7 +23,7 @@ export class NavMenu extends Component {
             this.props.user.isSignedIn ?
                 <Nav navbar className="ml-auto">
                     <NavItem>
-                        <Dom.NavLink activeClassName="active" to={'/portal'}>
+                        <Dom.NavLink activeClassName="active" to={'/Portal'}>
                             <NavLink>Hi, {this.props.user.userInfo.userName}!</NavLink>
                         </Dom.NavLink>
                     </NavItem>

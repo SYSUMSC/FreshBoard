@@ -38,12 +38,19 @@ namespace mscfreshman.Controllers
                 isSignedIn = _signInManager.IsSignedIn(User),
                 userInfo = await _userManager.GetUserAsync(User)
             };
-            return Json(data);
+            bool flag = true;
+            if (data.userInfo == null && data.isSignedIn)
+            {
+                await _signInManager.SignOutAsync();
+                flag = false;
+            }
+            return Json(new { isSignedIn = data.isSignedIn && flag, data.userInfo });
         }
 
         [HttpPost]
         public async Task<IActionResult> LoginAsync(string email, string password, bool persistent = true)
         {
+            await _signInManager.SignOutAsync();
             var result = await _signInManager.PasswordSignInAsync(email, password, persistent, false);
             if (result.Succeeded)
             {
