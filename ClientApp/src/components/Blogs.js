@@ -4,6 +4,7 @@ import Button from 'reactstrap/lib/Button';
 import Marked from 'marked';
 import Highlight from 'highlight.js';
 import 'highlight.js/styles/github.css';
+import { Container } from 'reactstrap';
 
 export class Blogs extends Component {
     displayName = Blogs.name;
@@ -38,6 +39,7 @@ export class Blogs extends Component {
             });
         });
 
+        //Add mathjax library from external cdn
         let script = document.createElement('script');
         script.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML';
         document.body.appendChild(script);
@@ -52,7 +54,8 @@ export class Blogs extends Component {
         }
         else newPath = this.state.path + '/' + path;
         if (newPath === '/') newPath = '';
-
+        while (newPath.startsWith('/')) newPath = newPath.substring(1);
+        
         //init
         this.setState({
             displayContent: false,
@@ -87,8 +90,7 @@ export class Blogs extends Component {
                         fileName: response.name,
                         fileTime: response.time,
                         author: response.author,
-                        subject: response.subject,
-                        fileTree: []
+                        subject: response.subject
                     });
                     if (window.MathJax) {
                         window.MathJax.Hub.Config({
@@ -121,10 +123,10 @@ export class Blogs extends Component {
                 )} </div>;
         
         return (
-            <div>
+            <Container>
                 <p>Current path: /{this.state.path}</p>
                 {content}
-            </div>
+            </Container>
         );
     }
 }

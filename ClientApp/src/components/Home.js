@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import * as Dom from 'react-router-dom';
-import { Jumbotron, Button, Container, Modal, ModalBody, ModalHeader, ModalFooter, Nav, NavItem, NavLink, TabContent, Row, Col } from 'reactstrap';
+import { Jumbotron, TabPane, Button, Container, Modal, ModalBody, ModalHeader, ModalFooter, Nav, NavItem, NavLink, TabContent, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
-import TabPane from 'reactstrap/lib/TabPane';
 import { Register } from './Account/Register';
 import { Login } from './Account/Login';
 
