@@ -31,21 +31,24 @@ mscfreshman
 ├───Controllers -- 后端控制器
 │   
 ├───Data -- 数据库相关
-│   │   ApplicationDbContext.cs -- 数据库强类型上下文
+│   │   ApplicationDbContext.cs -- 数据库强类型上下文模型构建类
+│   │   其他.cs -- 数据库强类型上下文
 │   │   
 │   ├───Identity -- 账户相关
 │   │       FreshBoardUser.cs -- 账户信息字段
 │   │       TranslatedIdentityErrorDescriber.cs -- 一些错误的翻译
 │   │       
-│   └───Migrations -- 数据库合并自动化脚本
+│   └───Migrations -- 数据库迁移更新自动化脚本
 │           
 ├───obj -- .NET Core 包的临时目录，类似 node_modules
 │                           
-├───Pages -- 内建页面，如内部错误页面（500）
+├───Pages -- 内建页面，如内部错误页面等
 │       
-└───Services -- 服务
-        EmailSender.cs -- 邮件发信服务器
-        SignalRHub.cs -- WebSocket 后端处理函数
+├───Services -- 服务
+│       EmailSender.cs -- 邮件发信服务器
+│       SignalRHub.cs -- WebSocket 后端处理函数
+│    
+└───Views -- 传统 MVC 页面的 View 层
 ```
 
 ## Coding & Build
