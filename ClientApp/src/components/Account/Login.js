@@ -23,12 +23,12 @@ export class Login extends Component {
                 <Form id="loginForm">
                     <FormGroup>
                         <Label for="email">电子邮箱</Label>
-                        <Input type="email" name="email" id="email" />
+                        <Input type="email" name="email" id="email" required />
                     </FormGroup>
 
                     <FormGroup>
                         <Label for="password">密码</Label>
-                        <Input type="password" name="password" id="password" />
+                        <Input type="password" name="password" id="password" required />
                     </FormGroup>
 
                     <FormGroup>
