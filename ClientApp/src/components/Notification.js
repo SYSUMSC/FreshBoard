@@ -11,14 +11,17 @@ export class Notification extends Component {
 
     render() {
         let panel =
-            this.props.user == null ? <p>没有通知</p> :
+            this.props.user === null ? <p>没有通知</p> :
                 this.props.user.isSignedIn ?
                     <p>没有通知</p>
                     :
-                    <div><h4>请先登录</h4> <hr /> <Container><Login /></Container></div>;
+                    <div><h4>请先登录</h4> <hr /> <Login /><br /></div>;
 
         return (
-            <Container>{panel}</Container>
+            <Container>
+                <br />
+                {panel}
+            </Container>
         );
     }
 }

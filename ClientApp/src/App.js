@@ -22,7 +22,7 @@ export default class App extends Component {
             .then(data => {
                 this.setState({ user: data });
             });
-            
+
     }
 
     setTitle(title) {
@@ -31,14 +31,12 @@ export default class App extends Component {
 
     render() {
         return (
-            <div>
-                <Layout user={this.state.user}>
-                    <Route exact path='/' render={() => { this.setTitle('主页'); return <Home user={this.state.user} />; }} />
-                    <Route path='/Notification' render={() => { this.setTitle('通知'); return <Notification user={this.state.user} />; }} />
-                    <Route path='/Blogs' render={() => { this.setTitle('干货'); return <Blogs user={this.state.user} />; }} />
-                    <Route path='/Portal' render={() => { this.setTitle('我的账户'); return <Portal user={this.state.user} />; }}></Route>
-                </Layout>
-            </div>
-        )
+            <Layout user={this.state.user}>
+                <Route exact path='/' render={() => { this.setTitle('主页'); return <Home user={this.state.user} />; }} />
+                <Route path='/Notification' render={() => { this.setTitle('通知'); return <Notification user={this.state.user} />; }} />
+                <Route path='/Blogs' render={() => { this.setTitle('干货'); return <Blogs user={this.state.user} />; }} />
+                <Route path='/Portal' render={() => { this.setTitle('我的账户'); return <Portal user={this.state.user} />; }} />
+            </Layout>
+        );
     }
 }
