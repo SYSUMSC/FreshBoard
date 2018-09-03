@@ -1,13 +1,26 @@
 ﻿import React, { Component } from "react";
-import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap";
+import { Button, Form, FormGroup, Label, Input } from "reactstrap";
+import { FormPost } from "../../utils/HttpRequest";
 
 export class Login extends Component {
     displayName = Login.name
 
+    login() {
+        var form = document.getElementById('loginForm');
+        if (form.reportValidity()) {
+            FormPost('/Account/LoginAsync', form)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.succeeded) window.location = '/';
+                    else alert(data.message);
+                });
+        }
+    }
+
     render() {
         return (
             <div>
-                <Form method="post" action='/Account/LoginAsync'>
+                <Form id="loginForm">
                     <FormGroup>
                         <Label for="email">电子邮箱</Label>
                         <Input type="email" name="email" id="email" />
@@ -27,7 +40,7 @@ export class Login extends Component {
                         </div>
                     </FormGroup>
 
-                    <Button className="float-right" color="primary">登录</Button>
+                    <Button type="button" className="float-right" color="primary" onClick={this.login}>登录</Button>
                 </Form>
             </div>
         );

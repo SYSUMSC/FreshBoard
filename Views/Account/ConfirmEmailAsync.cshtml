@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewData["Title"] = "确认电子邮箱";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+
+    <h2>确认电子邮箱</h2>
+
+    @if (ViewBag.ConfirmResult.Succeeded)
+    {
+        <div>
+            <p class="text-success">
+                已成功验证你的电子邮箱，感谢你的使用
+            </p>
+            <a class="btn btn-primary" href="/">返回首页</a>
+        </div>
+    }
+    else
+    {
+        <div>
+            <p class="text-danger">
+                电子邮箱验证失败
+            </p>
+            <ul>
+                @{
+                    foreach (var i in ViewBag.ConfirmResult.Errors)
+                    {
+                        <li><p>@i.Description</p></li>
+                    }
+                }
+            </ul>
+            <a class="btn btn-primary" href="/">返回首页</a>
+        </div>
+    }
+</div>

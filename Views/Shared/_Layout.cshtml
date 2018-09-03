@@ -1,0 +1,62 @@
+﻿@using mscfreshman.Data.Identity
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<FreshBoardUser> SignInManager
+@inject UserManager<FreshBoardUser> UserManager
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    <title>@ViewData["Title"] - SYSU MSC</title>
+    <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/4.1.1/css/bootstrap.min.css">
+
+</head>
+
+<body>
+    <div>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <a class="navbar-brand" href="/"><span>SYSU 微软学生俱乐部</span></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">主页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Notification">通知</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Blogs">干货</a>
+                    </li>
+                </ul>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <ul class="nav ml-auto navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Portal">Hi, @UserManager.GetUserName(User)!</a>
+                        </li>
+                        <li class="nav-item">
+                            <form method="post" action="/Account/LogoutAsync">
+                                <button type="submit" class="btn btn-link nav-link">退出</button>
+                            </form>
+                        </li>
+                    </ul>
+                }
+            </div>
+        </nav>
+    </div>
+    <br />
+    <div>
+        @RenderBody()
+    </div>
+    <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/4.1.1/bootstrap.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.slim.min.js"></script>
+
+
+    @RenderSection("Scripts", false)
+</body>
+</html>
+

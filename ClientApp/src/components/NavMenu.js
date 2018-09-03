@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react';
-import * as Dom from 'react-router-dom';
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
+import { NavLink } from 'react-router-dom';
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, Form } from 'reactstrap';
 
 export class NavMenu extends Component {
     displayName = NavMenu.name
@@ -19,46 +19,36 @@ export class NavMenu extends Component {
     }
 
     render() {
-        let accountPortal = this.props.user == null ? null :
+        let accountPortal = this.props.user === null ? null :
             this.props.user.isSignedIn ?
                 <Nav navbar className="ml-auto">
                     <NavItem>
-                        <Dom.NavLink activeClassName="active" to={'/Portal'}>
-                            <NavLink>Hi, {this.props.user.userInfo.userName}!</NavLink>
-                        </Dom.NavLink>
+                        <NavLink activeClassName="active" to={'/Portal'} className="nav-link">Hi, {this.props.user.userInfo.userName}!</NavLink>
                     </NavItem>
                     <NavItem>
-                        <form method="post" action="/Account/LogoutAsync">
+                        <Form method="post" action="/Account/LogoutAsync">
                             <button className="btn btn-link nav-link">退出</button>
-                        </form>
+                        </Form>
                     </NavItem>
                 </Nav>
                 : null;
 
         return (
             <Navbar color="dark" dark expand="md">
-                <NavbarBrand>
-                    <Dom.Link className="navbar-brand" to={'/'}>
-                        <span>SYSU 微软学生俱乐部</span>
-                    </Dom.Link>
-                </NavbarBrand>
+                <NavLink className="navbar-brand" to={'/'}>
+                    <span>SYSU 微软学生俱乐部</span>
+                </NavLink>
                 <NavbarToggler onClick={this.toggle} />
                 <Collapse isOpen={this.state.isOpen} navbar>
                     <Nav navbar>
                         <NavItem>
-                            <Dom.NavLink activeClassName="active" exact to={'/'}>
-                                <NavLink>主页</NavLink>
-                            </Dom.NavLink>
+                            <NavLink activeClassName="active" exact to={'/'} className="nav-link">主页</NavLink>
                         </NavItem>
                         <NavItem>
-                            <Dom.NavLink activeClassName="active" to={'/Notification'}>
-                                <NavLink>通知</NavLink>
-                            </Dom.NavLink>
+                            <NavLink activeClassName="active" to={'/Notification'} className="nav-link">通知</NavLink>
                         </NavItem>
                         <NavItem>
-                            <Dom.NavLink activeClassName="active" to={'/Blogs'}>
-                                <NavLink>干货</NavLink>
-                            </Dom.NavLink>
+                            <NavLink activeClassName="active" to={'/Blogs'} className="nav-link">干货</NavLink>
                         </NavItem>
                     </Nav>
                     {accountPortal}

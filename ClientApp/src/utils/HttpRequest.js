@@ -1,3 +1,17 @@
+export function FormPost(url, form) {
+    var myInit = {
+        method: 'POST',
+        credentials: "same-origin",
+        body: new FormData(form),
+        mode: 'cors',
+        cache: 'default'
+    };
+
+    var myRequest = new Request(url);
+
+    return fetch(myRequest, myInit);
+}
+
 export function Post(url, headers = {}, data = {}) {
     var myFormData = new FormData();
     for (var x in data) {
@@ -5,15 +19,15 @@ export function Post(url, headers = {}, data = {}) {
     }
 
     var myHeaders = new Headers();
-    for (var x in headers) {
-        myHeaders.append(x, headers[x]);
+    for (var y in headers) {
+        myHeaders.append(y, headers[y]);
     }
 
     var myInit = {
         method: 'POST',
         headers: myHeaders,
         credentials: "same-origin",
-        data: myFormData,
+        body: myFormData,
         mode: 'cors',
         cache: 'default'
     };
@@ -30,8 +44,8 @@ export function Get(url, headers = {}, data = {}) {
     }
 
     var myHeaders = new Headers();
-    for (var x in headers) {
-        myHeaders.append(x, headers[x]);
+    for (var y in headers) {
+        myHeaders.append(y, headers[y]);
     }
 
     var myInit = {

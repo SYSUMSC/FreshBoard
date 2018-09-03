@@ -1,43 +1,54 @@
 ﻿import React, { Component } from "react";
-import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap";
-import { Post } from "../../utils/HttpRequest";
-
+import { Button, Form, FormGroup, Label, Input, FormFeedback } from "reactstrap";
+import { FormPost } from "../../utils/HttpRequest";
 
 export class Register extends Component {
-    displayName = Register.name
+    displayName = Register.name;
+    
+    register() {
+        var form = document.getElementById('registerForm');
+        if (form.reportValidity()) {
+            FormPost('/Account/RegisterAsync', form)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.succeeded) window.location = '/';
+                    else alert(data.message);
+                });
+        }
+    }
 
     render() {
         return (
             <div>
-                <Form method="post" action='/Account/RegisterAsync'>
+                <Form id='registerForm'>
                     <FormGroup>
                         <Label for="name">姓名</Label>
-                        <Input type="text" name="name" id="name" />
+                        <Input type="text" name="name" id="name" required />
                     </FormGroup>
 
                     <FormGroup>
                         <Label for="email">电子邮箱</Label>
-                        <Input type="email" name="email" id="email" />
+                        <Input type="email" name="email" id="email" required />
                     </FormGroup>
 
                     <FormGroup>
                         <Label for="grade">年级</Label>
-                        <Input type="number" name="grade" id="grade" min="2015" max="2018" />
+                        <Input type="number" name="grade" id="grade" min="2015" max="2018" required />
                     </FormGroup>
 
                     <FormGroup>
                         <Label for="phone">电话</Label>
-                        <Input type="text" name="phone" id="phone" />
+                        <Input type="text" name="phone" id="phone" required />
                     </FormGroup>
 
                     <FormGroup>
                         <Label for="wechat">WeChat</Label>
-                        <Input type="text" name="wechat" id="wechat" />
+                        <Input type="text" name="wechat" id="wechat" required />
                     </FormGroup>
 
                     <FormGroup>
                         <Label for="qq">QQ</Label>
-                        <Input type="text" name="qq" id="qq" />
+                        <Input type="text" name="qq" id="qq" required />
                     </FormGroup>
 
                     <FormGroup>
@@ -91,30 +102,30 @@ export class Register extends Component {
 
                     <FormGroup>
                         <Label for="schnum">学号</Label>
-                        <Input type="text" name="schnum" id="schnum" />
+                        <Input type="text" name="schnum" id="schnum" required />
                     </FormGroup>
 
                     <FormGroup>
                         <Label for="institute">学院</Label>
-                        <Input type="text" name="institute" id="institute" />
+                        <Input type="text" name="institute" id="institute" required />
                     </FormGroup>
 
                     <FormGroup>
                         <Label for="major">专业</Label>
-                        <Input type="text" name="major" id="major" />
+                        <Input type="text" name="major" id="major" required />
                     </FormGroup>
 
                     <FormGroup>
                         <Label for="password">密码</Label>
-                        <Input type="password" name="password" id="password" />
+                        <Input type="password" name="password" id="password" required />
                     </FormGroup>
 
                     <FormGroup>
                         <Label for="confirmpassword">确认密码</Label>
-                        <Input type="password" name="confirmpassword" id="confirmpassword" />
+                        <Input type="password" name="confirmpassword" id="confirmpassword" required />
                     </FormGroup>
 
-                    <Button className="float-right" color="primary" onClick={this.register}>注册</Button>
+                    <Button type="button" className="float-right" color="primary" onClick={this.register}>注册</Button>
                 </Form>
             </div>
         );
