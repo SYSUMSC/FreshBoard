@@ -4,7 +4,7 @@ import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import { Blogs } from './components/Blogs';
 import { Notification } from './components/Notification';
-import { Get } from './utils/HttpRequest'
+import { Get } from './utils/HttpRequest';
 import { Portal } from './components/Account/Portal';
 
 export default class App extends Component {

@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, Form } from 'reactstrap';
+import { Collapse, Navbar, NavbarToggler, Nav, NavItem, Form } from 'reactstrap';
 
 export class NavMenu extends Component {
     displayName = NavMenu.name

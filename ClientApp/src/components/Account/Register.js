@@ -1,5 +1,5 @@
 ﻿import React, { Component } from "react";
-import { Button, Form, FormGroup, Label, Input, FormFeedback } from "reactstrap";
+import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import { FormPost } from "../../utils/HttpRequest";
 
 export class Register extends Component {
