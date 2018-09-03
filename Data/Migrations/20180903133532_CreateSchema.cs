@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace mscfreshman.Data.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class CreateSchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -48,11 +48,46 @@ namespace mscfreshman.Data.Migrations
                     Sexual = table.Column<int>(nullable: false),
                     SchoolNumber = table.Column<int>(nullable: false),
                     Institute = table.Column<string>(nullable: true),
-                    Major = table.Column<string>(nullable: true)
+                    Major = table.Column<string>(nullable: true),
+                    Department = table.Column<int>(nullable: false),
+                    ApplyStatus = table.Column<int>(nullable: false),
+                    CrackProgress = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Notification",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Time = table.Column<string>(nullable: false),
+                    Title = table.Column<string>(nullable: false),
+                    Content = table.Column<string>(nullable: false),
+                    Mode = table.Column<int>(nullable: false, defaultValueSql: "1")
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Targets = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notification", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReadStatus",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<string>(nullable: false),
+                    NotificationId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReadStatus", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -215,6 +250,12 @@ namespace mscfreshman.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Notification");
+
+            migrationBuilder.DropTable(
+                name: "ReadStatus");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

@@ -34,7 +34,7 @@ export class Home extends Component {
     }
 
     render() {
-        let loginPortal = this.props.user == null ? null :
+        let loginPortal = this.props.user === null ? <em>登录中...</em> :
             this.props.user.isSignedIn
                 ?
                 <Dom.NavLink to={'/Portal'}>

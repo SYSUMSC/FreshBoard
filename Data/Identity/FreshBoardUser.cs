@@ -9,32 +9,52 @@ namespace mscfreshman.Data.Identity
     public class FreshBoardUser : IdentityUser //IdentityUser 中已有 PhoneNumber、Email、UserName 字段，无需再建立
     {
         [PersonalData]
-        public string Name { get; set; } //姓名
+        public string Name { get; set; }
 
         [PersonalData]
-        public int Grade { get; set; } //年级
+        public int Grade { get; set; }
 
         [PersonalData]
-        public string QQ { get; set; } //QQ
+        public string QQ { get; set; }
 
         [PersonalData]
-        public string WeChat { get; set; } //微信号
+        public string WeChat { get; set; }
+
+        /// <summary>
+        /// 政治面貌 0 -- 群众, 1 -- 共青团员, 2 -- 共产党员, 3 -- 中共预备党员, 4 -- 无党派人士, 5 -- 其他
+        /// </summary>
+        [PersonalData]
+        public int CPCLevel { get; set; }
+
+        /// <summary>
+        /// 性别 1 -- 男, 2 -- 女
+        /// </summary>
+        [PersonalData]
+        public int Sexual { get; set; }
 
         [PersonalData]
-        public int CPCLevel { get; set; } //政治面貌 0 -- 群众, 1 -- 共青团员, 2 -- 党员
+        public int SchoolNumber { get; set; }
 
         [PersonalData]
-        public int Sexual { get; set; } //性别 1 -- Male, 2 -- Female
-
+        public string Institute { get; set; }
+        
         [PersonalData]
-        public int SchoolNumber { get; set; } //学号
+        public string Major { get; set; }
 
-        [PersonalData]
-        public string Institute { get; set; } //学院
+        /// <summary>
+        /// 部门 0 -- 暂无, 1 -- 行策, 2 -- 媒传, 3 -- 技术
+        /// </summary>
+        public int Department { get; set; }
 
-        [PersonalData]
-        public string Major { get; set; } //专业
+        /// <summary>
+        /// 录取状态 0 -- 暂无, 1 -- 等待一面, 2 -- 等待二面, 3 -- 录取失败, 4 -- 录取成功
+        /// </summary>
+        public int ApplyStatus { get; set; }
 
+        /// <summary>
+        /// 解谜进度
+        /// </summary>
+        public int CrackProgress { get; set; }
 
     }
 }

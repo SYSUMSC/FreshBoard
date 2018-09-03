@@ -9,8 +9,8 @@ using mscfreshman.Data;
 namespace mscfreshman.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180829103026_CreateIdentitySchema")]
-    partial class CreateIdentitySchema
+    [Migration("20180903133532_CreateSchema")]
+    partial class CreateSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -136,10 +136,16 @@ namespace mscfreshman.Data.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<int>("ApplyStatus");
+
                     b.Property<int>("CPCLevel");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
+
+                    b.Property<int>("CrackProgress");
+
+                    b.Property<int>("Department");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
@@ -195,6 +201,46 @@ namespace mscfreshman.Data.Migrations
                         .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("mscfreshman.Data.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Content")
+                        .IsRequired();
+
+                    b.Property<int>("Mode")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("1");
+
+                    b.Property<string>("Targets");
+
+                    b.Property<string>("Time")
+                        .IsRequired();
+
+                    b.Property<string>("Title")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Notification");
+                });
+
+            modelBuilder.Entity("mscfreshman.Data.ReadStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("NotificationId");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ReadStatus");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

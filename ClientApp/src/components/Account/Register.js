@@ -72,6 +72,21 @@ export class Register extends Component {
                                 <Input type="radio" name="cpclevel" id="cpclevel2" value="2" />共产党员
                             </label>
                         </div>
+                        <div className="form-check-inline">
+                            <label className="form-check-label">
+                                <Input type="radio" name="cpclevel" id="cpclevel3" value="3" />中共预备党员
+                            </label>
+                        </div>
+                        <div className="form-check-inline">
+                            <label className="form-check-label">
+                                <Input type="radio" name="cpclevel" id="cpclevel4" value="4" />无党派人士
+                            </label>
+                        </div>
+                        <div className="form-check-inline">
+                            <label className="form-check-label">
+                                <Input type="radio" name="cpclevel" id="cpclevel5" value="5" />其他
+                            </label>
+                        </div>
                     </FormGroup>
 
                     <FormGroup>
