@@ -13,7 +13,8 @@ export class Register extends Component {
                 .then(data => {
                     if (data.succeeded) window.location = '/';
                     else alert(data.message);
-                });
+                })
+                .catch(() => alert('注册失败'));
         }
     }
 

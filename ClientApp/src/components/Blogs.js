@@ -77,7 +77,8 @@ export class Blogs extends Component {
                         path: response.currentPath,
                         fileTree: response.fileList
                     });
-                });
+                })
+                .catch(() => alert('加载失败'));
         }
         else { //file
             Get('/Blog/GetBlogContentAsync', {}, { path: newPath })
@@ -103,7 +104,8 @@ export class Blogs extends Component {
                         window.MathJax.Hub.Configured();
                         window.MathJax.Hub.Queue(["Typeset", window.MathJax.Hub, "output"]);
                     }
-                });
+                })
+                .catch(() => alert('加载失败'));
         }
     }
 

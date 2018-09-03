@@ -21,7 +21,8 @@ export default class App extends Component {
             .then(data => data.json())
             .then(data => {
                 this.setState({ user: data });
-            });
+            })
+            .catch(() => alert('用户信息获取失败'));
 
     }
 

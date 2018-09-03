@@ -29,7 +29,7 @@ namespace mscfreshman.Controllers
             _dbContextOptions = dbContextOptions;
         }
 
-        public async Task<IActionResult> GetNotifications(int start, int count)
+        public async Task<IActionResult> GetNotificationsAsync(int start, int count)
         {
             throw new NotImplementedException();
             

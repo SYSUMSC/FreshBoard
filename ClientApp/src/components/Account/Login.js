@@ -13,7 +13,8 @@ export class Login extends Component {
                 .then(data => {
                     if (data.succeeded) window.location = '/';
                     else alert(data.message);
-                });
+                })
+                .catch(() => alert('登录失败'));
         }
     }
 
