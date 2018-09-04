@@ -21,7 +21,10 @@ export class Register extends Component {
             FormPost('/Account/RegisterAsync', form)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.succeeded) window.location = '/';
+                    if (data.succeeded) {
+                        alert('注册成功');
+                        window.location = '/';
+                    }
                     else {
                         alert(data.message);
                         this.setState({ disableButton: false });

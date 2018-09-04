@@ -1,5 +1,6 @@
 ﻿import React, { Component } from "react";
 import { Container } from "reactstrap";
+import { Post } from '../../utils/HttpRequest';
 
 export class Portal extends Component {
     static ApplyStatus(userInfo) {
@@ -29,6 +30,16 @@ export class Portal extends Component {
         );
     }
 
+    static SendConfirmEmail() {
+        Post('/Account/SendRegisterEmailAsync', {}, {})
+            .then(res => res.json())
+            .then(data => {
+                if (data.succeeded) alert('发送成功');
+                else alert(data.message);
+            })
+            .catch(() => alert('发送失败'));
+    }
+
     static UserInfoList(userInfo) {
         return (
             <table className='table'>
@@ -43,7 +54,7 @@ export class Portal extends Component {
                 <tbody>
                     <tr>
                         <td>{userInfo.name} {userInfo.sexual === 1 ? '♂' : '♀'}</td>
-                        <td>{userInfo.email}</td>
+                        <td>{userInfo.email} ({userInfo.emailConfirmed ? <span>已验证</span> : <a title="点击重新发送验证邮件" href="javascript:void(0)" onClick={Portal.SendConfirmEmail}>未验证</a>})</td>
                         <td>{userInfo.schoolNumber}</td>
                         <td>{userInfo.grade} {userInfo.institute} {userInfo.major}</td>
                     </tr>

@@ -88,15 +88,15 @@ namespace mscfreshman.Controllers
 
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var email = user.Email;
-            var callbackUrl = Url.Page("/Account/ConfirmEmail", null, new { userId = user.Id, code }, Request.Scheme);
+            var callbackUrl = Url.Action("ConfirmEmailAsync", "Account", new { userId = user.Id, code }, Request.Scheme);
 
             try
             {
-                await _emailSender.SendEmailAsync(email, "验证邮箱", $"<h2>中山大学微软学生俱乐部</h2><p>感谢您的注册，请点击 <a href='{callbackUrl}'>此处</a> 验证你的邮箱地址。</p><hr /><p>请勿回复本邮件</p><p>{DateTime.Now} - SYSU MSC</p>");
+                await _emailSender.SendEmailAsync(email, "验证邮箱 - SYSU MSC", $"<h2>中山大学微软学生俱乐部</h2><p>感谢您的注册，请点击 <a href='{callbackUrl}'>此处</a> 验证你的邮箱地址。</p><hr /><p>请勿回复本邮件</p><p>{DateTime.Now} - SYSU MSC</p>");
             }
-            catch
+            catch (Exception ex)
             {
-                //ignored
+                Console.WriteLine(ex.Message);
             }
 
             return Json(new { succeeded = true });
@@ -157,11 +157,11 @@ namespace mscfreshman.Controllers
                 var callbackUrl = Url.Action("ConfirmEmailAsync", "Account", new { userId = user.Id, code }, Request.Scheme);
                 try
                 {
-                    await _emailSender.SendEmailAsync(email, "验证邮箱", $"<h2>中山大学微软学生俱乐部</h2><p>感谢您的注册，请点击 <a href='{callbackUrl}'>此处</a> 验证你的邮箱地址。</p><hr /><p>请勿回复本邮件</p><p>{DateTime.Now} - SYSU MSC</p>");
+                    await _emailSender.SendEmailAsync(email, "验证邮箱 - SYSU MSC", $"<h2>中山大学微软学生俱乐部</h2><p>感谢您的注册，请点击 <a href='{callbackUrl}'>此处</a> 验证你的邮箱地址。</p><hr /><p>请勿回复本邮件</p><p>{DateTime.Now} - SYSU MSC</p>");
                 }
-                catch
+                catch (Exception ex)
                 {
-                    //ignored
+                    Console.WriteLine(ex.Message);
                 }
                 return Json(new { succeeded = true });
             }
