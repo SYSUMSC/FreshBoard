@@ -114,6 +114,25 @@ namespace mscfreshman.Controllers
                                 }
                             }
                             break;
+                        case 4:
+                            if (user == null) continue;
+                            if (i.Targets?.Split("|", StringSplitOptions.RemoveEmptyEntries)?.Contains(user.Privilege.ToString()) ?? false)
+                            {
+                                cnt++;
+                                if (cnt > start)
+                                {
+                                    notifications.Add(new NotificationModel
+                                    {
+                                        Id = i.Id,
+                                        Title = i.Title,
+                                        Content = i.Content,
+                                        Preview = GeneratePreview(i.Content),
+                                        Time = i.Time.ToString("yyyy/MM/dd HH:mm:ss"),
+                                        HasRead = string.IsNullOrEmpty(userId) ? true : await db.ReadStatus.AnyAsync(j => j.NotificationId == i.Id && j.UserId == userId)
+                                    });
+                                }
+                            }
+                            break;
                     }
                 }
             }
