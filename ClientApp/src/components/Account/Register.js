@@ -4,17 +4,30 @@ import { FormPost } from "../../utils/HttpRequest";
 
 export class Register extends Component {
     displayName = Register.name;
-    
+
+    constructor(props) {
+        super(props);
+        this.register = this.register.bind(this);
+
+        this.state = {
+            disableButton: false
+        };
+    }
+
     register() {
         var form = document.getElementById('registerForm');
         if (form.reportValidity()) {
+            this.setState({ disableButton: true });
             FormPost('/Account/RegisterAsync', form)
                 .then(response => response.json())
                 .then(data => {
                     if (data.succeeded) window.location = '/';
-                    else alert(data.message);
+                    else {
+                        alert(data.message);
+                        this.setState({ disableButton: false });
+                    }
                 })
-                .catch(() => alert('注册失败'));
+                .catch(() => { alert('注册失败'); this.setState({ disableButton: false }); });
         }
     }
 
@@ -126,7 +139,7 @@ export class Register extends Component {
                         <Input type="password" name="confirmpassword" id="confirmpassword" required />
                     </FormGroup>
 
-                    <Button type="button" className="float-right" color="primary" onClick={this.register}>注册</Button>
+                    <Button type="button" className="float-right" color="primary" onClick={this.register} disabled={this.state.disableButton}>注册</Button>
                 </Form>
             </div>
         );

@@ -5,16 +5,29 @@ import { FormPost } from "../../utils/HttpRequest";
 export class Login extends Component {
     displayName = Login.name
 
+    constructor(props) {
+        super(props);
+        this.login = this.login.bind(this);
+
+        this.state = {
+            disableButton: false
+        };
+    }
+
     login() {
         var form = document.getElementById('loginForm');
         if (form.reportValidity()) {
+            this.setState({ disableButton: true });
             FormPost('/Account/LoginAsync', form)
                 .then(response => response.json())
                 .then(data => {
                     if (data.succeeded) window.location = '/';
-                    else alert(data.message);
+                    else {
+                        alert(data.message);
+                        this.setState({ disableButton: false });
+                    }
                 })
-                .catch(() => alert('登录失败'));
+                .catch(() => { alert('登录失败'); this.setState({ disableButton: false }); });
         }
     }
 
@@ -41,7 +54,7 @@ export class Login extends Component {
                         </div>
                     </FormGroup>
 
-                    <Button type="button" className="float-right" color="primary" onClick={this.login}>登录</Button>
+                    <Button type="button" className="float-right" color="primary" onClick={this.login} disabled={this.state.disableButton}>登录</Button>
                 </Form>
             </div>
         );
