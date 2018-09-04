@@ -145,6 +145,7 @@ export class Blogs extends Component {
         return (
             <Container>
                 <br />
+                <h2>Blogs</h2>
                 <Breadcrumb>
                     {('主页/' + (this.state.path === '' ? '' : this.state.path + '/')).split('/').map((x, i, arr) => i === arr.length - 1 ? null : i === arr.length - 2 ? <BreadcrumbItem active>{x}</BreadcrumbItem> : <BreadcrumbItem>{x}</BreadcrumbItem>)}
                 </Breadcrumb>

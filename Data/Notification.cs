@@ -1,9 +1,11 @@
-﻿namespace mscfreshman.Data
+﻿using System;
+
+namespace mscfreshman.Data
 {
     public class Notification
     {
         public int Id { get; set; }
-        public string Time { get; set; }
+        public DateTime Time { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         /// <summary>
