@@ -89,7 +89,8 @@ export class Portal extends Component {
 
         return (
             <Container>
-                <h1>我的账户</h1>
+                <br />
+                <h2>我的账户</h2>
                 <h4>个人信息</h4>
                 {userInfo}
                 <hr />
