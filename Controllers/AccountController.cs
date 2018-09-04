@@ -163,6 +163,8 @@ namespace mscfreshman.Controllers
                 {
                     Console.WriteLine(ex.Message);
                 }
+                await _signInManager.SignOutAsync();
+                await _signInManager.SignInAsync(user, false);
                 return Json(new { succeeded = true });
             }
 
