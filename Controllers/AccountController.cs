@@ -88,7 +88,7 @@ namespace mscfreshman.Controllers
 
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var email = user.Email;
-            var callbackUrl = Url.Action("ConfirmEmailAsync", "Account", new { userId = user.Id, code }, Request.Scheme);
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, Request.Scheme);
 
             try
             {
@@ -154,7 +154,7 @@ namespace mscfreshman.Controllers
             if (result.Succeeded)
             {
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                var callbackUrl = Url.Action("ConfirmEmailAsync", "Account", new { userId = user.Id, code }, Request.Scheme);
+                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, Request.Scheme);
                 try
                 {
                     await _emailSender.SendEmailAsync(email, "验证邮箱 - SYSU MSC", $"<h2>中山大学微软学生俱乐部</h2><p>感谢您的注册，请点击 <a href='{callbackUrl}'>此处</a> 验证你的邮箱地址。</p><hr /><p>请勿回复本邮件</p><p>{DateTime.Now} - SYSU MSC</p>");
@@ -172,8 +172,8 @@ namespace mscfreshman.Controllers
         [HttpGet]
         public async Task<IActionResult> ConfirmEmailAsync(string userId, string code)
         {
-            ViewBag.ConfirmResult = await _userManager.ConfirmEmailAsync(await _userManager.FindByIdAsync(userId), code);
-            return View();
+            var result = await _userManager.ConfirmEmailAsync(await _userManager.FindByIdAsync(userId), code);
+            return Json(new { succeeded = result.Succeeded, errors = result.Errors.Select(i => i.Description) });
         }
     }
 }
