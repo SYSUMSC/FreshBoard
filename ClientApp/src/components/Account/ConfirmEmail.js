@@ -26,7 +26,10 @@ export class ConfirmEmail extends Component {
 
     render() {
         let result = this.state.loading ? <p>正在验证...</p> :
-            this.state.succeeded ? <p className="text-success">已成功验证邮箱，感谢使用</p>
+            this.state.succeeded ? <div>
+                <p className="text-success">已成功验证邮箱，感谢使用</p>
+                <Button color='primary' onClick={() => window.location = '/'}>返回首页</Button>
+            </div>
                 : <div>
                     <p className="text-danger">邮箱验证失败</p>
                     <ul>
