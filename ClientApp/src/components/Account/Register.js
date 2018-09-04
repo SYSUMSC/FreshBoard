@@ -37,7 +37,7 @@ export class Register extends Component {
                 <Form id='registerForm'>
                     <FormGroup>
                         <Label for="name">姓名</Label>
-                        <Input type="text" name="name" id="name" required />
+                        <Input type="text" name="name" id="name" minLength="2" maxLength="15" required />
                     </FormGroup>
 
                     <FormGroup>
@@ -47,7 +47,7 @@ export class Register extends Component {
 
                     <FormGroup>
                         <Label for="grade">年级</Label>
-                        <Input type="number" name="grade" id="grade" min="2015" max="2018" required />
+                        <Input type="number" name="grade" id="grade" min="2014" max="2018" required />
                     </FormGroup>
 
                     <FormGroup>
@@ -62,7 +62,7 @@ export class Register extends Component {
 
                     <FormGroup>
                         <Label for="qq">QQ</Label>
-                        <Input type="text" name="qq" id="qq" required />
+                        <Input type="text" name="qq" id="qq" maxLength="12" required />
                     </FormGroup>
 
                     <FormGroup>
@@ -116,7 +116,7 @@ export class Register extends Component {
 
                     <FormGroup>
                         <Label for="schnum">学号</Label>
-                        <Input type="text" name="schnum" id="schnum" required />
+                        <Input type="text" name="schnum" id="schnum" minLength="8" maxLength="8" required />
                     </FormGroup>
 
                     <FormGroup>

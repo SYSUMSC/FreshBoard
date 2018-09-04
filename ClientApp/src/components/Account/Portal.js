@@ -61,11 +61,11 @@ export class Portal extends Component {
                         <td>{userInfo.phoneNumber}</td>
                         <td>{userInfo.qq}</td>
                         <td>{userInfo.weChat}</td>
-                        <td>{userInfo.cPCLevel === 0 ? '群众'
-                            : userInfo.cPCLevel === 1 ? '共青团员'
-                                : userInfo.cPCLevel === 2 ? '共产党员'
-                                    : userInfo.cPCLevel === 3 ? '中共预备党员'
-                                        : userInfo.cPCLevel === 4 ? '无党派人士'
+                        <td>{userInfo.cpcLevel === 0 ? '群众'
+                            : userInfo.cpcLevel === 1 ? '共青团员'
+                                : userInfo.cpcLevel === 2 ? '共产党员'
+                                    : userInfo.cpcLevel === 3 ? '中共预备党员'
+                                        : userInfo.cpcLevel === 4 ? '无党派人士'
                                             : '其他'}</td>
                     </tr>
                 </tbody>
