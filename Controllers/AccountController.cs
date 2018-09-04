@@ -175,5 +175,57 @@ namespace mscfreshman.Controllers
             var result = await _userManager.ConfirmEmailAsync(await _userManager.FindByIdAsync(userId), code);
             return Json(new { succeeded = result.Succeeded, errors = result.Errors.Select(i => i.Description) });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ModifyAsync(
+            string name, //姓名
+            string email, //email
+            int grade, //年级
+            string phone, //电话
+            string qq, //QQ
+            string wechat,
+            int cpclevel, //政治面貌
+            string institute, //学院
+            string major, //专业
+            int sexual, //性别
+            int schnum) //学号
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Json(new { succeeded = false, message = "未登录" });
+            }
+
+            user.Name = name;
+            user.Email = email;
+            user.Grade = grade;
+            user.PhoneNumber = phone;
+            user.QQ = qq;
+            user.WeChat = wechat;
+            user.CPCLevel = cpclevel;
+            user.Institute = institute;
+            user.Major = major;
+            user.Sexual = sexual;
+            user.SchoolNumber = schnum;
+
+            var result = await _userManager.UpdateAsync(user);
+            return Json(new { succeeded = result.Succeeded, message = result.Errors.Any() ? result.Errors.Select(i => i.Description).Aggregate((accu, next) => accu + "\n" + next) : "修改失败" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApplyAsync(int department)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Json(new { succeeded = false, message = "未登录" });
+            }
+
+            if (user.Department != department) user.ApplyStatus = 0;
+            user.Department = department;
+
+            var result = await _userManager.UpdateAsync(user);
+            return Json(new { succeeded = result.Succeeded, message = result.Errors.Any() ? result.Errors.Select(i => i.Description).Aggregate((accu, next) => accu + "\n" + next) : "申请失败" });
+        }
     }
 }

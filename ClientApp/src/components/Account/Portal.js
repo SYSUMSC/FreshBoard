@@ -1,6 +1,8 @@
 ﻿import React, { Component } from "react";
-import { Container } from "reactstrap";
+import { Container, Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import { Post } from '../../utils/HttpRequest';
+import { Modify } from "./Modify";
+import { Apply } from "./Apply";
 
 export class Portal extends Component {
     static ApplyStatus(userInfo) {
@@ -87,26 +89,60 @@ export class Portal extends Component {
     displayName = Portal.name
     constructor(props) {
         super(props);
+        this.toggleModifyModal = this.toggleModifyModal.bind(this);
+        this.toggleApplyModal = this.toggleApplyModal.bind(this);
+        this.state = {
+            modifyModalOpen: false,
+            applyModalOpen: false
+        };
+    }
+
+    toggleModifyModal() {
+        this.setState({ modifyModalOpen: !this.state.modifyModalOpen });
+    }
+
+    toggleApplyModal() {
+        this.setState({ applyModalOpen: !this.state.applyModalOpen });
     }
 
     render() {
-        let userInfo = this.props.user === null ? <em>加载中...</em> :
+        let userInfo = this.props.user === null ? <p>加载中...</p> :
             this.props.user.isSignedIn ?
-                Portal.UserInfoList(this.props.user.userInfo) : <em>没有数据</em>;
+                Portal.UserInfoList(this.props.user.userInfo) : <p>没有数据</p>;
 
-        let departmentInfo = this.props.user === null ? <em>加载中...</em> :
+        let departmentInfo = this.props.user === null ? <p>加载中...</p> :
             this.props.user.isSignedIn ?
-                Portal.ApplyStatus(this.props.user.userInfo) : <em>没有数据</em>;
+                Portal.ApplyStatus(this.props.user.userInfo) : <p>没有数据</p>;
 
         return (
             <Container>
                 <br />
                 <h2>我的账户</h2>
-                <h4>个人信息</h4>
+                <h4>个人信息 <Button color="primary" onClick={this.toggleModifyModal}>修改</Button></h4>
                 {userInfo}
                 <hr />
-                <h4>部门申请</h4>
+                <h4>部门申请 <Button color="primary" onClick={this.toggleApplyModal}>修改</Button></h4>
                 {departmentInfo}
+
+                <Modal isOpen={this.state.modifyModalOpen} toggle={this.toggleModifyModal}>
+                    <ModalHeader toggle={this.toggleModifyModal}>修改信息</ModalHeader>
+                    <ModalBody>
+                        <Modify user={this.props.user} />
+                    </ModalBody>
+                    <ModalFooter>
+                        <p>SYSU MSC Account</p>
+                    </ModalFooter>
+                </Modal>
+                
+                <Modal isOpen={this.state.applyModalOpen} toggle={this.toggleApplyModal}>
+                    <ModalHeader toggle={this.toggleApplyModal}>修改信息</ModalHeader>
+                    <ModalBody>
+                        <Apply user={this.props.user} />
+                    </ModalBody>
+                    <ModalFooter>
+                        <p>SYSU MSC Account</p>
+                    </ModalFooter>
+                </Modal>
             </Container>
         );
     }

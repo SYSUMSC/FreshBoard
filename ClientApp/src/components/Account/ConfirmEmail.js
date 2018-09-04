@@ -1,8 +1,9 @@
 ﻿import React, { Component } from "react";
 import { Container, Button } from "reactstrap";
-import { NavLink } from 'react-router-dom';
 
 export class ConfirmEmail extends Component {
+    displayName = ConfirmEmail.name;
+
     constructor(props) {
         super(props);
         const p = window.location.toString();
@@ -31,9 +32,7 @@ export class ConfirmEmail extends Component {
                     <ul>
                         {this.state.errors.map(x => <li><small>{x}</small></li>)}
                     </ul>
-                    <NavLink to={'/'}>
-                        <Button color='primary'>返回首页</Button>
-                    </NavLink>
+                    <Button color='primary' onClick={() => window.location = '/'}>返回首页</Button>
                 </div>;
         return (
             <Container>
