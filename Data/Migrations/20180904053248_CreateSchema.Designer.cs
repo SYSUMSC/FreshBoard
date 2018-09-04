@@ -9,7 +9,7 @@ using mscfreshman.Data;
 namespace mscfreshman.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180903133532_CreateSchema")]
+    [Migration("20180904053248_CreateSchema")]
     partial class CreateSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -176,6 +176,8 @@ namespace mscfreshman.Data.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
+                    b.Property<int>("Privilege");
+
                     b.Property<string>("QQ");
 
                     b.Property<int>("SchoolNumber");
@@ -217,8 +219,7 @@ namespace mscfreshman.Data.Migrations
 
                     b.Property<string>("Targets");
 
-                    b.Property<string>("Time")
-                        .IsRequired();
+                    b.Property<DateTime>("Time");
 
                     b.Property<string>("Title")
                         .IsRequired();

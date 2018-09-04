@@ -147,7 +147,8 @@ namespace mscfreshman.Controllers
                 CPCLevel = cpclevel,
                 Institute = institute,
                 Major = major,
-                SchoolNumber = schnum
+                SchoolNumber = schnum,
+                Privilege = 0
             };
             var result = await _userManager.CreateAsync(user, password);
             if (result.Succeeded)

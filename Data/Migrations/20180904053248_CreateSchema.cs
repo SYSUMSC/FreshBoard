@@ -51,7 +51,8 @@ namespace mscfreshman.Data.Migrations
                     Major = table.Column<string>(nullable: true),
                     Department = table.Column<int>(nullable: false),
                     ApplyStatus = table.Column<int>(nullable: false),
-                    CrackProgress = table.Column<int>(nullable: false)
+                    CrackProgress = table.Column<int>(nullable: false),
+                    Privilege = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,7 +65,7 @@ namespace mscfreshman.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Time = table.Column<string>(nullable: false),
+                    Time = table.Column<DateTime>(nullable: false),
                     Title = table.Column<string>(nullable: false),
                     Content = table.Column<string>(nullable: false),
                     Mode = table.Column<int>(nullable: false, defaultValueSql: "1")

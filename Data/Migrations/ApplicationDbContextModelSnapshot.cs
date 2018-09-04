@@ -174,6 +174,8 @@ namespace mscfreshman.Data.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
+                    b.Property<int>("Privilege");
+
                     b.Property<string>("QQ");
 
                     b.Property<int>("SchoolNumber");
@@ -215,8 +217,7 @@ namespace mscfreshman.Data.Migrations
 
                     b.Property<string>("Targets");
 
-                    b.Property<string>("Time")
-                        .IsRequired();
+                    b.Property<DateTime>("Time");
 
                     b.Property<string>("Title")
                         .IsRequired();
