@@ -3,6 +3,8 @@ import { Container, Button, Modal, ModalHeader, ModalBody, ModalFooter } from "r
 import { Post } from '../../utils/HttpRequest';
 import { Modify } from "./Modify";
 import { Apply } from "./Apply";
+import QRCode from 'qrcode';
+import { ModifyOther } from "./ModifyOther";
 
 export class Portal extends Component {
     static ApplyStatus(userInfo) {
@@ -42,6 +44,16 @@ export class Portal extends Component {
             .catch(() => alert('发送失败'));
     }
 
+    static OtherInfoList(otherInfo) {
+        if (otherInfo === null) return null;
+        return (
+            otherInfo.map(x => (<div>
+                <h5>{x.description}</h5>
+                <textarea className="form-control" readOnly>{x.value}</textarea>
+            </div>))
+        );
+    }
+
     static UserInfoList(userInfo) {
         return (
             <table className='table'>
@@ -49,16 +61,33 @@ export class Portal extends Component {
                     <tr>
                         <th>姓名</th>
                         <th>邮箱</th>
-                        <th>学号</th>
-                        <th>院系</th>
+                        <th>生日</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>{userInfo.name} {userInfo.sexual === 1 ? '♂' : '♀'}</td>
                         <td>{userInfo.email} ({userInfo.emailConfirmed ? <span>已验证</span> : <a title="点击重新发送验证邮件" href="javascript:void(0)" onClick={Portal.SendConfirmEmail}>未验证</a>})</td>
+                        <td>{userInfo.dob}</td>
+                    </tr>
+                </tbody>
+                <thead>
+                    <tr>
+                        <th>学号</th>
+                        <th>院系</th>
+                        <th>政治面貌</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
                         <td>{userInfo.schoolNumber}</td>
                         <td>{userInfo.grade} {userInfo.institute} {userInfo.major}</td>
+                        <td>{userInfo.cpcLevel === 0 ? '群众'
+                            : userInfo.cpcLevel === 1 ? '共青团员'
+                                : userInfo.cpcLevel === 2 ? '共产党员'
+                                    : userInfo.cpcLevel === 3 ? '中共预备党员'
+                                        : userInfo.cpcLevel === 4 ? '无党派人士'
+                                            : '其他'}</td>
                     </tr>
                 </tbody>
                 <thead>
@@ -66,7 +95,6 @@ export class Portal extends Component {
                         <th>电话</th>
                         <th>QQ</th>
                         <th>WeChat</th>
-                        <th>政治面貌</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -74,12 +102,6 @@ export class Portal extends Component {
                         <td>{userInfo.phoneNumber}</td>
                         <td>{userInfo.qq}</td>
                         <td>{userInfo.weChat}</td>
-                        <td>{userInfo.cpcLevel === 0 ? '群众'
-                            : userInfo.cpcLevel === 1 ? '共青团员'
-                                : userInfo.cpcLevel === 2 ? '共产党员'
-                                    : userInfo.cpcLevel === 3 ? '中共预备党员'
-                                        : userInfo.cpcLevel === 4 ? '无党派人士'
-                                            : '其他'}</td>
                     </tr>
                 </tbody>
             </table>
@@ -89,20 +111,15 @@ export class Portal extends Component {
     displayName = Portal.name
     constructor(props) {
         super(props);
-        this.toggleModifyModal = this.toggleModifyModal.bind(this);
-        this.toggleApplyModal = this.toggleApplyModal.bind(this);
+        this.toggleModal = this.toggleModal.bind(this);
         this.state = {
-            modifyModalOpen: false,
-            applyModalOpen: false
+            isModalOpen: false,
+            modalType: 0
         };
     }
 
-    toggleModifyModal() {
-        this.setState({ modifyModalOpen: !this.state.modifyModalOpen });
-    }
-
-    toggleApplyModal() {
-        this.setState({ applyModalOpen: !this.state.applyModalOpen });
+    toggleModal(type = 0) {
+        this.setState({ isModalOpen: !this.state.isModalOpen, modalType: type });
     }
 
     render() {
@@ -114,35 +131,51 @@ export class Portal extends Component {
             this.props.user.isSignedIn ?
                 Portal.ApplyStatus(this.props.user.userInfo) : <p>没有数据</p>;
 
+        let modal = this.state.modalType === 1 ? <Modify user={this.props.user} />
+            : this.state.modalType === 2 ? <ModifyOther user={this.props.user} />
+                : this.state.modalType === 3 ? <Apply user={this.props.user} /> : null;
+
+        let otherInfo = this.props.user === null ? <p>加载中...</p> :
+            this.props.user.isSignedIn ?
+                Portal.OtherInfoList(this.props.user.otherInfo) : <p>没有数据</p>;
+
+        this.props.user === null ? null :
+            this.props.user.isSignedIn ?
+                QRCode.toDataURL(window.location.protocol + '//' + window.location.host + '/Account/Identity?userId=' + this.props.user.userInfo.id)
+                    .then(url => {
+                        document.getElementById('userQR').src = url;
+                    })
+                    .catch(err => {
+                        console.error(err);
+                    }) : null;
+
         return (
             <Container>
                 <br />
                 <h2>我的账户</h2>
-                <h4>个人信息 <Button color="primary" onClick={this.toggleModifyModal}>修改</Button></h4>
+                <h4>基本信息 <Button color="primary" onClick={() => this.toggleModal(1)}>修改</Button></h4>
                 {userInfo}
                 <hr />
-                <h4>部门申请 <Button color="primary" onClick={this.toggleApplyModal}>修改</Button></h4>
+                <h4>其他信息 <Button color="primary" onClick={() => this.toggleModal(2)}>修改</Button></h4>
+                {otherInfo}
+                <hr />
+                <h4>部门申请 <Button color="primary" onClick={() => this.toggleModal(3)}>修改</Button></h4>
                 {departmentInfo}
+                <hr />
+                <h4>个人二维码</h4>
+                <img id='userQR' alt='' src='' />
+                <p className="text-danger">面试时请向面试官出示此二维码</p>
 
-                <Modal isOpen={this.state.modifyModalOpen} toggle={this.toggleModifyModal}>
-                    <ModalHeader toggle={this.toggleModifyModal}>修改信息</ModalHeader>
+                <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+                    <ModalHeader toggle={this.toggleModal}>修改信息</ModalHeader>
                     <ModalBody>
-                        <Modify user={this.props.user} />
+                        {modal}
                     </ModalBody>
                     <ModalFooter>
                         <p>SYSU MSC Account</p>
                     </ModalFooter>
                 </Modal>
-                
-                <Modal isOpen={this.state.applyModalOpen} toggle={this.toggleApplyModal}>
-                    <ModalHeader toggle={this.toggleApplyModal}>修改信息</ModalHeader>
-                    <ModalBody>
-                        <Apply user={this.props.user} />
-                    </ModalBody>
-                    <ModalFooter>
-                        <p>SYSU MSC Account</p>
-                    </ModalFooter>
-                </Modal>
+
             </Container>
         );
     }

@@ -143,6 +143,8 @@ namespace mscfreshman.Data.Migrations
 
                     b.Property<int>("CrackProgress");
 
+                    b.Property<DateTime>("DOB");
+
                     b.Property<int>("Department");
 
                     b.Property<string>("Email")
@@ -167,6 +169,8 @@ namespace mscfreshman.Data.Migrations
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256);
+
+                    b.Property<string>("OtherInfo");
 
                     b.Property<string>("PasswordHash");
 

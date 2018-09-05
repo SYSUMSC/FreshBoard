@@ -17,11 +17,11 @@ namespace mscfreshman.Services
         {
             var msg = new MailMessage
             {
-                From = new MailAddress("services@sysums.club", "中山大学微软学生俱乐部"),
+                From = new MailAddress("services@sysumsc.com", "中山大学微软学生俱乐部", Encoding.UTF8),
                 Subject = subject,
                 SubjectEncoding = Encoding.UTF8,
-                Body = message.Replace("http://localhost:5000", "https://sysums.club")
-                    .Replace("https://localhost:5001", "https://sysums.club"),
+                Body = message.Replace("http://localhost:5000", "https://sysumsc.com")
+                    .Replace("https://localhost:5001", "https://sysumsc.com"),
                 BodyEncoding = Encoding.UTF8,
                 IsBodyHtml = true
             };
@@ -31,9 +31,8 @@ namespace mscfreshman.Services
             {
                 Host = "in-v3.mailjet.com",
                 Port = 587,
-                EnableSsl = true,
                 Credentials =
-                    new NetworkCredential("username", "password") //TODO
+                    new NetworkCredential("username", "password") //TODO: Fillin
             };
 
             return smtp.SendMailAsync(msg);

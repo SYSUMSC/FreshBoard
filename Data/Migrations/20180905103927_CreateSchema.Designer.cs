@@ -9,7 +9,7 @@ using mscfreshman.Data;
 namespace mscfreshman.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180904053248_CreateSchema")]
+    [Migration("20180905103927_CreateSchema")]
     partial class CreateSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -145,6 +145,8 @@ namespace mscfreshman.Data.Migrations
 
                     b.Property<int>("CrackProgress");
 
+                    b.Property<DateTime>("DOB");
+
                     b.Property<int>("Department");
 
                     b.Property<string>("Email")
@@ -169,6 +171,8 @@ namespace mscfreshman.Data.Migrations
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256);
+
+                    b.Property<string>("OtherInfo");
 
                     b.Property<string>("PasswordHash");
 

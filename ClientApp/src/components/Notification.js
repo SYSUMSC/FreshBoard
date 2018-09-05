@@ -20,24 +20,24 @@ export class Notification extends Component {
         this.getNotifications(1);
     }
 
-    dismissmsg(index = 0, element = 0) {
-        if (element !== 0) {
-            Post('/Notification/DismissNotificationAsync', {}, { id: element });
-            const newBadge = document.getElementById('new_' + index.toString());
-            const dismissBadge = document.getElementById('dismiss_' + index.toString());
-            if (newBadge != null) newBadge.remove();
-            if (dismissBadge != null) dismissBadge.remove();
-        }
+    componentDidMount() {
+        window.addEventListener('scroll', this._scrollHandler);
     }
 
-    togglemsg(index = 0, element = 0) {
-        if (this.state.showModal) {
-            this.setState({ readIndex: 0, showModal: false });
-            return;
+    componentWillUnmount() {
+        window.removeEventListener('scroll', this._scrollHandler);
+    }
+
+    _scrollHandler() {
+        if (window.scrollY + window.innerHeight > document.body.offsetHeight) {
+            if (this.state.loading) return;
+            const t = this.state.currentPage;
+            this.setState({
+                currentPage: this.state.notifications.length === 0 ? t : t + 1,
+                loading: true
+            });
+            this.getNotifications();
         }
-        this.setState({ readIndex: index, showModal: true });
-        if (element !== 0)
-            this.dismissmsg(index, element);
     }
 
     getNotificationLayout(notifications) {
@@ -45,7 +45,7 @@ export class Notification extends Component {
             <div>
                 {
                     notifications.length === 0 ? <p>暂无通知</p> :
-                        notifications.map((x, i) => <Card>
+                        notifications.map((x, i) => (<Card>
                             <CardBody>
                                 <CardTitle>{x.hasRead ? null : <Badge pill color="danger" id={'new_' + i.toString()}>未读</Badge>} {x.title}</CardTitle>
                                 <CardSubtitle>{x.time}</CardSubtitle>
@@ -62,30 +62,30 @@ export class Notification extends Component {
                                         </CardLink>
                                 }
                             </CardBody>
-                        </Card>)
+                        </Card>))
                 }
             </div>
         );
     }
 
-    _scrollHandler() {
-        if (window.scrollY + window.innerHeight > document.body.offsetHeight) {
-            if (this.state.loading) return;
-            const t = this.state.currentPage;
-            this.setState({
-                currentPage: this.state.notifications.length === 0 ? t : t + 1,
-                loading: true
-            });
-            this.getNotifications();
+    togglemsg(index = 0, element = 0) {
+        if (this.state.showModal) {
+            this.setState({ readIndex: 0, showModal: false });
+            return;
         }
+        this.setState({ readIndex: index, showModal: true });
+        if (element !== 0)
+            this.dismissmsg(index, element);
     }
 
-    componentDidMount() {
-        window.addEventListener('scroll', this._scrollHandler);
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('scroll', this._scrollHandler);
+    dismissmsg(index = 0, element = 0) {
+        if (element !== 0) {
+            Post('/Notification/DismissNotificationAsync', {}, { id: element });
+            const newBadge = document.getElementById('new_' + index.toString());
+            const dismissBadge = document.getElementById('dismiss_' + index.toString());
+            if (newBadge !== null) newBadge.remove();
+            if (dismissBadge !== null) dismissBadge.remove();
+        }
     }
 
     getNotifications() {

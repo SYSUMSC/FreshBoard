@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using mscfreshman.Data.Identity;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -31,6 +33,13 @@ namespace mscfreshman.Controllers
             return Redirect("/");
         }
 
+        private class OtherInfoList
+        {
+            public string Key { get; set; }
+            public string Description { get; set; }
+            public string Value { get; set; }
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetUserInfoAsync()
         {
@@ -45,7 +54,39 @@ namespace mscfreshman.Controllers
                 await _signInManager.SignOutAsync();
                 flag = false;
             }
-            return Json(new { isSignedIn = data.isSignedIn && flag, data.userInfo });
+
+            var otherInfo = new OtherInfoTemplate();
+            if (data.userInfo != null && !string.IsNullOrEmpty(data.userInfo.OtherInfo))
+            {
+                otherInfo = JsonConvert.DeserializeObject<OtherInfoTemplate>(data.userInfo.OtherInfo);
+            }
+
+            var properties = otherInfo.GetType().GetProperties();
+            var otherInfoList = new List<OtherInfoList>();
+            foreach (var property in properties)
+            {
+                if (!property.IsDefined(typeof(NameAttribute), false))
+                {
+                    continue;
+                }
+
+                var attributes = property.GetCustomAttributes(false);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute.GetType().Name == "NameAttribute")
+                    {
+                        otherInfoList.Add(new OtherInfoList
+                        {
+                            Key = property.Name,
+                            Description = attribute.GetType().GetProperty("Name").GetValue(attribute)?.ToString(),
+                            Value = property.GetValue(otherInfo)?.ToString()
+                        });
+                        break;
+                    }
+                }
+            }
+
+            return Json(new { isSignedIn = data.isSignedIn && flag, data.userInfo, otherInfo = otherInfoList });
         }
 
         [HttpPost]
@@ -107,6 +148,7 @@ namespace mscfreshman.Controllers
         public async Task<IActionResult> RegisterAsync(
             string name, //姓名
             string email, //email
+            DateTime dob,
             int grade, //年级
             string phone, //电话
             string qq, //QQ
@@ -139,6 +181,7 @@ namespace mscfreshman.Controllers
                 UserName = email,
                 Email = email,
                 Name = name,
+                DOB = dob,
                 Grade = grade,
                 PhoneNumber = phone,
                 WeChat = wechat,
@@ -150,6 +193,7 @@ namespace mscfreshman.Controllers
                 SchoolNumber = schnum,
                 Privilege = 0
             };
+
             var result = await _userManager.CreateAsync(user, password);
             if (result.Succeeded)
             {
@@ -179,9 +223,24 @@ namespace mscfreshman.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> ModifyOtherAsync(string data)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Json(new { succeeded = false, message = "未登录" });
+            }
+            user.OtherInfo = data;
+
+            var result = await _userManager.UpdateAsync(user);
+            return Json(new { succeeded = result.Succeeded, message = result.Errors.Any() ? result.Errors.Select(i => i.Description).Aggregate((accu, next) => accu + "\n" + next) : "修改失败" });
+        }
+
+        [HttpPost]
         public async Task<IActionResult> ModifyAsync(
             string name, //姓名
             string email, //email
+            DateTime dob, //出生日期
             int grade, //年级
             string phone, //电话
             string qq, //QQ
@@ -200,6 +259,7 @@ namespace mscfreshman.Controllers
 
             user.Name = name;
             user.Email = email;
+            user.DOB = dob;
             user.Grade = grade;
             user.PhoneNumber = phone;
             user.QQ = qq;
@@ -223,7 +283,11 @@ namespace mscfreshman.Controllers
                 return Json(new { succeeded = false, message = "未登录" });
             }
 
-            if (user.Department != department) user.ApplyStatus = 0;
+            if (user.Department != department)
+            {
+                user.ApplyStatus = 0;
+            }
+
             user.Department = department;
 
             var result = await _userManager.UpdateAsync(user);

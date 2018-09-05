@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace mscfreshman.Data.Identity
 {
@@ -40,6 +41,12 @@ namespace mscfreshman.Data.Identity
 
         [PersonalData]
         public string Major { get; set; }
+
+        [PersonalData]
+        public DateTime DOB { get; set; }
+
+        [PersonalData]
+        public string OtherInfo { get; set; }
 
         /// <summary>
         /// 部门 0 -- 暂无, 1 -- 行策, 2 -- 媒传, 3 -- 技术

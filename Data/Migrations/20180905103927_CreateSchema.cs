@@ -49,6 +49,8 @@ namespace mscfreshman.Data.Migrations
                     SchoolNumber = table.Column<int>(nullable: false),
                     Institute = table.Column<string>(nullable: true),
                     Major = table.Column<string>(nullable: true),
+                    DOB = table.Column<DateTime>(nullable: false),
+                    OtherInfo = table.Column<string>(nullable: true),
                     Department = table.Column<int>(nullable: false),
                     ApplyStatus = table.Column<int>(nullable: false),
                     CrackProgress = table.Column<int>(nullable: false),

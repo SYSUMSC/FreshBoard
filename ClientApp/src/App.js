@@ -21,6 +21,10 @@ export default class App extends Component {
         Get('/Account/GetUserInfoAsync')
             .then(data => data.json())
             .then(data => {
+                if (data.userInfo !== null) {
+                    var dob = data.userInfo.dob.toString();
+                    data.userInfo.dob = dob.substring(0, dob.indexOf('T'));
+                }
                 this.setState({ user: data });
             })
             .catch(() => alert('用户信息获取失败'));
