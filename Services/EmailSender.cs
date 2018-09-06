@@ -17,7 +17,7 @@ namespace mscfreshman.Services
         {
             var msg = new MailMessage
             {
-                From = new MailAddress("services@sysumsc.com", "中山大学微软学生俱乐部", Encoding.UTF8),
+                From = new MailAddress("services@sysumsc.com", "SYSU MSC", Encoding.UTF8),
                 Subject = subject,
                 SubjectEncoding = Encoding.UTF8,
                 Body = message.Replace("http://localhost:5000", "https://sysumsc.com")
@@ -29,10 +29,10 @@ namespace mscfreshman.Services
 
             var smtp = new SmtpClient
             {
-                Host = "in-v3.mailjet.com",
-                Port = 587,
+                Host = "smtpdm.aliyun.com",
+                Port = 25,
                 Credentials =
-                    new NetworkCredential("username", "password") //TODO: Fillin
+                    new NetworkCredential("username", "passwd") //TODO: Fillin these fields
             };
 
             return smtp.SendMailAsync(msg);

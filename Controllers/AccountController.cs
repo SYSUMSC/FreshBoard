@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Aliyun.Acs.Core;
+using Aliyun.Acs.Core.Profile;
+using Aliyun.Acs.Dysmsapi.Model.V20170525;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using mscfreshman.Data.Identity;
@@ -223,6 +226,69 @@ namespace mscfreshman.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> SendSMSAsync()
+        {
+            if (!_signInManager.IsSignedIn(User))
+            {
+                return Json(new { succeeded = false, message = "未登录" });
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Json(new { succeeded = false, message = "发生未知错误" });
+            }
+            var token = await _userManager.GenerateChangePhoneNumberTokenAsync(user, user.PhoneNumber);
+
+            var product = "Dysmsapi";
+            var domain = "dysmsapi.aliyuncs.com";
+            //TODO: Fillin these fields
+            var accessKeyId = "keyId";
+            var accessKeySecret = "keySec";
+
+            var profile = DefaultProfile.GetProfile("cn-hangzhou", accessKeyId, accessKeySecret);
+
+            DefaultProfile.AddEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
+            IAcsClient acsClient = new DefaultAcsClient(profile);
+            SendSmsRequest request = new SendSmsRequest
+            {
+                PhoneNumbers = user.PhoneNumber,
+                SignName = "sysumsc",
+                TemplateCode = "SMS_143868088",
+                TemplateParam = JsonConvert.SerializeObject(new { code = token })
+            };
+            try
+            {
+                var res = acsClient.GetAcsResponse(request);
+                return Json(new { succeeded = res.Code.ToUpper() == "OK", message = res.Message });
+            }
+            catch
+            {
+                return Json(new { succeeded = false, message = "发生未知错误" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmPhoneAsync(string token)
+        {
+            if (!_signInManager.IsSignedIn(User))
+            {
+                return Json(new { succeeded = false, message = "未登录" });
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Json(new { succeeded = false, message = "发生未知错误" });
+            }
+            var res = await _userManager.VerifyChangePhoneNumberTokenAsync(user, token, user.PhoneNumber);
+            user.PhoneNumberConfirmed = res;
+            await _userManager.UpdateAsync(user);
+            return Json(new { succeeded = res });
+        }
+
+
+        [HttpPost]
         public async Task<IActionResult> ModifyOtherAsync(string data)
         {
             var user = await _userManager.GetUserAsync(User);
@@ -258,9 +324,11 @@ namespace mscfreshman.Controllers
             }
 
             user.Name = name;
+            user.EmailConfirmed &= user.Email == email;
             user.Email = email;
             user.DOB = dob;
             user.Grade = grade;
+            user.PhoneNumberConfirmed &= user.PhoneNumber == phone;
             user.PhoneNumber = phone;
             user.QQ = qq;
             user.WeChat = wechat;

@@ -5,6 +5,7 @@ import { Modify } from "./Modify";
 import { Apply } from "./Apply";
 import QRCode from 'qrcode';
 import { ModifyOther } from "./ModifyOther";
+import { ConfirmPhone } from "./ConfirmPhone";
 
 export class Portal extends Component {
     static ApplyStatus(userInfo) {
@@ -54,7 +55,26 @@ export class Portal extends Component {
         );
     }
 
-    static UserInfoList(userInfo) {
+    displayName = Portal.name
+    constructor(props) {
+        super(props);
+        this.toggleModal = this.toggleModal.bind(this);
+        this.sendConfirmSMS = this.sendConfirmSMS.bind(this);
+        this.userInfoList = this.userInfoList.bind(this);
+        this.state = {
+            isModalOpen: false,
+            modalType: 0
+        };
+    }
+
+    sendConfirmSMS() {
+        this.setState({
+            isModalOpen: true,
+            modalType: 4
+        });
+    }
+
+    userInfoList(userInfo) {
         return (
             <table className='table'>
                 <thead>
@@ -67,7 +87,7 @@ export class Portal extends Component {
                 <tbody>
                     <tr>
                         <td>{userInfo.name} {userInfo.sexual === 1 ? '♂' : '♀'}</td>
-                        <td>{userInfo.email} ({userInfo.emailConfirmed ? <span>已验证</span> : <a title="点击重新发送验证邮件" href="javascript:void(0)" onClick={Portal.SendConfirmEmail}>未验证</a>})</td>
+                        <td>{userInfo.email} ({userInfo.emailConfirmed ? <span>已验证</span> : <a title="点击重新发送验证邮件" href="javascript:void(0)" onClick={Portal.SendConfirmEmail}>点击验证</a>})</td>
                         <td>{userInfo.dob}</td>
                     </tr>
                 </tbody>
@@ -99,23 +119,13 @@ export class Portal extends Component {
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{userInfo.phoneNumber}</td>
+                        <td>{userInfo.phoneNumber} ({userInfo.phoneNumberConfirmed ? <span>已验证</span> : <a title="验证电话号码" href="javascript:void(0)" onClick={() => this.toggleModal(4)}>点击验证</a>})</td>
                         <td>{userInfo.qq}</td>
                         <td>{userInfo.weChat}</td>
                     </tr>
                 </tbody>
             </table>
         );
-    }
-
-    displayName = Portal.name
-    constructor(props) {
-        super(props);
-        this.toggleModal = this.toggleModal.bind(this);
-        this.state = {
-            isModalOpen: false,
-            modalType: 0
-        };
     }
 
     toggleModal(type = 0) {
@@ -125,7 +135,7 @@ export class Portal extends Component {
     render() {
         let userInfo = this.props.user === null ? <p>加载中...</p> :
             this.props.user.isSignedIn ?
-                Portal.UserInfoList(this.props.user.userInfo) : <p>没有数据</p>;
+                this.userInfoList(this.props.user.userInfo) : <p>没有数据</p>;
 
         let departmentInfo = this.props.user === null ? <p>加载中...</p> :
             this.props.user.isSignedIn ?
@@ -133,7 +143,8 @@ export class Portal extends Component {
 
         let modal = this.state.modalType === 1 ? <Modify user={this.props.user} />
             : this.state.modalType === 2 ? <ModifyOther user={this.props.user} />
-                : this.state.modalType === 3 ? <Apply user={this.props.user} /> : null;
+                : this.state.modalType === 3 ? <Apply user={this.props.user} />
+                    : this.state.modalType === 4 ? <ConfirmPhone user={this.props.user} /> : null;
 
         let otherInfo = this.props.user === null ? <p>加载中...</p> :
             this.props.user.isSignedIn ?

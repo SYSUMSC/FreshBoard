@@ -22,7 +22,7 @@ export class Register extends Component {
                 .then(response => response.json())
                 .then(data => {
                     if (data.succeeded) {
-                        alert('注册成功');
+                        alert('注册成功，请及时验证邮箱和电话，否则无法接收到通知');
                         window.location = '/';
                     }
                     else {
