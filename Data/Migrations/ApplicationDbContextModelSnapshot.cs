@@ -215,6 +215,11 @@ namespace mscfreshman.Data.Migrations
                     b.Property<string>("Content")
                         .IsRequired();
 
+                    b.Property<bool?>("HasPushed")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("0");
+
                     b.Property<int>("Mode")
                         .ValueGeneratedOnAdd()
                         .HasDefaultValueSql("1");

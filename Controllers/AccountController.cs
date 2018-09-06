@@ -66,7 +66,7 @@ namespace mscfreshman.Controllers
 
             if (user == null)
             {
-                return Json(new { succeeded = false, message = "发生未知错误" });
+                return Json(new { succeeded = false, message = "没有找到该用户" });
             }
 
             var data = new
@@ -316,8 +316,8 @@ namespace mscfreshman.Controllers
             var profile = DefaultProfile.GetProfile("cn-hangzhou", accessKeyId, accessKeySecret);
 
             DefaultProfile.AddEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
-            IAcsClient acsClient = new DefaultAcsClient(profile);
-            SendSmsRequest request = new SendSmsRequest
+            var acsClient = new DefaultAcsClient(profile);
+            var request = new SendSmsRequest
             {
                 PhoneNumbers = user.PhoneNumber,
                 SignName = "sysumsc",
@@ -420,13 +420,41 @@ namespace mscfreshman.Controllers
 
             if (user.Department != department)
             {
-                user.ApplyStatus = 0;
+                if (department == 0)
+                {
+                    user.ApplyStatus = 0;
+                }
+                else
+                {
+                    user.ApplyStatus = 1;
+                }
             }
 
             user.Department = department;
 
             var result = await _userManager.UpdateAsync(user);
             return Json(new { succeeded = result.Succeeded, message = result.Errors.Any() ? result.Errors.Select(i => i.Description).Aggregate((accu, next) => accu + "\n" + next) : "申请失败" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAccountAsync(string password)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Json(new { succeeded = false, message = "未登录" });
+            }
+            if (!await _userManager.CheckPasswordAsync(user, password))
+            {
+                return Json(new { succeeded = false, message = "密码不正确" });
+            }
+            var result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                await _signInManager.SignOutAsync();
+            }
+
+            return Json(new { succeeded = result.Succeeded, message = result.Errors.Any() ? result.Errors.Select(i => i.Description).Aggregate((accu, next) => accu + "\n" + next) : "删除失败" });
         }
     }
 }

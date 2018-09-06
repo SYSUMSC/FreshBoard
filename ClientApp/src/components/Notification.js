@@ -17,7 +17,7 @@ export class Notification extends Component {
         this._scrollHandler = this._scrollHandler.bind(this);
         this.togglemsg = this.togglemsg.bind(this);
         this.dismissmsg = this.dismissmsg.bind(this);
-        this.getNotifications(1);
+        this.getNotifications();
     }
 
     componentDidMount() {

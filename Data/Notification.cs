@@ -22,9 +22,6 @@ namespace mscfreshman.Data
         /// </summary>
         public int Mode { get; set; }
         public string Targets { get; set; }
-        /// <summary>
-        /// 是否已推送
-        /// </summary>
-        public bool HasPushed { get; set; }
+        public bool? HasPushed { get; set; }
     }
 }

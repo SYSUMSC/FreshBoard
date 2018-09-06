@@ -70,28 +70,32 @@ export class Identity extends Component {
     static ApplyStatus(userInfo) {
         if (userInfo === null) return <p>没有数据</p>;
         return (
-            <table className='table'>
-                <thead>
-                    <tr>
-                        <th>部门</th>
-                        <th>状态</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{userInfo.department === 1 ? '行政策划部'
-                            : userInfo.department === 2 ? '媒体宣传部'
-                                : userInfo.department === 3 ? '综合技术部'
-                                    : '暂无'}
-                        </td>
-                        <td>{userInfo.applyStatus === 1 ? '等待第一次面试'
-                            : userInfo.applyStatus === 2 ? '等待第二次面试'
-                                : userInfo.applyStatus === 3 ? '录取失败'
-                                    : userInfo.applyStatus === 4 ? '录取成功'
-                                        : '暂无'}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div>
+                <table className='table'>
+                    <thead>
+                        <tr>
+                            <th>部门</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{userInfo.department === 1 ? '行政策划部'
+                                : userInfo.department === 2 ? '媒体宣传部'
+                                    : userInfo.department === 3 ? '综合技术部'
+                                        : '暂无'}
+                            </td>
+                            <td>{userInfo.applyStatus === 1 ? '等待第一次面试'
+                                : userInfo.applyStatus === 2 ? '等待第二次面试'
+                                    : userInfo.applyStatus === 3 ? '录取失败'
+                                        : userInfo.applyStatus === 4 ? '录取成功'
+                                            : '暂无'}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br />
+                <p>解谜进度：{userInfo.crackProgress}</p>
+            </div>
         );
     }
 
@@ -125,7 +129,7 @@ export class Identity extends Component {
             });
     }
 
-    
+
 
     render() {
         let userInfo = this.state.loading ? <p>加载中...</p> :

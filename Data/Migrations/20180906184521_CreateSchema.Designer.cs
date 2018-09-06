@@ -9,7 +9,7 @@ using mscfreshman.Data;
 namespace mscfreshman.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180905103927_CreateSchema")]
+    [Migration("20180906184521_CreateSchema")]
     partial class CreateSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -216,6 +216,11 @@ namespace mscfreshman.Data.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired();
+
+                    b.Property<bool?>("HasPushed")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("0");
 
                     b.Property<int>("Mode")
                         .ValueGeneratedOnAdd()

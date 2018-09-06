@@ -133,7 +133,7 @@ export class Blogs extends Component {
                             return (
                                 <ListGroupItem className="justify-content-between">
                                     <a href="javascript:void(0)" onClick={() => this.loadBlogs(i.fileName, i.type)}>{i.type === 0 ? i.fileName : i.fileName.substring(0, i.fileName.lastIndexOf('.'))}</a>
-                                    <span>&nbsp;</span>
+                                    &nbsp;
                                     <Badge pill>{i.type === 0 ? "目录" : "文档"}
                                     </Badge>
                                 </ListGroupItem>);

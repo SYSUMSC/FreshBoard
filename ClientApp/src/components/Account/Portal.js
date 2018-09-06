@@ -10,39 +10,51 @@ import { ConfirmPhone } from "./ConfirmPhone";
 export class Portal extends Component {
     static ApplyStatus(userInfo) {
         return (
-            <table className='table'>
-                <thead>
-                    <tr>
-                        <th>部门</th>
-                        <th>状态</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{userInfo.department === 1 ? '行政策划部'
-                            : userInfo.department === 2 ? '媒体宣传部'
-                                : userInfo.department === 3 ? '综合技术部'
-                                    : '暂无'}
-                        </td>
-                        <td>{userInfo.applyStatus === 1 ? '等待第一次面试'
-                            : userInfo.applyStatus === 2 ? '等待第二次面试'
-                                : userInfo.applyStatus === 3 ? '录取失败'
-                                    : userInfo.applyStatus === 4 ? '录取成功'
-                                        : '暂无'}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div>
+                <table className='table'>
+                    <thead>
+                        <tr>
+                            <th>部门</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{userInfo.department === 1 ? '行政策划部'
+                                : userInfo.department === 2 ? '媒体宣传部'
+                                    : userInfo.department === 3 ? '综合技术部'
+                                        : '暂无'}
+                            </td>
+                            <td>{userInfo.applyStatus === 1 ? '等待第一次面试'
+                                : userInfo.applyStatus === 2 ? '等待第二次面试'
+                                    : userInfo.applyStatus === 3 ? '录取失败'
+                                        : userInfo.applyStatus === 4 ? '录取成功'
+                                            : '暂无'}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br />
+                <p>解谜进度：{userInfo.crackProgress}</p>
+            </div>
         );
     }
 
+    static SendingEmail = false
+
     static SendConfirmEmail() {
+        if (Portal.SendingEmail) return;
+        Portal.SendingEmail = true;
         Post('/Account/SendRegisterEmailAsync', {}, {})
             .then(res => res.json())
             .then(data => {
+                Portal.SendingEmail = false;
                 if (data.succeeded) alert('发送成功');
                 else alert(data.message);
             })
-            .catch(() => alert('发送失败'));
+            .catch(() => {
+                Portal.SendingEmail = false;
+                alert('发送失败');
+            });
     }
 
     static OtherInfoList(otherInfo) {

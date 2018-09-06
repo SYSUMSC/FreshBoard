@@ -72,7 +72,8 @@ namespace mscfreshman.Data.Migrations
                     Content = table.Column<string>(nullable: false),
                     Mode = table.Column<int>(nullable: false, defaultValueSql: "1")
                         .Annotation("Sqlite:Autoincrement", true),
-                    Targets = table.Column<string>(nullable: true)
+                    Targets = table.Column<string>(nullable: true),
+                    HasPushed = table.Column<bool>(nullable: false, defaultValueSql: "0")
                 },
                 constraints: table =>
                 {
