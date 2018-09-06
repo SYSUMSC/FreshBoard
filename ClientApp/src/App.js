@@ -7,6 +7,7 @@ import { Notification } from './components/Notification';
 import { Get } from './utils/HttpRequest';
 import { Portal } from './components/Account/Portal';
 import { ConfirmEmail } from './components/Account/ConfirmEmail';
+import { Identity } from './components/Account/Identity';
 
 export default class App extends Component {
     displayName = App.name
@@ -43,6 +44,7 @@ export default class App extends Component {
                 <Route exact path='/Blogs' render={() => { this.setTitle('干货'); return <Blogs user={this.state.user} />; }} />
                 <Route exact path='/Account/Portal' render={() => { this.setTitle('我的账户'); return <Portal user={this.state.user} />; }} />
                 <Route path='/Account/ConfirmEmail' render={() => { this.setTitle('验证邮箱'); return <ConfirmEmail user={this.state.user} />; }} />
+                <Route path='/Account/Identity' render={() => { this.setTitle('成员信息'); return <Identity user={this.state.user} />; }} />
             </Layout>
         );
     }

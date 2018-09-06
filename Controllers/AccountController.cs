@@ -43,6 +43,72 @@ namespace mscfreshman.Controllers
             public string Value { get; set; }
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> GetSpecificUserInfoAsync(string userId)
+        {
+            if (!_signInManager.IsSignedIn(User))
+            {
+                return Json(new { succeeded = false, message = "未登录" });
+            }
+
+            var admin = await _userManager.GetUserAsync(User);
+            if (admin == null)
+            {
+                return Json(new { succeeded = false, message = "发生未知错误" });
+            }
+            if (admin.Privilege != 1)
+            {
+                return Json(new { succeeded = false, message = "没有权限" });
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return Json(new { succeeded = false, message = "发生未知错误" });
+            }
+
+            var data = new
+            {
+                userInfo = user,
+                otherInfo = user.OtherInfo
+            };
+
+            var otherInfo = new OtherInfoTemplate();
+            if (data.userInfo != null && !string.IsNullOrEmpty(data.userInfo.OtherInfo))
+            {
+                otherInfo = JsonConvert.DeserializeObject<OtherInfoTemplate>(data.userInfo.OtherInfo);
+            }
+
+            var properties = otherInfo.GetType().GetProperties();
+            var otherInfoList = new List<OtherInfoList>();
+            foreach (var property in properties)
+            {
+                if (!property.IsDefined(typeof(NameAttribute), false))
+                {
+                    continue;
+                }
+
+                var attributes = property.GetCustomAttributes(false);
+                foreach (var attribute in attributes)
+                {
+                    if (attribute.GetType().Name == "NameAttribute")
+                    {
+                        otherInfoList.Add(new OtherInfoList
+                        {
+                            Key = property.Name,
+                            Description = attribute.GetType().GetProperty("Name").GetValue(attribute)?.ToString(),
+                            Value = property.GetValue(otherInfo)?.ToString()
+                        });
+                        break;
+                    }
+                }
+            }
+
+            return Json(new { succeeded = true, data.userInfo, otherInfo = otherInfoList });
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetUserInfoAsync()
         {

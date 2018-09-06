@@ -21,7 +21,7 @@ export class ConfirmEmail extends Component {
                     loading: false,
                     errors: data.succeeded ? [] : data.errors
                 });
-            }).catch(() => this.setState({ succeeded: false, loading: false, errors: ['未知错误'] }));
+            }).catch(() => this.setState({ succeeded: false, loading: false, errors: ['发生未知错误'] }));
     }
 
     render() {
