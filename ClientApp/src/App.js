@@ -8,6 +8,10 @@ import { Get } from './utils/HttpRequest';
 import { Portal } from './components/Account/Portal';
 import { ConfirmEmail } from './components/Account/ConfirmEmail';
 import { Identity } from './components/Account/Identity';
+import { ApplyManager } from './components/Account/Admin/ApplyManager';
+import { NotificationManager } from './components/Account/Admin/NotificationManager';
+import { AdminIndex } from './components/Account/Admin/Index';
+import { PrivilegeManager } from './components/Account/Admin/PrivilegeManager';
 
 export default class App extends Component {
     displayName = App.name
@@ -45,6 +49,10 @@ export default class App extends Component {
                 <Route exact path='/Account/Portal' render={() => { this.setTitle('我的账户'); return <Portal user={this.state.user} />; }} />
                 <Route path='/Account/ConfirmEmail' render={() => { this.setTitle('验证邮箱'); return <ConfirmEmail user={this.state.user} />; }} />
                 <Route path='/Account/Identity' render={() => { this.setTitle('成员信息'); return <Identity user={this.state.user} />; }} />
+                <Route path='/Account/Admin/Index' render={() => { this.setTitle('管理后台'); return <AdminIndex user={this.state.user} />; }} />
+                <Route path='/Account/Admin/NotificationManager' render={() => { this.setTitle('通知管理'); return <NotificationManager user={this.state.user} />; }} />
+                <Route path='/Account/Admin/ApplyManager' render={() => { this.setTitle('申请管理'); return <ApplyManager user={this.state.user} />; }} />
+                <Route path='/Account/Admin/PrivilegeManager' render={() => { this.setTitle('权限管理'); return <PrivilegeManager user={this.state.user} />; }} />
             </Layout>
         );
     }

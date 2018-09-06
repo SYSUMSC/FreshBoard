@@ -29,6 +29,8 @@ namespace mscfreshman.Data
                 entity.Property(e => e.Time).IsRequired();
 
                 entity.Property(e => e.Title).IsRequired();
+
+                entity.Property(e => e.HasPushed).IsRequired().HasDefaultValueSql("0");
             });
 
             modelBuilder.Entity<ReadStatus>(entity =>

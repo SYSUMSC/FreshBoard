@@ -112,6 +112,7 @@ namespace mscfreshman.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUserInfoAsync()
         {
+            Console.WriteLine(Request.Host);
             var data = new
             {
                 isSignedIn = _signInManager.IsSignedIn(User),

@@ -37,11 +37,18 @@ namespace mscfreshman.Controllers
         public async Task<IActionResult> DismissNotificationAsync(int nid)
         {
             var user = await _userManager.GetUserAsync(User);
-            if (user == null) return Json(null);
+            if (user == null)
+            {
+                return Json(null);
+            }
+
             using (var db = new ApplicationDbContext(_dbContextOptions))
             {
                 if (!db.ReadStatus.Any(i => i.UserId == user.Id && i.NotificationId == nid))
+                {
                     db.ReadStatus.Add(new ReadStatus { UserId = user.Id, NotificationId = nid });
+                }
+
                 await db.SaveChangesAsync();
             }
             return Json(null);
@@ -58,7 +65,11 @@ namespace mscfreshman.Controllers
             {
                 foreach (var i in db.Notification.OrderByDescending(j => j.Id))
                 {
-                    if (count != 0 && notifications.Count > count) break;
+                    if (count != 0 && notifications.Count > count)
+                    {
+                        break;
+                    }
+
                     switch (i.Mode)
                     {
                         case 1:
@@ -77,7 +88,11 @@ namespace mscfreshman.Controllers
                             }
                             break;
                         case 2:
-                            if (user == null) continue;
+                            if (user == null)
+                            {
+                                continue;
+                            }
+
                             if (i.Targets?.Split("|", StringSplitOptions.RemoveEmptyEntries)?.Contains(user.Department.ToString()) ?? false)
                             {
                                 cnt++;
@@ -96,7 +111,11 @@ namespace mscfreshman.Controllers
                             }
                             break;
                         case 3:
-                            if (user == null) continue;
+                            if (user == null)
+                            {
+                                continue;
+                            }
+
                             if (i.Targets?.Split("|", StringSplitOptions.RemoveEmptyEntries)?.Contains(user.Id) ?? false)
                             {
                                 cnt++;
@@ -115,7 +134,11 @@ namespace mscfreshman.Controllers
                             }
                             break;
                         case 4:
-                            if (user == null) continue;
+                            if (user == null)
+                            {
+                                continue;
+                            }
+
                             if (i.Targets?.Split("|", StringSplitOptions.RemoveEmptyEntries)?.Contains(user.Privilege.ToString()) ?? false)
                             {
                                 cnt++;
@@ -141,7 +164,11 @@ namespace mscfreshman.Controllers
 
         private string GeneratePreview(string content)
         {
-            if (content == null) return null;
+            if (content == null)
+            {
+                return null;
+            }
+
             var scriptreg = new Regex("(?i)(<SCRIPT)[\\s\\S]*?((</SCRIPT>)|(/>))");
             content = scriptreg.Replace(content, string.Empty);
             var blankreg = new Regex("\\s+|\t|\r|\n");

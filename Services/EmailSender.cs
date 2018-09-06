@@ -32,7 +32,7 @@ namespace mscfreshman.Services
                 Host = "smtpdm.aliyun.com",
                 Port = 25,
                 Credentials =
-                    new NetworkCredential("username", "passwd") //TODO: Fillin these fields
+                    new NetworkCredential("services@sysumsc.com", "passwd") //TODO: Fillin these fields
             };
 
             return smtp.SendMailAsync(msg);

@@ -34,12 +34,22 @@ export class Home extends Component {
     }
 
     render() {
+        let adminPortal = this.props.user === null ? null :
+            this.props.user.isSignedIn ?
+                (this.props.user.userInfo.privilege !== 1 ? null
+                    : <Dom.NavLink to={'/Account/Admin/Index'}>
+                        <Button color="primary">进入管理后台</Button>
+                    </Dom.NavLink>) : null;
+
         let loginPortal = this.props.user === null ? <p>登录中...</p> :
             this.props.user.isSignedIn
                 ?
-                <Dom.NavLink to={'/Account/Portal'}>
-                    <Button color="primary">进入账户</Button>
-                </Dom.NavLink>
+                <div>
+                    <Dom.NavLink to={'/Account/Portal'}>
+                        <Button color="primary">进入账户</Button>
+                    </Dom.NavLink>&nbsp;
+                    {adminPortal}
+                </div>
                 : <Button color="primary" onClick={this.toggleLogin}>立即上车</Button>;
         return (
             <div>
