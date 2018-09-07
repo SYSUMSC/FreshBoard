@@ -135,7 +135,7 @@ namespace mscfreshman.Controllers
                         StartInfo = new ProcessStartInfo
                         {
                             FileName = "git",
-                            Arguments = $"log --pretty=email \"{path}\"",
+                            Arguments = $"blame -p \"{path}\"",
                             RedirectStandardOutput = true,
                             UseShellExecute = false,
                             WorkingDirectory = Program.GitRepos["Blogs"]
@@ -152,17 +152,15 @@ namespace mscfreshman.Controllers
                     string subject = string.Empty;
                     foreach (var i in fileInfo.Split('\n', StringSplitOptions.RemoveEmptyEntries))
                     {
-                        if (i.StartsWith("From:")) author = i.Substring(6);
-                        if (i.StartsWith("Date:")) date = DateTime.Parse(i.Substring(6));
-                        if (i.StartsWith("Subject:"))
-                        {
-                            subject = i.Substring(9);
-                            break;
-                        }
+                        if (i.StartsWith("author ")) author = i.Substring(7);
+                        if (i.StartsWith("author-mail ")) author += " " + i.SubString(12);
+                        if (i.StartsWith("author-time ")) date = DateTime.UnixEpoch + TimeSpan.FromSeconds(i.Substring(12));
+                        if (i.StartsWith("summary ")) subject = i.Substring(8);
+                        if (i.StartsWith("boundary")) break;
                     }
                     if (date == null) date = new FileInfo(file).LastWriteTime;
 
-                    var content = await System.IO.File.ReadAllTextAsync(file, new UTF8Encoding(false));
+                    var content = await System.IO.File.ReadAllTextAsync(file, Encoding.UTF8);
                     return Json(new { path, name = Path.GetFileName(file), time = date?.ToString("yyyy/MM/dd HH:mm:ss"), content, author, subject });
                 }
                 catch
