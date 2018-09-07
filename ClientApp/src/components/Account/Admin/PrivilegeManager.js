@@ -46,6 +46,7 @@ export class PrivilegeManager extends Component {
     render() {
         return (
             <Container>
+                <br />
                 <h2>权限管理</h2>
                 <Form id='priForm'>
                     <FormGroup>

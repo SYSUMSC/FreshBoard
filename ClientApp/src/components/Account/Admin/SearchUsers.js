@@ -1,6 +1,6 @@
 ﻿import React, { Component } from "react";
 import { Input, Label, Modal, ListGroup, ListGroupItem } from "reactstrap";
-import { Get } from "../../../utils/HttpRequest";
+import { Post } from "../../../utils/HttpRequest";
 
 export class SearchUsers extends Component {
     displayName = SearchUsers.name;
@@ -30,7 +30,11 @@ export class SearchUsers extends Component {
                                 x.department === 1 ? "行政策划部" :
                                     x.department === 2 ? "媒体宣传部" :
                                         x.department === 3 ? "综合技术部" : "暂无部门"
-                            }</p>
+                            } {x.applyStatus === 1 ? '等待一面'
+                                : x.applyStatus === 2 ? '等待二面'
+                                    : x.applyStatus === 3 ? '录取失败'
+                                        : x.applyStatus === 4 ? '录取成功'
+                                                : '暂无'} 解谜进度: {x.crackProgress}</p>
                             <p>Id: {x.id} <a href={"/Account/Identity?userId=" + x.id} target="_blank">查看详情</a></p>
                             <p>{x.email} {x.emailConfirmed ? "√" : "×"} {x.phoneNumber} {x.phoneNumberConfirmed ? "√" : "×"}</p>
                         </ListGroupItem>
@@ -46,7 +50,7 @@ export class SearchUsers extends Component {
             this.setState({
                 loading: true
             });
-            Get('/Admin/SearchUsersAsync', {}, { patterns: document.getElementById('patterns').value })
+            Post('/Admin/SearchUsersAsync', {}, { patterns: document.getElementById('patterns').value })
                 .then(res => res.json())
                 .then(data => {
                     console.log(data);
@@ -72,7 +76,7 @@ export class SearchUsers extends Component {
         let userInfo = this.state.loading ? <p>加载中...</p> : this.state.succeeded ? this.generateUserInfo() : <p>没有数据</p>;
         return (
             <div>
-                <Label for="patterns">可通过用户 Id/姓名/邮箱搜索成员</Label>
+                <Label for="patterns">可通过用户 Id/姓名/邮箱/手机搜索成员，输入 $All 查看全部成员</Label>
                 <Input id="patterns" type="text" onInput={this.searchUsers} />
                 <br />
                 {userInfo}

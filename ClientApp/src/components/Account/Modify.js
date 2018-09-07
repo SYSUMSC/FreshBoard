@@ -39,7 +39,7 @@ export class Modify extends Component {
                 </FormGroup>
 
                 <FormGroup>
-                    <Label for="phone">电话</Label>
+                    <Label for="phone">手机</Label>
                     <Input type="text" name="phone" id="phone" required defaultValue={userInfo.phoneNumber} />
                 </FormGroup>
 

@@ -17,7 +17,8 @@
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.5",
     "reactstrap": "^6.4.0",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "tslib": "^1.9.3"
   },
   "scripts": {
     "start": "rimraf ./build && react-scripts start",

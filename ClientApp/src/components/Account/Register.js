@@ -22,7 +22,7 @@ export class Register extends Component {
                 .then(response => response.json())
                 .then(data => {
                     if (data.succeeded) {
-                        alert('注册成功，请及时验证邮箱和电话，否则无法接收到通知');
+                        alert('注册成功，请及时验证邮箱和手机，否则无法接收到通知');
                         window.location = '/';
                     }
                     else {
@@ -59,7 +59,7 @@ export class Register extends Component {
                     </FormGroup>
 
                     <FormGroup>
-                        <Label for="phone">电话</Label>
+                        <Label for="phone">手机</Label>
                         <Input type="text" name="phone" id="phone" required />
                     </FormGroup>
 

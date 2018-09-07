@@ -220,7 +220,7 @@ namespace mscfreshman.Controllers
             string email, //email
             DateTime dob,
             int grade, //年级
-            string phone, //电话
+            string phone, //手机
             string qq, //QQ
             string wechat,
             int cpclevel, //政治面貌
@@ -375,7 +375,7 @@ namespace mscfreshman.Controllers
             string email, //email
             DateTime dob, //出生日期
             int grade, //年级
-            string phone, //电话
+            string phone, //手机
             string qq, //QQ
             string wechat,
             int cpclevel, //政治面貌

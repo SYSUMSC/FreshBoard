@@ -70,7 +70,7 @@ export class ConfirmPhone extends Component {
         let confirmPanel = this.state.confirmed ?
             (this.state.succeeded ? <p className="text-success">验证成功</p> : <p className="text-danger">验证失败</p>)
             : (<div>
-                <p>你的电话号码尚未验证，请点击发送验证短信进行验证</p>
+                <p>你的手机号码尚未验证，请点击发送验证短信进行验证</p>
 
                 <table style={{ width: '100%' }}>
                     <tr>
@@ -89,7 +89,7 @@ export class ConfirmPhone extends Component {
         return (
             <div>
                 <br />
-                <h2>验证电话号码</h2>
+                <h2>验证手机号码</h2>
                 {confirmPanel}
             </div>
         );

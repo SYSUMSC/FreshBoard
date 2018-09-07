@@ -41,7 +41,7 @@ export class Identity extends Component {
                 </tbody>
                 <thead>
                     <tr>
-                        <th>电话</th>
+                        <th>手机</th>
                         <th>QQ</th>
                         <th>WeChat</th>
                     </tr>
@@ -85,8 +85,8 @@ export class Identity extends Component {
                                     : userInfo.department === 3 ? '综合技术部'
                                         : '暂无'}
                             </td>
-                            <td>{userInfo.applyStatus === 1 ? '等待第一次面试'
-                                : userInfo.applyStatus === 2 ? '等待第二次面试'
+                            <td>{userInfo.applyStatus === 1 ? '等待一面'
+                                : userInfo.applyStatus === 2 ? '等待二面'
                                     : userInfo.applyStatus === 3 ? '录取失败'
                                         : userInfo.applyStatus === 4 ? '录取成功'
                                             : '暂无'}</td>

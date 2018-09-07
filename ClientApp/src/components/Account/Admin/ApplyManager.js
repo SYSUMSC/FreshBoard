@@ -46,7 +46,8 @@ export class ApplyManager extends Component {
     render() {
         return (
             <Container>
-                <h2>录取管理</h2>
+                <br />
+                <h2>申请管理</h2>
                 <Form id='applyForm'>
                     <FormGroup>
                         <Label>用户 Id</Label>
@@ -61,12 +62,12 @@ export class ApplyManager extends Component {
                         </div>
                         <div className="form-check-inline">
                             <label className="form-check-label">
-                                <Input type="radio" name="status" id="apply1" value="1" />等待第一次面试
+                                <Input type="radio" name="status" id="apply1" value="1" />等待一面
                             </label>
                         </div>
                         <div className="form-check-inline">
                             <label className="form-check-label">
-                                <Input type="radio" name="status" id="apply2" value="2" />等待第二次面试
+                                <Input type="radio" name="status" id="apply2" value="2" />等待二面
                             </label>
                         </div>
                         <div className="form-check-inline">

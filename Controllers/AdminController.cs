@@ -78,13 +78,16 @@ namespace mscfreshman.Controllers
 
             if (user.ApplyStatus != status)
             {
+                user.ApplyStatus = status;
+                await _userManager.UpdateAsync(user);
+
                 if (user.PhoneNumberConfirmed)
                 {
                     var product = "Dysmsapi";
                     var domain = "dysmsapi.aliyuncs.com";
                     //TODO: Fillin these fields
                     var accessKeyId = "keyId";
-                    var accessKeySecret = "keySec";
+                    var accessKeySecret = "ksySec";
 
                     var profile = DefaultProfile.GetProfile("cn-hangzhou", accessKeyId, accessKeySecret);
 
@@ -101,7 +104,7 @@ namespace mscfreshman.Controllers
                             {
                                 name = user.Name,
                                 department = user.Department == 1 ? "行政策划部" : user.Department == 2 ? "媒体宣传部" : user.Department == 3 ? "综合技术部" : "暂无",
-                                status = user.ApplyStatus == 1 ? "等待第一次面试" : user.ApplyStatus == 2 ? "等待第二次面试" : user.ApplyStatus == 3 ? "录取失败" : user.ApplyStatus == 4 ? "录取成功" : "暂无"
+                                status = user.ApplyStatus == 1 ? "等待一面" : user.ApplyStatus == 2 ? "等待二面" : user.ApplyStatus == 3 ? "录取失败" : user.ApplyStatus == 4 ? "录取成功" : "暂无"
                             })
                     };
                     try
@@ -118,7 +121,7 @@ namespace mscfreshman.Controllers
                 {
                     try
                     {
-                        await _emailSender.SendEmailAsync(user.Email, "录取状态更新通知 - SYSU MSC", $"<h2>中山大学微软学生俱乐部</h2><p>{user.Name} 您好！您申请 ${(user.Department == 1 ? "行政策划部" : user.Department == 2 ? "媒体宣传部" : user.Department == 3 ? "综合技术部" : "暂无")} 的录取状态更新为 ${(user.ApplyStatus == 1 ? "等待第一次面试" : user.ApplyStatus == 2 ? "等待第二次面试" : user.ApplyStatus == 3 ? "录取失败" : user.ApplyStatus == 4 ? "录取成功" : "暂无")}，请点击 <a href='{Request.Scheme}://{Request.Host}/Account/Portal'>此处</a> 查看。</p><hr /><p>请勿回复本邮件</p><p>{DateTime.Now} - SYSU MSC</p>");
+                        await _emailSender.SendEmailAsync(user.Email, "录取状态更新通知 - SYSU MSC", $"<h2>中山大学微软学生俱乐部</h2><p>{user.Name} 您好！您申请 {(user.Department == 1 ? "行政策划部" : user.Department == 2 ? "媒体宣传部" : user.Department == 3 ? "综合技术部" : "暂无")} 的录取状态更新为 {(user.ApplyStatus == 1 ? "等待一面" : user.ApplyStatus == 2 ? "等待二面" : user.ApplyStatus == 3 ? "录取失败" : user.ApplyStatus == 4 ? "录取成功" : "暂无")}，请点击 <a href='{Request.Scheme}://{Request.Host}/Account/Portal'>此处</a> 查看。</p><hr /><p>请勿回复本邮件</p><p>{DateTime.Now} - SYSU MSC</p>");
                     }
                     catch
                     {
@@ -127,12 +130,10 @@ namespace mscfreshman.Controllers
                 }
             }
 
-            user.ApplyStatus = status;
-            await _userManager.UpdateAsync(user);
             return Json(new { succeeded = true });
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> SearchUsersAsync(string patterns)
         {
             if (!await VerifyPrivilegeAsync())
@@ -141,6 +142,11 @@ namespace mscfreshman.Controllers
             }
 
             var userList = new List<FreshBoardUser>();
+            if (patterns == "$All")
+            {
+                userList = _userManager.Users.ToList();
+            }
+
             foreach (var user in _userManager.Users.Where(i => i.Id.Contains(patterns)))
             {
                 if (!userList.Any(i => i.Id == user.Id))
@@ -182,7 +188,8 @@ namespace mscfreshman.Controllers
                     i.EmailConfirmed,
                     i.PhoneNumberConfirmed,
                     i.Sexual,
-                    i.CrackProgress
+                    i.CrackProgress,
+                    i.ApplyStatus
                 })
             });
         }
@@ -319,7 +326,7 @@ namespace mscfreshman.Controllers
                 var domain = "dysmsapi.aliyuncs.com";
                 //TODO: Fillin these fields
                 var accessKeyId = "keyId";
-                var accessKeySecret = "keySec";
+                var accessKeySecret = "ksySec";
 
                 var profile = DefaultProfile.GetProfile("cn-hangzhou", accessKeyId, accessKeySecret);
 

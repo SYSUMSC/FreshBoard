@@ -12,6 +12,7 @@ import { ApplyManager } from './components/Account/Admin/ApplyManager';
 import { NotificationManager } from './components/Account/Admin/NotificationManager';
 import { AdminIndex } from './components/Account/Admin/Index';
 import { PrivilegeManager } from './components/Account/Admin/PrivilegeManager';
+import { Crack } from './components/Crack';
 
 export default class App extends Component {
     displayName = App.name
@@ -46,6 +47,7 @@ export default class App extends Component {
                 <Route exact path='/' render={() => { this.setTitle('主页'); return <Home user={this.state.user} />; }} />
                 <Route exact path='/Notification' render={() => { this.setTitle('通知'); return <Notification user={this.state.user} />; }} />
                 <Route exact path='/Blogs' render={() => { this.setTitle('干货'); return <Blogs user={this.state.user} />; }} />
+                <Route exact path='/Crack' render={() => { this.setTitle('解谜'); return <Crack user={this.state.user} />; }} />
                 <Route exact path='/Account/Portal' render={() => { this.setTitle('我的账户'); return <Portal user={this.state.user} />; }} />
                 <Route path='/Account/ConfirmEmail' render={() => { this.setTitle('验证邮箱'); return <ConfirmEmail user={this.state.user} />; }} />
                 <Route path='/Account/Identity' render={() => { this.setTitle('成员信息'); return <Identity user={this.state.user} />; }} />

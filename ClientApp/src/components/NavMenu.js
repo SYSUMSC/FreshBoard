@@ -50,6 +50,9 @@ export class NavMenu extends Component {
                         <NavItem>
                             <NavLink activeClassName="active" to={'/Blogs'} className="nav-link">干货</NavLink>
                         </NavItem>
+                        <NavItem>
+                            <NavLink activeClassName="active" to={'/Crack'} className="nav-link">解谜</NavLink>
+                        </NavItem>
                     </Nav>
                     {accountPortal}
                 </Collapse>
