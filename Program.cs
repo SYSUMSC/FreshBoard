@@ -43,7 +43,7 @@ namespace mscfreshman
                     WorkingDirectory = saveDir,
                     UseShellExecute = false
                 }).WaitForExit();
-                Thread.Sleep(300 * 1000);
+                Thread.Sleep(120 * 1000);
             }
         }
     }

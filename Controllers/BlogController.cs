@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace mscfreshman.Controllers
 {
@@ -42,6 +43,7 @@ namespace mscfreshman.Controllers
 
         public IActionResult GetBlogTree(string path)
         {
+            path = HttpUtility.UrlDecode(path, Encoding.UTF8);
             if (string.IsNullOrWhiteSpace(path))
             {
                 path = string.Empty;
@@ -99,6 +101,8 @@ namespace mscfreshman.Controllers
             {
                 path = string.Empty;
             }
+
+            path = HttpUtility.UrlDecode(path, Encoding.UTF8);
 
             while (path.StartsWith("/") || path.StartsWith("\\"))
             {
