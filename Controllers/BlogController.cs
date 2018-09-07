@@ -137,12 +137,14 @@ namespace mscfreshman.Controllers
                             FileName = "git",
                             Arguments = $"blame -p \"{path}\"",
                             RedirectStandardOutput = true,
+                            RedirectStandardInput = true,
                             UseShellExecute = false,
                             WorkingDirectory = Program.GitRepos["Blogs"]
                         }
                     })
                     {
                         process.Start();
+                        process.StandardInput.Dispose();
                         fileInfo = await process.StandardOutput.ReadToEndAsync();
                         process.WaitForExit();
                     }
@@ -153,8 +155,8 @@ namespace mscfreshman.Controllers
                     foreach (var i in fileInfo.Split('\n', StringSplitOptions.RemoveEmptyEntries))
                     {
                         if (i.StartsWith("author ")) author = i.Substring(7);
-                        if (i.StartsWith("author-mail ")) author += " " + i.SubString(12);
-                        if (i.StartsWith("author-time ")) date = DateTime.UnixEpoch + TimeSpan.FromSeconds(i.Substring(12));
+                        if (i.StartsWith("author-mail ")) author += " " + i.Substring(12);
+                        if (i.StartsWith("author-time ")) date = DateTime.UnixEpoch + TimeSpan.FromSeconds(int.Parse(i.Substring(12)));
                         if (i.StartsWith("summary ")) subject = i.Substring(8);
                         if (i.StartsWith("boundary")) break;
                     }
