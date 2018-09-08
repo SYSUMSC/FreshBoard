@@ -53,7 +53,7 @@ export class NotificationManager extends Component {
     }
 
     getNotifications() {
-        Get('/Admin/GetNotificationsAsync', {}, { start: (this.state.currentPage - 1) * 10, count: 10 })
+        Get('/Admin/GetNotificationsAsync', {}, { start: (this.state.currentPage - 1) * 20, count: 20 })
             .then(response => response.json())
             .then(data => {
                 if (data.succeeded)

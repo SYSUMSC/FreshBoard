@@ -13,6 +13,7 @@ import { NotificationManager } from './components/Account/Admin/NotificationMana
 import { AdminIndex } from './components/Account/Admin/Index';
 import { PrivilegeManager } from './components/Account/Admin/PrivilegeManager';
 import { Crack } from './components/Crack';
+import { ProblemManager } from './components/Account/Admin/ProblemManager';
 
 export default class App extends Component {
     displayName = App.name
@@ -55,6 +56,7 @@ export default class App extends Component {
                 <Route path='/Account/Admin/NotificationManager' render={() => { this.setTitle('通知管理'); return <NotificationManager user={this.state.user} />; }} />
                 <Route path='/Account/Admin/ApplyManager' render={() => { this.setTitle('申请管理'); return <ApplyManager user={this.state.user} />; }} />
                 <Route path='/Account/Admin/PrivilegeManager' render={() => { this.setTitle('权限管理'); return <PrivilegeManager user={this.state.user} />; }} />
+                <Route path='/Account/Admin/ProblemManager' render={() => { this.setTitle('题目管理'); return <ProblemManager user={this.state.user} />; }} />
             </Layout>
         );
     }

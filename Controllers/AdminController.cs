@@ -434,8 +434,8 @@ namespace mscfreshman.Controllers
             return Json(new { succeeded = true, users = usersList });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> GetProblems(int start = 0, int count = 0)
+        [HttpGet]
+        public async Task<IActionResult> GetProblemsAsync(int start = 0, int count = 0)
         {
             if (!await VerifyPrivilegeAsync())
             {
@@ -445,11 +445,11 @@ namespace mscfreshman.Controllers
             {
                 if (count == 0)
                 {
-                    return Json(await db.Problem.Skip(start).ToListAsync());
+                    return Json(new { succeeded = true, problems = await db.Problem.Skip(start).ToListAsync() });
                 }
                 else
                 {
-                    return Json(await db.Problem.Skip(start).Take(count).ToListAsync());
+                    return Json(new { succeeded = true, problems = await db.Problem.Skip(start).Take(count).ToListAsync() });
                 }
             }
         }
@@ -464,7 +464,7 @@ namespace mscfreshman.Controllers
         /// <param name="pid">为 0 添加，非 0 修改</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> NewProblem(string title, string content, int level, int pid = 0)
+        public async Task<IActionResult> NewProblemAsync(string title, string content, string script, int level, int pid = 0)
         {
             if (!await VerifyPrivilegeAsync())
             {
@@ -478,6 +478,7 @@ namespace mscfreshman.Controllers
                     {
                         Title = title,
                         Content = content,
+                        Script = script,
                         Level = level
                     };
                     db.Problem.Add(problem);
@@ -489,16 +490,17 @@ namespace mscfreshman.Controllers
                     {
                         problem.Title = title;
                         problem.Content = content;
+                        problem.Script = script;
                         problem.Level = level;
                     }
                 }
                 await db.SaveChangesAsync();
             }
-            return Json(new { succeeded = true });
+            return Json(new { succeeded = true, pid });
         }
 
         [HttpPost]
-        public async Task<IActionResult> RemoveProblem(int pid)
+        public async Task<IActionResult> RemoveProblemAsync(int pid)
         {
             if (!await VerifyPrivilegeAsync())
             {
