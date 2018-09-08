@@ -13,6 +13,7 @@ namespace mscfreshman.Data
 
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<ReadStatus> ReadStatus { get; set; }
+        public virtual DbSet<Problem> Problem { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -40,6 +41,17 @@ namespace mscfreshman.Data
                 entity.Property(e => e.UserId).IsRequired();
 
                 entity.Property(e => e.NotificationId).IsRequired();
+            });
+
+            modelBuilder.Entity<Problem>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Title).IsRequired();
+
+                entity.Property(e => e.Content).IsRequired();
+
+                entity.Property(e => e.Level).IsRequired();
             });
         }
     }
