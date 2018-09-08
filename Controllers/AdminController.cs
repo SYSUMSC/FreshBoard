@@ -57,6 +57,11 @@ namespace mscfreshman.Controllers
             {
                 return Json(new { succeeded = false, message = "没有找到该用户" });
             }
+            var thisUser = await _userManager.GetUserAsync(User);
+            if (thisUser.Id == user.Id)
+            {
+                return Json(new { succeeded = false, message = "可别丢人了，不能修改自己的权限" });
+            }
 
             user.Privilege = privilege;
             await _userManager.UpdateAsync(user);
@@ -87,7 +92,7 @@ namespace mscfreshman.Controllers
                     var domain = "dysmsapi.aliyuncs.com";
                     //TODO: Fillin these fields
                     var accessKeyId = "keyId";
-                    var accessKeySecret = "ksySec";
+                    var accessKeySecret = "keySec";
 
                     var profile = DefaultProfile.GetProfile("cn-hangzhou", accessKeyId, accessKeySecret);
 
@@ -326,7 +331,7 @@ namespace mscfreshman.Controllers
                 var domain = "dysmsapi.aliyuncs.com";
                 //TODO: Fillin these fields
                 var accessKeyId = "keyId";
-                var accessKeySecret = "ksySec";
+                var accessKeySecret = "keySec";
 
                 var profile = DefaultProfile.GetProfile("cn-hangzhou", accessKeyId, accessKeySecret);
 
