@@ -67,17 +67,7 @@ namespace mscfreshman.Controllers
                     return Json(null);
                 }
 
-                var fileList = Directory.GetFiles(dir, "*.md")
-                    .Where(i => Path.GetFileName(i).ToLower() != "readme.md")
-                    .Select(i =>
-                        new BlogsRepo
-                        {
-                            FileName = Path.GetFileName(i),
-                            Type = 1,
-                            Time = new FileInfo(i).LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss")
-                        })
-                    .Concat(
-                        Directory.GetDirectories(dir)
+                var fileList = Directory.GetDirectories(dir)
                         .Where(i => !Path.GetFileName(i).StartsWith("."))
                         .Select(i =>
                             new BlogsRepo
@@ -85,8 +75,17 @@ namespace mscfreshman.Controllers
                                 FileName = Path.GetFileName(i),
                                 Type = 0,
                                 Time = new DirectoryInfo(i).LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss")
-                            })
-                    ).ToList();
+                            }).Concat(
+                                Directory.GetFiles(dir, "*.md")
+                                    .Where(i => Path.GetFileName(i).ToLower() != "readme.md")
+                                    .Select(i =>
+                                        new BlogsRepo
+                                        {
+                                            FileName = Path.GetFileName(i),
+                                            Type = 1,
+                                            Time = new FileInfo(i).LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss")
+                                        })
+                            ).ToList();
                 return Json(new { CurrentPath = path, FileList = fileList });
             }
             else
@@ -139,7 +138,8 @@ namespace mscfreshman.Controllers
                             RedirectStandardOutput = true,
                             RedirectStandardInput = true,
                             UseShellExecute = false,
-                            WorkingDirectory = Program.GitRepos["Blogs"]
+                            WorkingDirectory = Program.GitRepos["Blogs"],
+                            StandardOutputEncoding = Encoding.UTF8
                         }
                     })
                     {
@@ -154,13 +154,35 @@ namespace mscfreshman.Controllers
                     string subject = string.Empty;
                     foreach (var i in fileInfo.Split('\n', StringSplitOptions.RemoveEmptyEntries))
                     {
-                        if (i.StartsWith("author ")) author = i.Substring(7);
-                        if (i.StartsWith("author-mail ")) author += " " + i.Substring(12);
-                        if (i.StartsWith("author-time ")) date = DateTime.UnixEpoch + TimeSpan.FromSeconds(int.Parse(i.Substring(12)));
-                        if (i.StartsWith("summary ")) subject = i.Substring(8);
-                        if (i.StartsWith("boundary")) break;
+                        if (i.StartsWith("author "))
+                        {
+                            author = i.Substring(7);
+                        }
+
+                        if (i.StartsWith("author-mail "))
+                        {
+                            author += " " + i.Substring(12);
+                        }
+
+                        if (i.StartsWith("author-time "))
+                        {
+                            date = DateTime.UnixEpoch + TimeSpan.FromSeconds(int.Parse(i.Substring(12)));
+                        }
+
+                        if (i.StartsWith("summary "))
+                        {
+                            subject = i.Substring(8);
+                        }
+
+                        if (i.StartsWith("boundary"))
+                        {
+                            break;
+                        }
                     }
-                    if (date == null) date = new FileInfo(file).LastWriteTime;
+                    if (date == null)
+                    {
+                        date = new FileInfo(file).LastWriteTime;
+                    }
 
                     var content = await System.IO.File.ReadAllTextAsync(file, Encoding.UTF8);
                     return Json(new { path, name = Path.GetFileName(file), time = date?.ToString("yyyy/MM/dd HH:mm:ss"), content, author, subject });

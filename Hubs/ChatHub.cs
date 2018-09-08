@@ -4,16 +4,18 @@ using Microsoft.EntityFrameworkCore;
 using mscfreshman.Data;
 using mscfreshman.Data.Identity;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
-namespace mscfreshman.Services
+namespace mscfreshman.Hubs
 {
-    public class SignalRHub : Hub
+    public class ChatHub : Hub
     {
         private readonly UserManager<FreshBoardUser> _userManager;
         private readonly SignInManager<FreshBoardUser> _signInManager;
         private readonly DbContextOptions<ApplicationDbContext> _dbContextOptions;
-        public SignalRHub(
+        public ChatHub(
             UserManager<FreshBoardUser> userManager,
             SignInManager<FreshBoardUser> signInManager,
             DbContextOptions<ApplicationDbContext> dbContextOptions)
@@ -21,16 +23,6 @@ namespace mscfreshman.Services
             _userManager = userManager;
             _signInManager = signInManager;
             _dbContextOptions = dbContextOptions;
-        }
-
-        public override async Task OnConnectedAsync()
-        {
-            await base.OnConnectedAsync();
-        }
-
-        public override async Task OnDisconnectedAsync(Exception exception)
-        {
-            await base.OnDisconnectedAsync(exception);
         }
     }
 }

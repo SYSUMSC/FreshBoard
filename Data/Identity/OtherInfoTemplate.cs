@@ -7,8 +7,11 @@ namespace mscfreshman.Data.Identity
         [Name("自我介绍")]
         public string introduction { get; set; }
 
-        [Name("优点")]
+        [Name("自身优点")]
         public string advantages { get; set; }
+
+        [Name("对 MSC 的期待")]
+        public string wishes { get; set; }
 
     }
 

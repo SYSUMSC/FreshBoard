@@ -1,5 +1,3 @@
-using System;
-
 namespace mscfreshman.Data
 {
     public class Problem
@@ -9,5 +7,6 @@ namespace mscfreshman.Data
         public string Content { get; set; }
         public string Script { get; set; }
         public int Level { get; set; }
+        public string Answer { get; set; }
     }
 }

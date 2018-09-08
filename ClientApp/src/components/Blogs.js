@@ -129,6 +129,7 @@ export class Blogs extends Component {
                 </div> :
                 <div>
                     <ListGroup>
+                        {parentFolder}
                         {this.state.fileTree.map(i => {
                             return (
                                 <ListGroupItem className="justify-content-between">
@@ -138,7 +139,6 @@ export class Blogs extends Component {
                                     </Badge>
                                 </ListGroupItem>);
                         })}
-                        {parentFolder}
                     </ListGroup>
                 </div>;
 

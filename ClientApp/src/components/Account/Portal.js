@@ -61,8 +61,9 @@ export class Portal extends Component {
         if (otherInfo === null) return null;
         return (
             otherInfo.map(x => (<div>
-                <h5>{x.description}</h5>
+                <strong>{x.description}</strong>
                 <textarea className="form-control" readOnly>{x.value}</textarea>
+                <br />
             </div>))
         );
     }

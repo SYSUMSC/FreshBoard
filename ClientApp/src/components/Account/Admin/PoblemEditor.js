@@ -22,13 +22,14 @@ export class ProblemEditor extends Component {
         var current = this.state.showModal;
         if (current) {
             while (this.script !== 0) {
-                var ele = document.getElementById('script_block_' + (this.script--));
-                if (ele !== null) ele.remove();
+                var eleTmp = document.getElementById('script_block_' + (this.script--));
+                if (eleTmp !== null) eleTmp.remove();
             }
         }
         else {
             var script = document.getElementById('script').value;
             var rawScript = '';
+            if (script === null) script = '';
             script.split('\n').forEach(v => {
                 if (v.startsWith('[jslib]:')) {
                     var libele = document.createElement('script');
@@ -64,11 +65,15 @@ export class ProblemEditor extends Component {
             <FormGroup>
                 <Label for="script">脚本 (JavaScript)</Label>
                 <FormText>如需引用 JavaScript 库请在单独的一行中填写 [jslib]:url，如[jslib]:https://sample.com/sample.js</FormText>
-                <textarea className="form-control" defaultValue={problem.script} name="script" id="script" required />
+                <textarea className="form-control" defaultValue={problem.script} name="script" id="script" />
             </FormGroup>
             <FormGroup>
                 <Label for="level">等级</Label>
-                <Input type="number" defaultValue={problem.level} name="level" id="level" min="1" max="10" />
+                <Input type="number" defaultValue={problem.level} name="level" id="level" min="1" max="10" required />
+            </FormGroup>
+            <FormGroup>
+                <Label for="answer">答案</Label>
+                <textarea className="form-control"  defaultValue={problem.answer} name="answer" id="answer" />
             </FormGroup>
         </Form>);
     }
@@ -106,7 +111,7 @@ export class ProblemEditor extends Component {
     }
 
     render() {
-        let problem = this.props.problem === null ? this.generateProblemEditor({ id: 0, time: '', title: '', content: '', level: 0 }) : this.generateProblemEditor(this.props.problem);
+        let problem = this.props.problem === null ? this.generateProblemEditor({ id: 0, title: '', content: '', script: '', level: 1, answer: '' }) : this.generateProblemEditor(this.props.problem);
 
         return (
             <div>

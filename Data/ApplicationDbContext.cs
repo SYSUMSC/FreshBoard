@@ -6,14 +6,29 @@ namespace mscfreshman.Data
 {
     public class ApplicationDbContext : IdentityDbContext<FreshBoardUser>
     {
+        private readonly string _connectionString;
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
 
+        public ApplicationDbContext(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
+
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<ReadStatus> ReadStatus { get; set; }
         public virtual DbSet<Problem> Problem { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlite(_connectionString);
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -426,7 +426,7 @@ namespace mscfreshman.Controllers
                 }
                 else
                 {
-                    user.ApplyStatus = 1;
+                    user.ApplyStatus = user.CrackProgress == 10 ? 2 : 1;
                 }
             }
 

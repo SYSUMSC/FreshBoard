@@ -464,7 +464,7 @@ namespace mscfreshman.Controllers
         /// <param name="pid">为 0 添加，非 0 修改</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> NewProblemAsync(string title, string content, string script, int level, int pid = 0)
+        public async Task<IActionResult> NewProblemAsync(string title, string content, string script, int level, string answer, int pid = 0)
         {
             if (!await VerifyPrivilegeAsync())
             {
@@ -479,7 +479,8 @@ namespace mscfreshman.Controllers
                         Title = title,
                         Content = content,
                         Script = script,
-                        Level = level
+                        Level = level,
+                        Answer = answer
                     };
                     db.Problem.Add(problem);
                 }
@@ -492,6 +493,7 @@ namespace mscfreshman.Controllers
                         problem.Content = content;
                         problem.Script = script;
                         problem.Level = level;
+                        problem.Answer = answer;
                     }
                 }
                 await db.SaveChangesAsync();
