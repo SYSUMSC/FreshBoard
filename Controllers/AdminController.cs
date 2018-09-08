@@ -433,5 +433,87 @@ namespace mscfreshman.Controllers
             }
             return Json(new { succeeded = true, users = usersList });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> GetProblems(int start = 0, int count = 0)
+        {
+            if (!await VerifyPrivilegeAsync())
+            {
+                return Json(new { succeeded = false, message = "没有权限" });
+            }
+            using (var db = new ApplicationDbContext(_dbContextOptions))
+            {
+                if (count == 0)
+                {
+                    return Json(await db.Problem.Skip(start).ToListAsync());
+                }
+                else
+                {
+                    return Json(await db.Problem.Skip(start).Take(count).ToListAsync());
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// 新建题目
+        /// </summary>
+        /// <param name="title">标题</param>
+        /// <param name="content">内容</param>
+        /// <param name="level">难度</param>
+        /// <param name="pid">为 0 添加，非 0 修改</param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> NewProblem(string title, string content, int level, int pid = 0)
+        {
+            if (!await VerifyPrivilegeAsync())
+            {
+                return Json(new { succeeded = false, message = "没有权限" });
+            }
+            using (var db = new ApplicationDbContext(_dbContextOptions))
+            {
+                if (pid == 0)
+                {
+                    var problem = new Problem
+                    {
+                        Title = title,
+                        Content = content,
+                        Level = level
+                    };
+                    db.Problem.Add(problem);
+                }
+                else
+                {
+                    var problem = await db.Problem.FindAsync(pid);
+                    if (problem != null)
+                    {
+                        problem.Title = title;
+                        problem.Content = content;
+                        problem.Level = level;
+                    }
+                }
+                await db.SaveChangesAsync();
+            }
+            return Json(new { succeeded = true });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveProblem(int pid)
+        {
+            if (!await VerifyPrivilegeAsync())
+            {
+                return Json(new { succeeded = false, message = "没有权限" });
+            }
+            using (var db = new ApplicationDbContext(_dbContextOptions))
+            {
+                var problem = await db.Problem.FindAsync(pid);
+                if (problem != null)
+                {
+                    db.Problem.Remove(problem);
+                }
+                await db.SaveChangesAsync();
+            }
+            return Json(new { succeeded = true });
+        }
     }
 }
