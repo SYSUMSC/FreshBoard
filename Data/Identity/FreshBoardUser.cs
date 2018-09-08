@@ -62,11 +62,13 @@ namespace mscfreshman.Data.Identity
         /// 解谜进度
         /// </summary>
         public int CrackProgress { get; set; }
-        
+
         /// <summary>
         /// 用户权限 1 -- admin, other -- 普通权限
         /// </summary>
         public int Privilege { get; set; }
+
+        public string AdditionalInfo { get; set; }
 
     }
 }
