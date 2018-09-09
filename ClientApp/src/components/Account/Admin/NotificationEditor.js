@@ -68,7 +68,7 @@ export class NotificationEditor extends Component {
             </FormGroup>
             <FormGroup>
                 <Label for="time">推送时间</Label>
-                <Input type="datetime-local" defaultValue={notification.time} name="time" id="time" />
+                <Input type="datetime-local" defaultValue={notification.time} name="time" id="time" required />
             </FormGroup>
             <FormGroup>
                 <Label for="mode">推送模式</Label>&nbsp;
