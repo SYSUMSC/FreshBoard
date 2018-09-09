@@ -1,10 +1,56 @@
 ﻿@charset "UTF-8";
-/*!
-Animate.css - http://daneden.me/animate
-Licensed under the MIT license - http://opensource.org/licenses/MIT
 
-Copyright (c) 2014 Daniel Eden
-*/
+@keyframes spin-right-preloader {
+    from {
+        transform: rotate(0deg);
+        opacity: 0.2;
+    }
+
+    50% {
+        transform: rotate(180deg);
+        opacity: 1.0;
+    }
+
+    to {
+        transform: rotate(360deg);
+        opacity: 0.2;
+    }
+}
+
+@-moz-keyframes spin-right-preloader {
+    from {
+        -moz-transform: rotate(0deg);
+        opacity: 0.2;
+    }
+
+    50% {
+        -moz-transform: rotate(180deg);
+        opacity: 1.0;
+    }
+
+    to {
+        -moz-transform: rotate(360deg);
+        opacity: 0.2;
+    }
+}
+
+@-webkit-keyframes spin-right-preloader {
+    from {
+        -webkit-transform: rotate(0deg);
+        opacity: 0.2;
+    }
+
+    50% {
+        -webkit-transform: rotate(180deg);
+        opacity: 1.0;
+    }
+
+    to {
+        -webkit-transform: rotate(360deg);
+        opacity: 0.2;
+    }
+}
+
 
 .animated {
     -webkit-animation-duration: 1s;

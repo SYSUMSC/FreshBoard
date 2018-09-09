@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as Dom from 'react-router-dom';
-import { Jumbotron, TabPane, Button, Container, Modal, ModalBody, ModalHeader, ModalFooter, Nav, NavItem, NavLink, TabContent, Row, Col } from 'reactstrap';
+import { TabPane, Button, Container, Modal, ModalBody, ModalHeader, ModalFooter, Nav, NavItem, NavLink, TabContent, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
 import { Register } from './Account/Register';
 import { Login } from './Account/Login';
@@ -42,7 +42,7 @@ export class Home extends Component {
                         <Button color="primary">进入管理后台</Button>
                     </Dom.NavLink>) : null;
 
-        let loginPortal = this.props.user === null ? <p>登录中...</p> :
+        let loginPortal = this.props.user === null ? <small>登录中...</small> :
             this.props.user.isSignedIn
                 ?
                 <div>
