@@ -91,17 +91,10 @@ namespace mscfreshman
             app.UseWebSockets();
             app.Use(async (context, next) =>
             {
-                if (context.Request.Path == "/1ebdc0d7-3d5b-40f6-b44f-b884b6395132")
+                if (context.WebSockets.IsWebSocketRequest && context.Request.Path == "/1ebdc0d7-3d5b-40f6-b44f-b884b6395132")
                 {
-                    if (context.WebSockets.IsWebSocketRequest)
-                    {
-                        var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                        await Echo(context, webSocket);
-                    }
-                    else
-                    {
-                        context.Response.StatusCode = 400;
-                    }
+                    var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                    await Echo(context, webSocket);
                 }
                 else
                 {
@@ -112,7 +105,7 @@ namespace mscfreshman
             app.UseSignalR(routes => { routes.MapHub<ChatHub>("/ChatHub"); });
 
             app.UseSpaStaticFiles();
-            
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -170,7 +163,10 @@ namespace mscfreshman
                                         {
                                             await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes($"Wow! {guid}! That's it! Congratulations! Here is the answer: {answer.Answer}. Bye~")), WebSocketMessageType.Text, true, CancellationToken.None);
                                         }
-                                        else await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes($"Wow! {guid}! That's it! Congratulations! But unfortunately I don't know the answer. Bye~")), WebSocketMessageType.Text, true, CancellationToken.None);
+                                        else
+                                        {
+                                            await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes($"Wow! {guid}! That's it! Congratulations! But unfortunately I don't know the answer. Bye~")), WebSocketMessageType.Text, true, CancellationToken.None);
+                                        }
                                     }
                                 }
                                 else
