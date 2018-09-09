@@ -81,6 +81,11 @@ namespace mscfreshman.Controllers
                 return Json(new { succeeded = false, message = "没有找到该用户" });
             }
 
+            if (user.Department != 0)
+            {
+                return Json(new { succeeded = false, message = "该用户没有申请任何部门" });
+            }
+
             if (user.ApplyStatus != status)
             {
                 user.ApplyStatus = status;
