@@ -81,7 +81,7 @@ namespace mscfreshman.Controllers
                 return Json(new { succeeded = false, message = "没有找到该用户" });
             }
 
-            if (user.Department != 0)
+            if (user.Department == 0)
             {
                 return Json(new { succeeded = false, message = "该用户没有申请任何部门" });
             }
@@ -336,7 +336,7 @@ namespace mscfreshman.Controllers
                 var domain = "dysmsapi.aliyuncs.com";
                 //TODO: Fillin these fields
                 var accessKeyId = "keyId";
-                var accessKeySecret = "keySec";
+                var accessKeySecret = "ksySec";
 
                 var profile = DefaultProfile.GetProfile("cn-hangzhou", accessKeyId, accessKeySecret);
 
