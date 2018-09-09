@@ -23,7 +23,6 @@ export class Apply extends Component {
                 .then(response => response.json())
                 .then(data => {
                     if (data.succeeded) {
-                        alert('申请成功');
                         window.location = '/Account/Portal';
                     }
                     else {

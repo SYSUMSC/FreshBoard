@@ -17,6 +17,7 @@ export class Home extends Component {
         };
 
         this.switchTab = this.switchTab.bind(this);
+
     }
 
     toggleLogin() {
@@ -52,20 +53,17 @@ export class Home extends Component {
                 </div>
                 : <Button color="primary" onClick={this.toggleLogin}>立即上车</Button>;
         return (
-            <div>
-                <Jumbotron>
-                    <Container>
-                        <h2 className="display-3">欢迎上车！</h2>
-                        <p className="lead">这里是中山大学微软学生俱乐部 —— 中山大学最 cool 的社团</p>
-                        <hr />
-                        <p>船新的 MSC 行划部、媒传部和技术部等你来加入</p>
-                        <p className="text-info">加入方法：立即上车 -- 注册/登录账号 -- 进入账户 -- 补全相关信息 -- 申请部门，so easy~</p>
-
+            <div className="header">
+                <Container>
+                    <div className="intro-text">
+                        <h1>中山大学<span style={{ color: '#28ABE3' }}>微软学生俱乐部</span></h1>
+                        <p>船新的 MSC 等你来加入~</p>
                         {loginPortal}
                         <br />
-                        <small className="text-danger">注意：具体要求、面试须知等会在【通知】及邮件中告知，面试和录取状态请进入账户查阅</small>
-                    </Container>
-                </Jumbotron>
+                        <br />
+                        <small className="text-info">加入方法：立即上车 -- 注册/登录账号 -- 进入账户 -- 补全相关信息 -- 申请部门，so easy~</small>
+                    </div>
+                </Container>
 
                 <Modal isOpen={this.state.loginShown} toggle={this.toggleLogin}>
                     <ModalHeader toggle={this.toggleLogin}>加入 MSC！</ModalHeader>

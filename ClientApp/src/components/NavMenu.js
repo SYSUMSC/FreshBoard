@@ -34,7 +34,7 @@ export class NavMenu extends Component {
                 : null;
 
         return (
-            <Navbar color="dark" dark expand="md">
+            <Navbar color="dark" dark expand="md" fixed className="fixed-top">
                 <NavLink className="navbar-brand" to={'/'}>
                     <span>SYSU 微软学生俱乐部</span>
                 </NavLink>

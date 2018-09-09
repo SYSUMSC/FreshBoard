@@ -1,6 +1,6 @@
 ﻿import React, { Component } from "react";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
-import { FormPost } from "../../utils/HttpRequest";
+import { FormPost, Post } from "../../utils/HttpRequest";
 
 export class Login extends Component {
     displayName = Login.name
@@ -8,6 +8,7 @@ export class Login extends Component {
     constructor(props) {
         super(props);
         this.login = this.login.bind(this);
+        this.forgetPassword = this.forgetPassword.bind(this);
 
         this.state = {
             disableButton: false
@@ -29,6 +30,25 @@ export class Login extends Component {
                 })
                 .catch(() => { alert('登录失败'); this.setState({ disableButton: false }); });
         }
+    }
+
+    forgetPassword() {
+        var email = document.getElementById('email');
+        if (email === null || email.value === null || email.value === '' || !(email.value.indexOf('@') > 0)) {
+            alert('请填写正确的电子邮箱地址');
+            return;
+        }
+        Post('/Account/SendResetPasswordEmailAsync', {}, { email: email.value })
+            .then(res => res.json())
+            .then(data => {
+                if (data.succeeded) {
+                    alert('已发送一封关于重置密码的邮件到您的邮箱，请根据邮件说明重置密码');
+                }
+                else {
+                    alert(data.message);
+                }
+            })
+            .catch(() => alert('发生未知错误'));
     }
 
     render() {
@@ -53,8 +73,10 @@ export class Login extends Component {
                             </label>
                         </div>
                     </FormGroup>
-
-                    <Button type="button" className="float-right" color="primary" onClick={this.login} disabled={this.state.disableButton}>登录</Button>
+                    <p>
+                        <a href="javascript:void(0)" onClick={this.forgetPassword}>重置密码</a>
+                        <Button type="button" className="float-right" color="primary" onClick={this.login} disabled={this.state.disableButton}>登录</Button>
+                    </p>
                 </Form>
             </div>
         );

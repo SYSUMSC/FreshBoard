@@ -129,7 +129,6 @@ export class Modify extends Component {
                 .then(response => response.json())
                 .then(data => {
                     if (data.succeeded) {
-                        alert('修改成功');
                         window.location = '/Account/Portal';
                     }
                     else {

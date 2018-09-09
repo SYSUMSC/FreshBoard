@@ -9,7 +9,9 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace mscfreshman.Controllers
 {
@@ -455,6 +457,36 @@ namespace mscfreshman.Controllers
             }
 
             return Json(new { succeeded = result.Succeeded, message = result.Errors.Any() ? result.Errors.Select(i => i.Description).Aggregate((accu, next) => accu + "\n" + next) : "删除失败" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPasswordAsync(string userId, string token, string password, string confirmpassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return Json(new { succeeded = false, message = "重置失败" });
+            if (password != confirmpassword) return Json(new { succeeded = false, message = "密码和确认密码不匹配" });
+            if (!string.IsNullOrEmpty(token)) token = HttpUtility.UrlDecode(token, Encoding.UTF8);
+            var result = await _userManager.ResetPasswordAsync(user, token, password);
+
+            return Json(new { succeeded = result.Succeeded, message = result.Errors.Any() ? result.Errors.Select(i => i.Description).Aggregate((accu, next) => accu + "\n" + next) : "重置失败" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendResetPasswordEmailAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null || !user.EmailConfirmed) return Json(new { succeeded = true });
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code }, Request.Scheme);
+            try
+            {
+                await _emailSender.SendEmailAsync(email, "重置密码 - SYSU MSC", $"<h2>中山大学微软学生俱乐部</h2><p>您好，请点击 <a href='{callbackUrl}'>此处</a> 重置你的账户密码。</p><hr /><p>请勿回复本邮件</p><p>{DateTime.Now} - SYSU MSC</p>");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return Json(new { succeeded = true });
         }
     }
 }

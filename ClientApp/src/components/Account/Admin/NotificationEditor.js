@@ -122,7 +122,6 @@ export class NotificationEditor extends Component {
                         disabled: false
                     });
                     if (data.succeeded) {
-                        alert('保存成功');
                         window.location = '/Account/Admin/NotificationManager';
                     }
                     else {

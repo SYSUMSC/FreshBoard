@@ -14,6 +14,7 @@ import { AdminIndex } from './components/Account/Admin/Index';
 import { PrivilegeManager } from './components/Account/Admin/PrivilegeManager';
 import { Crack } from './components/Crack';
 import { ProblemManager } from './components/Account/Admin/ProblemManager';
+import { ResetPassword } from './components/Account/ResetPassword';
 
 export default class App extends Component {
     displayName = App.name
@@ -51,6 +52,7 @@ export default class App extends Component {
                 <Route exact path='/Crack' render={() => { this.setTitle('解谜'); return <Crack user={this.state.user} />; }} />
                 <Route exact path='/Account/Portal' render={() => { this.setTitle('我的账户'); return <Portal user={this.state.user} />; }} />
                 <Route path='/Account/ConfirmEmail' render={() => { this.setTitle('验证邮箱'); return <ConfirmEmail user={this.state.user} />; }} />
+                <Route path='/Account/ResetPassword' render={() => { this.setTitle('重置密码'); return <ResetPassword />; }} />
                 <Route path='/Account/Identity' render={() => { this.setTitle('成员信息'); return <Identity user={this.state.user} />; }} />
                 <Route path='/Account/Admin/Index' render={() => { this.setTitle('管理后台'); return <AdminIndex user={this.state.user} />; }} />
                 <Route path='/Account/Admin/NotificationManager' render={() => { this.setTitle('通知管理'); return <NotificationManager user={this.state.user} />; }} />

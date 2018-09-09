@@ -114,6 +114,8 @@ export class Identity extends Component {
             .then(res => res.json())
             .then(data => {
                 if (data.succeeded) {
+                    var dob = data.userInfo.dob.toString();
+                    data.userInfo.dob = dob.substring(0, dob.indexOf('T'));
                     this.setState({
                         userInfo: data.userInfo,
                         otherInfo: data.otherInfo,

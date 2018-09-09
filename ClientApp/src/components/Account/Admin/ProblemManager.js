@@ -69,7 +69,6 @@ export class ProblemManager extends Component {
                 if (data.succeeded) {
                     var ele = document.getElementById('pbm_' + index.toString());
                     if (ele !== null) ele.remove();
-                    alert('删除成功');
                 }
                 else alert(data.message);
             })
