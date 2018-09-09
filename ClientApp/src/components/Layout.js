@@ -12,7 +12,6 @@ export class Layout extends Component {
     componentDidMount() {
         var num = 10;
         var obj = document.getElementById('preloader');
-        console.log(obj);
         var st = setInterval(function () {
             num--;
             obj.style.opacity = num / 10;
