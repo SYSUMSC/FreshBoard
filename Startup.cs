@@ -150,7 +150,7 @@ namespace mscfreshman
                         if ((text.Contains("answer") || text.Contains("solve") || text.Contains("solution") || text.Contains("hint") || text.Contains("key")) && (text.Contains("what") || text.Contains("where") || text.Contains("how")))
                         {
                             hasKey = true;
-                            await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes("Here is an important hint: " + guid)), WebSocketMessageType.Text, true, CancellationToken.None);
+                            await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes("Here is an important key: " + guid)), WebSocketMessageType.Text, true, CancellationToken.None);
                         }
                         else
                         {
