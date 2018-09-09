@@ -26,6 +26,7 @@ export class NotificationManager extends Component {
         this.removeNotification = this.removeNotification.bind(this);
         this.togglesending = this.togglesending.bind(this);
         this.showErrors = this.showErrors.bind(this);
+        this.updateList = this.updateList.bind(this);
 
         this.sending = false;
 
@@ -52,8 +53,8 @@ export class NotificationManager extends Component {
         }
     }
 
-    getNotifications() {
-        Get('/Admin/GetNotificationsAsync', {}, { start: (this.state.currentPage - 1) * 20, count: 20 })
+    getNotifications(fromStart = false) {
+        Get('/Admin/GetNotificationsAsync', {}, { start: fromStart ? 0 :(this.state.currentPage - 1) * 20, count: 20 })
             .then(response => response.json())
             .then(data => {
                 if (data.succeeded)
@@ -74,7 +75,7 @@ export class NotificationManager extends Component {
     togglesending(index = 0) {
         if (this.sending) return;
         if (this.state.showSendingModal) {
-            this.setState({ readIndex: 0, showSendingModal: false });
+            this.updateList();
             return;
         }
         var list = document.getElementById('errorlist');
@@ -141,11 +142,25 @@ export class NotificationManager extends Component {
                 if (data.succeeded) {
                     var ele = document.getElementById('msg_' + index.toString());
                     if (ele !== null) ele.remove();
-                    alert('删除成功');
                 }
                 else alert(data.message);
             })
             .catch(() => alert('发生未知错误'));
+    }
+
+    updateList() {
+        this.setState({
+            notifications: [],
+            loading: true,
+            currentPage: 1,
+            readIndex: 0,
+            showModal: false,
+            showSendingModal: false,
+            pushUsers: null,
+            currentSent: 0,
+            errors: []
+        });
+        this.getNotifications(true);
     }
 
     getNotificationLayout(notifications) {
@@ -200,7 +215,7 @@ export class NotificationManager extends Component {
                 <Modal isOpen={this.state.showModal} toggle={this.togglemsg}>
                     <ModalHeader toggle={this.togglemsg}>编辑通知</ModalHeader>
                     <ModalBody>
-                        <NotificationEditor notification={canRead ? this.state.notifications[this.state.readIndex] : null} />
+                        <NotificationEditor notification={canRead ? this.state.notifications[this.state.readIndex] : null} updateList={this.updateList} />
                     </ModalBody>
                     <ModalFooter><span className="float-right">SYSU MSC Push Services</span></ModalFooter>
                 </Modal>

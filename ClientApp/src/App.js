@@ -21,11 +21,14 @@ export default class App extends Component {
 
     constructor(props) {
         super(props);
-
+        this.getUserStatus = this.getUserStatus.bind(this);
         this.state = {
             user: null
         };
+        this.getUserStatus();
+    }
 
+    getUserStatus() {
         Get('/Account/GetUserInfoAsync')
             .then(data => data.json())
             .then(data => {
@@ -33,10 +36,10 @@ export default class App extends Component {
                     var dob = data.userInfo.dob.toString();
                     data.userInfo.dob = dob.substring(0, dob.indexOf('T'));
                 }
+                this.setState({ user: null });
                 this.setState({ user: data });
             })
             .catch(() => alert('用户信息获取失败'));
-
     }
 
     setTitle(title) {
@@ -49,9 +52,9 @@ export default class App extends Component {
                 <Route exact path='/' render={() => { this.setTitle('主页'); return <Home user={this.state.user} />; }} />
                 <Route exact path='/Notification' render={() => { this.setTitle('通知'); return <Notification user={this.state.user} />; }} />
                 <Route exact path='/Blogs' render={() => { this.setTitle('干货'); return <Blogs user={this.state.user} />; }} />
-                <Route exact path='/Crack' render={() => { this.setTitle('解谜'); return <Crack user={this.state.user} />; }} />
-                <Route exact path='/Account/Portal' render={() => { this.setTitle('我的账户'); return <Portal user={this.state.user} />; }} />
-                <Route path='/Account/ConfirmEmail' render={() => { this.setTitle('验证邮箱'); return <ConfirmEmail user={this.state.user} />; }} />
+                <Route exact path='/Crack' render={() => { this.setTitle('解谜'); return <Crack user={this.state.user} updateStatus={this.getUserStatus} />; }} />
+                <Route exact path='/Account/Portal' render={() => { this.setTitle('我的账户'); return <Portal user={this.state.user} updateStatus={this.getUserStatus} />; }} />
+                <Route path='/Account/ConfirmEmail' render={() => { this.setTitle('验证邮箱'); return <ConfirmEmail user={this.state.user} updateStatus={this.getUserStatus} />; }} />
                 <Route path='/Account/ResetPassword' render={() => { this.setTitle('重置密码'); return <ResetPassword />; }} />
                 <Route path='/Account/Identity' render={() => { this.setTitle('成员信息'); return <Identity user={this.state.user} />; }} />
                 <Route path='/Account/Admin/Index' render={() => { this.setTitle('管理后台'); return <AdminIndex user={this.state.user} />; }} />

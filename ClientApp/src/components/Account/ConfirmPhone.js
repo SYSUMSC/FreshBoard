@@ -46,11 +46,13 @@ export class ConfirmPhone extends Component {
         Post('/Account/ConfirmPhoneAsync', {}, { token: token })
             .then(res => res.json())
             .then(data => {
-                if (data.succeeded)
+                if (data.succeeded) {
                     this.setState({
                         succeeded: true,
                         confirmed: true
                     });
+                    this.props.updateStatus();
+                }
                 else {
                     alert(data.message);
                     this.setState({

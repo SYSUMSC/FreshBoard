@@ -32,7 +32,7 @@ export class Layout extends Component {
                 </div>
                 <footer>
                     <br />
-                    <Navbar className="fixed-bottom" color="light" fixed light>
+                    <Navbar color="light" fixed="bottom" light>
                         <Nav className="ml-auto">
                             <NavLink className="float-left">SYSU MSC 2018</NavLink>
                         </Nav>

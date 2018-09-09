@@ -268,8 +268,8 @@ namespace mscfreshman.Controllers
                     };
 
                     await db.Notification.AddAsync(notification);
-
                     await db.SaveChangesAsync();
+                    nid = notification.Id;
                 }
                 else
                 {
@@ -483,6 +483,8 @@ namespace mscfreshman.Controllers
                         Answer = answer
                     };
                     db.Problem.Add(problem);
+                    await db.SaveChangesAsync();
+                    pid = problem.Id;
                 }
                 else
                 {
@@ -494,9 +496,10 @@ namespace mscfreshman.Controllers
                         problem.Script = script;
                         problem.Level = level;
                         problem.Answer = answer;
+                        pid = problem.Id;
+                        await db.SaveChangesAsync();
                     }
                 }
-                await db.SaveChangesAsync();
             }
             return Json(new { succeeded = true, pid });
         }

@@ -122,7 +122,7 @@ export class NotificationEditor extends Component {
                         disabled: false
                     });
                     if (data.succeeded) {
-                        window.location = '/Account/Admin/NotificationManager';
+                        this.props.updateList();
                     }
                     else {
                         alert(data.message);

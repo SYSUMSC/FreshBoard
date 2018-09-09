@@ -91,7 +91,7 @@ export class ProblemEditor extends Component {
                         disabled: false
                     });
                     if (data.succeeded) {
-                        window.location = '/Account/Admin/ProblemManager';
+                        this.props.updateList();
                     }
                     else {
                         alert(data.message);

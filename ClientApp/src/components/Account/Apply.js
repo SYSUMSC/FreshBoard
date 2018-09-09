@@ -23,7 +23,8 @@ export class Apply extends Component {
                 .then(response => response.json())
                 .then(data => {
                     if (data.succeeded) {
-                        window.location = '/Account/Portal';
+                        this.props.updateStatus();
+                        this.props.closeModal();
                     }
                     else {
                         alert(data.message);

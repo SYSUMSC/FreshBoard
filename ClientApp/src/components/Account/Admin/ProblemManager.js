@@ -19,6 +19,7 @@ export class ProblemManager extends Component {
         this.newProblem = this.newProblem.bind(this);
         this.togglepbm = this.togglepbm.bind(this);
         this.removeProblem = this.removeProblem.bind(this);
+        this.updateList = this.updateList.bind(this);
 
         this.getProblems();
     }
@@ -43,8 +44,8 @@ export class ProblemManager extends Component {
         }
     }
 
-    getProblems() {
-        Get('/Admin/GetProblemsAsync', {}, { start: (this.state.currentPage - 1) * 20, count: 20 })
+    getProblems(fromStart = false) {
+        Get('/Admin/GetProblemsAsync', {}, { start: fromStart ? 0 : (this.state.currentPage - 1) * 20, count: 20 })
             .then(response => response.json())
             .then(data => {
                 if (data.succeeded)
@@ -54,6 +55,17 @@ export class ProblemManager extends Component {
             .catch(() => alert('加载失败'));
     }
 
+    updateList() {
+        this.setState({
+            problems: [],
+            loading: true,
+            currentPage: 1,
+            readIndex: 0,
+            showModal: false
+        });
+        this.getProblems(true);
+    }
+
     togglepbm(index = 0) {
         if (this.state.showModal) {
             this.setState({ readIndex: 0, showModal: false });
@@ -61,7 +73,7 @@ export class ProblemManager extends Component {
         }
         this.setState({ readIndex: index, showModal: true });
     }
-    
+
     removeProblem(pid, index) {
         Post('/Admin/RemoveProblemAsync', {}, { pid: pid })
             .then(res => res.json())
@@ -117,7 +129,7 @@ export class ProblemManager extends Component {
                 <Modal isOpen={this.state.showModal} toggle={this.togglepbm}>
                     <ModalHeader toggle={this.togglepbm}>编辑题目</ModalHeader>
                     <ModalBody>
-                        <ProblemEditor problem={canRead ? this.state.problems[this.state.readIndex] : null} />
+                        <ProblemEditor problem={canRead ? this.state.problems[this.state.readIndex] : null} updateList={this.updateList} />
                     </ModalBody>
                     <ModalFooter><span className="float-right">SYSU MSC Problem System</span></ModalFooter>
                 </Modal>

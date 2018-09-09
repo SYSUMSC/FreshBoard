@@ -36,6 +36,7 @@ export class Crack extends Component {
             .then(data => {
                 if (data.succeeded) {
                     this.setState({ problem: data.problem, loading: false });
+                    this.updateStatus();
                 }
                 else {
                     alert(data.message);

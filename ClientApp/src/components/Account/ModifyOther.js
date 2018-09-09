@@ -23,7 +23,7 @@ export class ModifyOther extends Component {
                 {
                     otherInfo.map(x => (<FormGroup>
                         <Label for={x.key}>{x.description}</Label>
-                        <textarea className="form-control" name={x.key} id={x.key} required defaultValue={x.value} />
+                        <textarea className="form-control" name={x.key} id={x.key} defaultValue={x.value} />
                     </FormGroup>))
                 }
 
@@ -39,7 +39,8 @@ export class ModifyOther extends Component {
                 .then(response => response.json())
                 .then(data => {
                     if (data.succeeded) {
-                        window.location = '/Account/Portal';
+                        this.props.updateStatus();
+                        this.props.closeModal();
                     }
                     else {
                         alert(data.message);

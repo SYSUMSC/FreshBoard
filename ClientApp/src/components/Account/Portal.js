@@ -48,12 +48,12 @@ export class Portal extends Component {
             .then(res => res.json())
             .then(data => {
                 Portal.SendingEmail = false;
-                if (data.succeeded) alert('发送成功');
+                if (data.succeeded) alert('已发送一封关于验证邮箱的邮件到您的邮箱，请根据邮件说明验证邮箱');
                 else alert(data.message);
             })
             .catch(() => {
                 Portal.SendingEmail = false;
-                alert('发送失败');
+                alert('发生未知错误');
             });
     }
 
@@ -132,7 +132,7 @@ export class Portal extends Component {
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{userInfo.phoneNumber} ({userInfo.phoneNumberConfirmed ? <span>已验证</span> : <a title="验证手机号码" href="javascript:void(0)" onClick={() => this.toggleModal(4)}>点击验证</a>})</td>
+                        <td>{userInfo.phoneNumber} <span id='phoneConfirmStatus'>({userInfo.phoneNumberConfirmed ? <span>已验证</span> : <a title="验证手机号码" href="javascript:void(0)" onClick={() => this.toggleModal(4)}>点击验证</a>})</span></td>
                         <td>{userInfo.qq}</td>
                         <td>{userInfo.weChat}</td>
                     </tr>
@@ -154,14 +154,14 @@ export class Portal extends Component {
             this.props.user.isSignedIn ?
                 Portal.ApplyStatus(this.props.user.userInfo) : <p>没有数据</p>;
 
-        let modal = this.state.modalType === 1 ? <Modify user={this.props.user} />
-            : this.state.modalType === 2 ? <ModifyOther user={this.props.user} />
-                : this.state.modalType === 3 ? <Apply user={this.props.user} />
-                    : this.state.modalType === 4 ? <ConfirmPhone user={this.props.user} /> : null;
-
         let otherInfo = this.props.user === null ? <p>加载中...</p> :
             this.props.user.isSignedIn ?
                 Portal.OtherInfoList(this.props.user.otherInfo) : <p>没有数据</p>;
+
+        let modal = this.state.modalType === 1 ? <Modify user={this.props.user} updateStatus={this.props.updateStatus} closeModal={this.toggleModal} />
+            : this.state.modalType === 2 ? <ModifyOther user={this.props.user} updateStatus={this.props.updateStatus} closeModal={this.toggleModal} />
+                : this.state.modalType === 3 ? <Apply user={this.props.user} updateStatus={this.props.updateStatus} closeModal={this.toggleModal} />
+                    : this.state.modalType === 4 ? <ConfirmPhone user={this.props.user} updateStatus={this.props.updateStatus} /> : null;
 
         this.props.user === null ? null :
             this.props.user.isSignedIn ?
