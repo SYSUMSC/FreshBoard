@@ -89,7 +89,7 @@ export class Crack extends Component {
                     document.body.appendChild(libele);
                 }
                 else {
-                    rawScript += v;
+                    rawScript += v + '\n';
                 }
             });
             var ele = document.createElement('script');

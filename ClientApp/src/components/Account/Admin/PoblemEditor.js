@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+﻿import React, { Component } from "react";
 import { Form, FormGroup, Label, Input, Button, Modal, ModalHeader, ModalBody, ModalFooter, FormText } from "reactstrap";
 import { FormPost } from "../../../utils/HttpRequest";
 
@@ -38,7 +38,7 @@ export class ProblemEditor extends Component {
                     document.body.appendChild(libele);
                 }
                 else {
-                    rawScript += v;
+                    rawScript += v + '\n';
                 }
             });
             var ele = document.createElement('script');
