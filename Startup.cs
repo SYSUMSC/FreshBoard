@@ -112,9 +112,7 @@ namespace mscfreshman
             app.UseSignalR(routes => { routes.MapHub<ChatHub>("/ChatHub"); });
 
             app.UseSpaStaticFiles();
-
-            app.UseAuthentication();
-
+            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
