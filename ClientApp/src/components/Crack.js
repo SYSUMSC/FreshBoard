@@ -56,7 +56,7 @@ export class Crack extends Component {
                 .then(res => res.json())
                 .then(data => {
                     if (data.succeeded) {
-                        this.updateStatus();
+                        this.props.updateStatus();
                         this.getProblem();
                     }
                     else {
