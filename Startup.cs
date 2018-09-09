@@ -91,7 +91,7 @@ namespace mscfreshman
             app.UseWebSockets();
             app.Use(async (context, next) =>
             {
-                if (context.WebSockets.IsWebSocketRequest && context.Request.Path == "/1ebdc0d7-3d5b-40f6-b44f-b884b6395132")
+                if (context.WebSockets.IsWebSocketRequest && context.Request.Path == "/MSCHome")
                 {
                     var webSocket = await context.WebSockets.AcceptWebSocketAsync();
                     await Echo(context, webSocket);
@@ -105,6 +105,8 @@ namespace mscfreshman
             app.UseSignalR(routes => { routes.MapHub<ChatHub>("/ChatHub"); });
 
             app.UseSpaStaticFiles();
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
