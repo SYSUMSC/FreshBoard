@@ -80,7 +80,7 @@ export class Notification extends Component {
 
     dismissmsg(index = 0, element = 0) {
         if (element !== 0) {
-            Post('/Notification/DismissNotificationAsync', {}, { id: element });
+            Post('/Notification/DismissNotificationAsync', {}, { nid: element });
             const newBadge = document.getElementById('new_' + index.toString());
             const dismissBadge = document.getElementById('dismiss_' + index.toString());
             if (newBadge !== null) newBadge.remove();
