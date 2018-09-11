@@ -123,7 +123,7 @@ export class Crack extends Component {
                 <br />
                 <h2>解谜</h2>
                 <Alert color="info" isOpen={this.state.visible} toggle={this.onDismiss}>
-                    完成所有题目之后可以免试进入二面呦~
+                    完成所有题目之后可以免试进入二面，而且二面还会加分呦~
                 </Alert>
                 {problem}
             </Container>
