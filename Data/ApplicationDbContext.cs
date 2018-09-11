@@ -20,6 +20,7 @@ namespace mscfreshman.Data
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<ReadStatus> ReadStatus { get; set; }
         public virtual DbSet<Problem> Problem { get; set; }
+        public virtual DbSet<CrackRecord> CrackRecord { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -67,6 +68,19 @@ namespace mscfreshman.Data
                 entity.Property(e => e.Content).IsRequired();
 
                 entity.Property(e => e.Level).IsRequired();
+            });
+
+            modelBuilder.Entity<CrackRecord>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+                
+                entity.Property(e => e.Time).IsRequired();
+
+                entity.Property(e => e.UserId).IsRequired();
+
+                entity.Property(e => e.ProblemId).IsRequired();
+
+                entity.Property(e => e.Result).IsRequired();
             });
         }
     }

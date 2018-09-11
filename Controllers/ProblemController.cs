@@ -97,18 +97,43 @@ namespace mscfreshman.Controllers
                 var problem = await db.Problem.FindAsync(pid);
                 if (problem == null)
                 {
+                    db.CrackRecord.Add(new CrackRecord
+                    {
+                        UserId = user.Id,
+                        ProblemId = problem.Id,
+                        Time = DateTime.Now,
+                        Result = 3
+                    });
+                    await db.SaveChangesAsync();
                     return Json(new { succeeded = false, message = "找不到题目" });
                 }
 
                 if (problem.Level != user.CrackProgress + 1)
                 {
+                    db.CrackRecord.Add(new CrackRecord
+                    {
+                        UserId = user.Id,
+                        ProblemId = problem.Id,
+                        Time = DateTime.Now,
+                        Result = 2
+                    });
+                    await db.SaveChangesAsync();
                     return Json(new { succeeded = false, message = "参数错误" });
                 }
 
                 if (problem.Answer != answer)
                 {
+                    db.CrackRecord.Add(new CrackRecord
+                    {
+                        UserId = user.Id,
+                        ProblemId = problem.Id,
+                        Time = DateTime.Now,
+                        Result = 0
+                    });
+                    await db.SaveChangesAsync();
                     return Json(new { succeeded = false, message = "答案不正确" });
                 }
+
                 if (user.CrackProgress < 10)
                 {
                     user.CrackProgress++;
@@ -122,6 +147,16 @@ namespace mscfreshman.Controllers
                         await _userManager.UpdateAsync(user);
                     }
                 }
+                
+                db.CrackRecord.Add(new CrackRecord
+                {
+                    UserId = user.Id,
+                    ProblemId = problem.Id,
+                    Time = DateTime.Now,
+                    Result = 1
+                });
+
+                await db.SaveChangesAsync();
                 return Json(new { succeeded = true });
             }
         }
