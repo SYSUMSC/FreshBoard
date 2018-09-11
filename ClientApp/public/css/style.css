@@ -34,7 +34,7 @@
     background-attachment: scroll;
     background-image: url('../images/banner.jpg');
     background-position: center center;
-    background-repeat: none;
+    background-repeat: no-repeat;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -131,4 +131,76 @@
         border-radius: 50%;
         border-left-color: transparent;
         border-bottom-color: transparent;
+    }
+
+
+.border {
+    border-top: 1px solid #999;
+    border-bottom: 1px solid #999;
+    margin: 0 45%;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.section-title h2 {
+    color: #111;
+    font-size: 48px;
+    font-family: 'PT Sans Narrow', Arial, sans-serif;
+    text-transform: none;
+}
+
+.section-title p {
+    padding-bottom: 60px;
+    color: #111;
+    letter-spacing: 1px;
+    font-size: 18px;
+    font-weight: 300;
+}
+
+/*---------------------------------------------------------*/
+/* Start About Us Section                                  */
+/*---------------------------------------------------------*/
+
+.about-us-section-1 {
+    padding-top: 100px;
+    padding-bottom: 120px;
+    background-color: #f1f1f1;
+}
+
+.about-us-section-2 {
+    padding-top: 120px;
+    padding-bottom: 120px;
+    background-color: #28ABE3;
+}
+
+.welcome-section {
+    background-color: #fff;
+    padding-bottom: 40px;
+    box-shadow: 0 0 3px #ccc;
+    padding: 30px;
+}
+
+    .welcome-section img {
+        width: 100%;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        -o-border-radius: 2px;
+        border-radius: 2px;
+    }
+
+
+    .welcome-section h4 {
+        padding-top: 20px;
+        color: #777;
+    }
+
+    .welcome-section p {
+        padding-top: 20px;
+        color: #999;
+    }
+
+    .welcome-section:hover .border {
+        margin: 0 40%;
     }

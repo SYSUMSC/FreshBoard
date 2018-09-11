@@ -24,9 +24,14 @@
     <title>欢迎 - SYSU MSC</title>
 </head>
 <body>
-    <div id="preloader" class="preloader-mask">
-        <div class="preloader-content"></div>
-    </div>
+    <script id="buildPreloader">
+        var ele = document.createElement('div');
+        ele.className = "preloader-mask";
+        ele.id = "preloader";
+        ele.innerHTML = "<div class='preloader-content'></div>";
+        document.body.appendChild(ele);
+        document.getElementById('buildPreloader').remove();
+    </script>
     <noscript>
         请启用 JavaScript 以让本站点正常工作
     </noscript>

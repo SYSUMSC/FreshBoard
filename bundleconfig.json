@@ -6,7 +6,8 @@
     // An array of relative input file paths. Globbing patterns supported
     "inputFiles": [
       "ClientApp/public/css/style.css",
-      "ClientApp/public/css/animate.css"
+      "ClientApp/public/css/animate.css",
+      "ClientApp/public/css/material.css"
     ]
   }
 ]

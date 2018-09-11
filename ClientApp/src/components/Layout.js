@@ -5,31 +5,14 @@ import { Nav, Navbar, NavLink } from 'reactstrap';
 export class Layout extends Component {
     displayName = Layout.name
 
-    constructor(props) {
-        super(props);
-    }
-
-    componentDidMount() {
-        var num = 10;
-        var obj = document.getElementById('preloader');
-        var st = setInterval(function () {
-            num--;
-            obj.style.opacity = num / 10;
-            if (num <= 0) {
-                obj.remove();
-                clearInterval(st);
-            }
-        }, 30);
-    }
-
     render() {
         return (
             <div>
                 <NavMenu user={this.props.user} />
-                <div className="body-content">
+                <div id="body" className="body-content">
                     {this.props.children}
                 </div>
-                <footer>
+                <footer id="footer">
                     <br />
                     <Navbar color="light" fixed="bottom" light>
                         <Nav className="ml-auto">

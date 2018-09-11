@@ -8,6 +8,17 @@ import registerServiceWorker from './registerServiceWorker';
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
 const rootElement = document.getElementById('root');
 
+var num = 10;
+var obj = document.getElementById('preloader');
+var st = setInterval(function () {
+    num--;
+    obj.style.opacity = num / 10;
+    if (num <= 0) {
+        obj.remove();
+        clearInterval(st);
+    }
+}, 30);
+
 ReactDOM.render(
     <BrowserRouter basename={baseUrl}>
         <App />
