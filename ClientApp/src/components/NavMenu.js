@@ -36,7 +36,7 @@ export class NavMenu extends Component {
         return (
             <Navbar color="dark" dark expand="md" fixed="top">
                 <NavLink className="navbar-brand" to={'/'}>
-                    <span>SYSU 微软学生俱乐部</span>
+                    <span><img src="/favicon.ico" height="28" width="28" alt="SYSU MSC" /> SYSU 微软学生俱乐部</span>
                 </NavLink>
                 <NavbarToggler onClick={this.toggle} />
                 <Collapse isOpen={this.state.isOpen} navbar>
