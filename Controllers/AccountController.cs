@@ -290,7 +290,9 @@ namespace mscfreshman.Controllers
         [HttpGet]
         public async Task<IActionResult> ConfirmEmailAsync(string userId, string code)
         {
-            var result = await _userManager.ConfirmEmailAsync(await _userManager.FindByIdAsync(userId), code);
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return Json(new { succeeded = false, errors = new[] { "找不到该用户" } });
+            var result = await _userManager.ConfirmEmailAsync(user, code);
             return Json(new { succeeded = result.Succeeded, errors = result.Errors.Select(i => i.Description) });
         }
 
