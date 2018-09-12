@@ -226,7 +226,7 @@ export class NotificationManager extends Component {
                         <p>将会向以下成员发送新消息通知：</p>
                         {
                             (canRead && this.state.showSendingModal && this.state.pushUsers !== null && this.state.pushUsers.succeeded) ?
-                                <div style={{ maxHeight: '200px', overflow: 'auto' }}>
+                                <div style={{ maxHeight: '400px', overflow: 'auto' }}>
                                     <ListGroup>
                                         {this.state.pushUsers.users.map(x => (
                                             <ListGroupItem className="justify-content-between">

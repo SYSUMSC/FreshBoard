@@ -22,7 +22,7 @@ export class SearchUsers extends Component {
     generateUserInfo() {
         if (this.state.users === null || this.state.users.length === 0) return <p>没有数据</p>;
         return (
-            <div style={{ maxHeight: '200px', overflow: 'auto' }}>
+            <div style={{ maxHeight: '400px', overflow: 'auto' }}>
                 <ListGroup>
                     {this.state.users.map(x => (
                         <ListGroupItem className="justify-content-between">
@@ -53,7 +53,6 @@ export class SearchUsers extends Component {
             Post('/Admin/SearchUsersAsync', {}, { patterns: document.getElementById('patterns').value })
                 .then(res => res.json())
                 .then(data => {
-                    console.log(data);
                     if (data.succeeded) {
                         this.setState({
                             loading: false,
