@@ -102,7 +102,8 @@ namespace mscfreshman.Controllers
                         UserId = user.Id,
                         ProblemId = problem.Id,
                         Time = DateTime.Now,
-                        Result = 3
+                        Result = 3,
+                        Content = answer
                     });
                     await db.SaveChangesAsync();
                     return Json(new { succeeded = false, message = "找不到题目" });
@@ -115,7 +116,8 @@ namespace mscfreshman.Controllers
                         UserId = user.Id,
                         ProblemId = problem.Id,
                         Time = DateTime.Now,
-                        Result = 2
+                        Result = 2,
+                        Content = answer
                     });
                     await db.SaveChangesAsync();
                     return Json(new { succeeded = false, message = "参数错误" });
@@ -128,7 +130,8 @@ namespace mscfreshman.Controllers
                         UserId = user.Id,
                         ProblemId = problem.Id,
                         Time = DateTime.Now,
-                        Result = 0
+                        Result = 0,
+                        Content = answer
                     });
                     await db.SaveChangesAsync();
                     return Json(new { succeeded = false, message = "答案不正确" });
@@ -153,7 +156,8 @@ namespace mscfreshman.Controllers
                     UserId = user.Id,
                     ProblemId = problem.Id,
                     Time = DateTime.Now,
-                    Result = 1
+                    Result = 1,
+                    Content = answer
                 });
 
                 await db.SaveChangesAsync();
