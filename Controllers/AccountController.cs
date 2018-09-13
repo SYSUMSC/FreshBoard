@@ -393,14 +393,28 @@ namespace mscfreshman.Controllers
             {
                 return Json(new { succeeded = false, message = "未登录" });
             }
-
+            var emailChanged = false;
             user.Name = name;
-            user.EmailConfirmed &= user.Email == email;
-            user.Email = email;
+            if (user.Email != email)
+            {
+                var setEmailResult = await _userManager.SetEmailAsync(user, email);
+                if (!setEmailResult.Succeeded)
+                {
+                    return Json(new { succeeded = false, message = "电子邮件修改失败" });
+                }
+                emailChanged = true;
+            }
+            user.UserName = email;
             user.DOB = dob;
             user.Grade = grade;
-            user.PhoneNumberConfirmed &= user.PhoneNumber == phone;
-            user.PhoneNumber = phone;
+            if (user.PhoneNumber != phone)
+            {
+                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, phone);
+                if (!setPhoneResult.Succeeded)
+                {
+                    return Json(new { succeeded = false, message = "手机号码修改失败" });
+                }
+            }
             user.QQ = qq;
             user.WeChat = wechat;
             user.CPCLevel = cpclevel;
@@ -410,6 +424,10 @@ namespace mscfreshman.Controllers
             user.SchoolNumber = schnum;
 
             var result = await _userManager.UpdateAsync(user);
+            if (emailChanged)
+            {
+                await _signInManager.RefreshSignInAsync(user);
+            }
             return Json(new { succeeded = result.Succeeded, message = result.Errors.Any() ? result.Errors.Select(i => i.Description).Aggregate((accu, next) => accu + "\n" + next) : "修改失败" });
         }
 
