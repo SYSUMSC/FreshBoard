@@ -63,7 +63,7 @@ namespace mscfreshman.Controllers
             var userId = user?.Id ?? string.Empty;
             using (var db = new ApplicationDbContext(_dbContextOptions))
             {
-                foreach (var i in db.Notification.Where(j => j.Time >= DateTime.Now).OrderByDescending(j => j.Id))
+                foreach (var i in db.Notification.Where(j => j.Time <= DateTime.Now).OrderByDescending(j => j.Id))
                 {
                     if (count != 0 && notifications.Count > count)
                     {
