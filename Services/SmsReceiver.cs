@@ -67,7 +67,7 @@ namespace mscfreshman
             AcsClient = acsClient;
             var file = new FileStream("./" + name + ".txt", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
             file.Seek(0, SeekOrigin.End);
-            logs = new StreamWriter(file);
+            logs = new StreamWriter(file) { AutoFlush = true };
         }
 
         readonly long bufferTime = 60 * 2;
@@ -85,7 +85,7 @@ namespace mscfreshman
             var token = queryTokenForMnsQueueResponse.MessageTokenDTO;
             return token;
         }
-        
+
         public void Handle()
         {
             while (!Environment.HasShutdownStarted)
