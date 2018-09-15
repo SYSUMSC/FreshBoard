@@ -10,11 +10,6 @@ namespace mscfreshman.Services
     {
         public Task SendEmailAsync(string email, string subject, string message)
         {
-            return Execute(subject, message, email);
-        }
-
-        public Task Execute(string subject, string message, string email)
-        {
             var msg = new MailMessage
             {
                 From = new MailAddress("services@sysumsc.com", "SYSU MSC", Encoding.UTF8),
@@ -32,7 +27,7 @@ namespace mscfreshman.Services
                 Host = "smtpdm.aliyun.com",
                 Port = 25,
                 Credentials =
-                    new NetworkCredential("services@sysumsc.com", "passwd") //TODO: Fillin these fields
+                    new NetworkCredential("services@sysumsc.com", Secrets.EmailPassword)
             };
 
             return smtp.SendMailAsync(msg);

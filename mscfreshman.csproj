@@ -32,8 +32,14 @@
     <Reference Include="aliyun-net-sdk-core">
       <HintPath>aliyun-net-sdk-core.dll</HintPath>
     </Reference>
+    <Reference Include="aliyun-net-sdk-dybaseapi">
+      <HintPath>aliyun-net-sdk-dybaseapi.dll</HintPath>
+    </Reference>
     <Reference Include="aliyun-net-sdk-dysmsapi">
       <HintPath>aliyun-net-sdk-dysmsapi.dll</HintPath>
+    </Reference>
+    <Reference Include="Aliyun.MNS">
+      <HintPath>Aliyun.MNS.dll</HintPath>
     </Reference>
   </ItemGroup>
 

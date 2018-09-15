@@ -81,6 +81,14 @@ export class ApplyManager extends Component {
                             </label>
                         </div>
                     </FormGroup>
+
+                    <FormGroup>
+                        <div className="form-check-inline">
+                            <label className="form-check-label">
+                                <Input type="checkbox" name="requireResponse" id="requireResponse" />要求短信回执
+                            </label>
+                        </div>
+                    </FormGroup>
                     <br />
                     <h4>成员信息搜索</h4>
                     <SearchUsers />

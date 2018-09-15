@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using mscfreshman.Data.Identity;
+using mscfreshman.Services;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -20,15 +21,18 @@ namespace mscfreshman.Controllers
         private readonly UserManager<FreshBoardUser> _userManager;
         private readonly SignInManager<FreshBoardUser> _signInManager;
         private readonly IEmailSender _emailSender;
+        private readonly ISmsSender _smsSender;
 
         public AccountController(
             UserManager<FreshBoardUser> userManager,
             SignInManager<FreshBoardUser> signInManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ISmsSender smsSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _smsSender = smsSender;
         }
 
         [HttpPost]
@@ -310,27 +314,10 @@ namespace mscfreshman.Controllers
                 return Json(new { succeeded = false, message = "发生未知错误" });
             }
             var token = await _userManager.GenerateChangePhoneNumberTokenAsync(user, user.PhoneNumber);
-
-            var product = "Dysmsapi";
-            var domain = "dysmsapi.aliyuncs.com";
-            //TODO: Fillin these fields
-            var accessKeyId = "keyId";
-            var accessKeySecret = "keySec";
-
-            var profile = DefaultProfile.GetProfile("cn-hangzhou", accessKeyId, accessKeySecret);
-
-            DefaultProfile.AddEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
-            var acsClient = new DefaultAcsClient(profile);
-            var request = new SendSmsRequest
-            {
-                PhoneNumbers = user.PhoneNumber,
-                SignName = "sysumsc",
-                TemplateCode = "SMS_143868088",
-                TemplateParam = JsonConvert.SerializeObject(new { code = token })
-            };
+            
             try
             {
-                var res = acsClient.GetAcsResponse(request);
+                var res = await _smsSender.SendSmsAsync(user.PhoneNumber, JsonConvert.SerializeObject(new { code = token }), "SMS_143868088");
                 return Json(new { succeeded = res.Code.ToUpper() == "OK", message = res.Message });
             }
             catch

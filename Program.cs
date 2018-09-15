@@ -19,6 +19,7 @@ namespace mscfreshman
                      Path.Combine(Environment.CurrentDirectory, "BlogsRepo"), 
                      "Blogs"))
                 .Start();
+            SmsReceiver.StartThread();
             CreateWebHostBuilder(args).Build().Run();
         }
 

@@ -54,7 +54,7 @@ export class NotificationManager extends Component {
     }
 
     getNotifications(fromStart = false) {
-        Get('/Admin/GetNotificationsAsync', {}, { start: fromStart ? 0 :(this.state.currentPage - 1) * 20, count: 20 })
+        Get('/Admin/GetNotificationsAsync', {}, { start: fromStart ? 0 : (this.state.currentPage - 1) * 20, count: 20 })
             .then(response => response.json())
             .then(data => {
                 if (data.succeeded)
@@ -91,33 +91,37 @@ export class NotificationManager extends Component {
             .catch(() => alert('发生未知错误'));
     }
 
-    async sendEmailSMS(nid, index) {
+    async sendEmailSMS(nid) {
+        if (this.sending) return;
         if (this.state.pushUsers === null || this.state.pushUsers.users === null) return;
         if (this.state.notifications.length <= this.state.readIndex) return;
         this.setState({ currentSent: 0 });
         this.sending = true;
         var email = document.getElementById('sendemail').checked;
         var phone = document.getElementById('sendsms').checked;
+        var requireResponse = document.getElementById('requireresponse').checked;
         var list = document.getElementById('errorlist');
         if (list !== null)
             list.innerHTML = "";
         for (var i = 0; i < this.state.pushUsers.users.length; i++) {
             var data = null;
             try {
-                data = await (await Post('/Admin/PushNotificationAsync', {}, {
-                    nid: nid, userId: this.state.pushUsers.users[i].id, phone, email
-                })).json();
+                var response = await Post('/Admin/PushNotificationAsync', {}, {
+                    nid: nid, userId: this.state.pushUsers.users[i].id, phone: phone, email: email, requireResponse: requireResponse
+                }).catch(() => false);
+                if (response)
+                    data = await response.json();
+                else data = {
+                    emailSucceeded: false,
+                    phoneSucceeded: false
+                };
             }
             catch (e) {
                 //ignore
             }
 
-            if (data === null) {
-                this.setState({ currentSent: this.state.currentSent + 1 });
-            }
-            else {
-                this.setState({ currentSent: this.state.currentSent + 1 });
-            }
+            this.setState({ currentSent: this.state.currentSent + 1 });
+
             if (list !== null) {
                 var ele = document.createElement('li');
                 ele.className = "justify-content-between list-group-item";
@@ -254,10 +258,16 @@ export class NotificationManager extends Component {
                                     <Input type="checkbox" id="sendsms" />短信
                                 </label>
                             </div>
+                            <div className="form-check-inline">
+                                <label className="form-check-label">
+                                    <Input type="checkbox" id="requireresponse" />要求短信回执
+                                </label>
+                            </div>
+
                         </FormGroup>
                         <p>
                             {this.state.pushUsers !== null && this.state.pushUsers.users !== null ? <span>发送进度：{this.state.currentSent}/{this.state.pushUsers.users.length}</span> : null}
-                            <Button color="primary" id="sendBtn" className="float-right" onClick={canRead ? () => this.sendEmailSMS(this.state.notifications[this.state.readIndex].id, this.state.readIndex) : null}>发送</Button>
+                            <Button color="primary" id="sendBtn" className="float-right" onClick={canRead ? () => this.sendEmailSMS(this.state.notifications[this.state.readIndex].id) : null}>发送</Button>
                         </p>
                         <div style={{ maxHeight: '200px', overflow: 'auto' }}>
                             <ListGroup id="errorlist" />

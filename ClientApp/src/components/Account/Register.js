@@ -55,7 +55,7 @@ export class Register extends Component {
 
                     <FormGroup>
                         <Label for="grade">年级</Label>
-                        <Input type="number" name="grade" id="grade" min="2000" max="2018" required />
+                        <Input type="number" name="grade" id="grade" min="2000" max="2018" required placeholder="填写年份" />
                     </FormGroup>
 
                     <FormGroup>

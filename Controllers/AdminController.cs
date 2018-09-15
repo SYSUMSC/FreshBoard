@@ -1,12 +1,10 @@
-﻿using Aliyun.Acs.Core;
-using Aliyun.Acs.Core.Profile;
-using Aliyun.Acs.Dysmsapi.Model.V20170525;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using mscfreshman.Data;
 using mscfreshman.Data.Identity;
+using mscfreshman.Services;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -21,17 +19,20 @@ namespace mscfreshman.Controllers
         private readonly SignInManager<FreshBoardUser> _signInManager;
         private readonly DbContextOptions<ApplicationDbContext> _dbContextOptions;
         private readonly IEmailSender _emailSender;
+        private readonly ISmsSender _smsSender;
 
         public AdminController(
             UserManager<FreshBoardUser> userManager,
             SignInManager<FreshBoardUser> signInManager,
             DbContextOptions<ApplicationDbContext> dbContextOptions,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ISmsSender smsSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _dbContextOptions = dbContextOptions;
             _emailSender = emailSender;
+            _smsSender = smsSender;
         }
 
         private async Task<bool> VerifyPrivilegeAsync()
@@ -69,7 +70,7 @@ namespace mscfreshman.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ModifyApplyStatusAsync(string userId, int status)
+        public async Task<IActionResult> ModifyApplyStatusAsync(string userId, int status, bool requireResponse = false)
         {
             if (!await VerifyPrivilegeAsync())
             {
@@ -93,33 +94,15 @@ namespace mscfreshman.Controllers
 
                 if (user.PhoneNumberConfirmed)
                 {
-                    var product = "Dysmsapi";
-                    var domain = "dysmsapi.aliyuncs.com";
-                    //TODO: Fillin these fields
-                    var accessKeyId = "keyId";
-                    var accessKeySecret = "keySec";
-
-                    var profile = DefaultProfile.GetProfile("cn-hangzhou", accessKeyId, accessKeySecret);
-
-                    DefaultProfile.AddEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
-                    var acsClient = new DefaultAcsClient(profile);
-
-                    var request = new SendSmsRequest
+                    try
                     {
-                        PhoneNumbers = user.PhoneNumber,
-                        SignName = "sysumsc",
-                        TemplateCode = "SMS_143863265",
-                        TemplateParam = JsonConvert.SerializeObject(
+                        var res = await _smsSender.SendSmsAsync(user.PhoneNumber, JsonConvert.SerializeObject(
                             new
                             {
                                 name = user.Name,
                                 department = user.Department == 1 ? "行政策划部" : user.Department == 2 ? "媒体宣传部" : user.Department == 3 ? "综合技术部" : "暂无",
                                 status = user.ApplyStatus == 1 ? "等待一面" : user.ApplyStatus == 2 ? "等待二面" : user.ApplyStatus == 3 ? "录取失败" : user.ApplyStatus == 4 ? "录取成功" : "暂无"
-                            })
-                    };
-                    try
-                    {
-                        var res = acsClient.GetAcsResponse(request);
+                            }), requireResponse ? "SMS_144943362" : "SMS_143863265");
                     }
                     catch
                     {
@@ -314,7 +297,7 @@ namespace mscfreshman.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PushNotificationAsync(int nid, string userId, bool phone, bool email)
+        public async Task<IActionResult> PushNotificationAsync(int nid, string userId, bool phone, bool email, bool requireResponse = false)
         {
             if (!await VerifyPrivilegeAsync())
             {
@@ -332,27 +315,9 @@ namespace mscfreshman.Controllers
 
             if (phone && user.PhoneNumberConfirmed)
             {
-                var product = "Dysmsapi";
-                var domain = "dysmsapi.aliyuncs.com";
-                //TODO: Fillin these fields
-                var accessKeyId = "keyId";
-                var accessKeySecret = "ksySec";
-
-                var profile = DefaultProfile.GetProfile("cn-hangzhou", accessKeyId, accessKeySecret);
-
-                DefaultProfile.AddEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
-                var acsClient = new DefaultAcsClient(profile);
-
-                var request = new SendSmsRequest
-                {
-                    PhoneNumbers = user.PhoneNumber,
-                    SignName = "sysumsc",
-                    TemplateCode = "SMS_143863117",
-                    TemplateParam = JsonConvert.SerializeObject(new { name = user.Name })
-                };
                 try
                 {
-                    var res = acsClient.GetAcsResponse(request);
+                    var res = await _smsSender.SendSmsAsync(user.PhoneNumber, JsonConvert.SerializeObject(new { name = user.Name }), requireResponse ? "SMS_144853993" : "SMS_143863117");
                     phoneSucceeded = res.Code.ToUpper() == "OK";
                 }
                 catch
@@ -365,7 +330,7 @@ namespace mscfreshman.Controllers
             {
                 try
                 {
-                    await _emailSender.SendEmailAsync(user.Email, "消息通知 - SYSU MSC", $"<h2>中山大学微软学生俱乐部</h2><p>{user.Name} 您好！您有新的通知，请点击 <a href='{Request.Scheme}://{Request.Host}/Nofication'>此处</a> 查看。</p><hr /><p>请勿回复本邮件</p><p>{DateTime.Now} - SYSU MSC</p>");
+                    await _emailSender.SendEmailAsync(user.Email, "消息通知 - SYSU MSC", $"<h2>中山大学微软学生俱乐部</h2><p>{user.Name} 您好！您有新的通知，请点击 <a href='{Request.Scheme}://{Request.Host}/Notification'>此处</a> 查看。</p><hr /><p>请勿回复本邮件</p><p>{DateTime.Now} - SYSU MSC</p>");
                 }
                 catch
                 {

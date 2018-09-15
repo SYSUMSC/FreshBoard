@@ -51,6 +51,7 @@ namespace mscfreshman
 
             services.AddEntityFrameworkSqlite();
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<ISmsSender, SmsSender>();
             services.AddSession();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

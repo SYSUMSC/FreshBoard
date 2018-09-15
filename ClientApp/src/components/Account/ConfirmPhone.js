@@ -77,10 +77,10 @@ export class ConfirmPhone extends Component {
                 <table style={{ width: '100%' }}>
                     <tr>
                         <td>
-                            <Input type="number" id="confirmToken" />
-                        </td>
-                        <td className="float-right">
                             <Button color="primary" disabled={this.state.disabled} onClick={this.sendConfirmSMS}>{buttonText}</Button>
+                        </td>
+                        <td>
+                            <Input type="number" id="confirmToken" placeholder="验证码" />
                         </td>
                     </tr>
                 </table>

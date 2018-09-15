@@ -53,12 +53,12 @@ export class Notification extends Component {
                             <CardBody>
                                 <CardText>{x.preview}</CardText>
                                 <CardLink>
-                                    <Button color="primary" onClick={() => this.togglemsg(i, x.id)}>阅读</Button>
+                                    <Button color="primary" onClick={() => this.togglemsg(i, x.id)}>查看详情</Button>
                                 </CardLink>
                                 {
                                     x.hasRead ? null :
                                         <CardLink id={'dismiss_' + i.toString()}>
-                                            <Button color="secondary" onClick={() => this.dismissmsg(i, x.id)}>忽略</Button>
+                                            <Button color="secondary" onClick={() => this.dismissmsg(i, x.id)}>标记已读</Button>
                                         </CardLink>
                                 }
                             </CardBody>
