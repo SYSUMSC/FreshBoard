@@ -331,6 +331,7 @@ namespace mscfreshman.Controllers
                 try
                 {
                     await _emailSender.SendEmailAsync(user.Email, "消息通知 - SYSU MSC", $"<h2>中山大学微软学生俱乐部</h2><p>{user.Name} 您好！您有新的通知，请点击 <a href='{Request.Scheme}://{Request.Host}/Notification'>此处</a> 查看。</p><hr /><p>请勿回复本邮件</p><p>{DateTime.Now} - SYSU MSC</p>");
+                    emailSucceeded = true;
                 }
                 catch
                 {
