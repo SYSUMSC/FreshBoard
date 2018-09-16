@@ -23,7 +23,7 @@ export class Register extends Component {
                 .then(data => {
                     if (data.succeeded) {
                         alert('注册成功，请及时验证邮箱和手机，否则无法接收到通知');
-                        window.location = '/';
+                        window.location.reload();
                     }
                     else {
                         alert(data.message);

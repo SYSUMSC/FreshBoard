@@ -1,23 +1,12 @@
 import React, { Component } from 'react';
 import * as Dom from 'react-router-dom';
-import { TabPane, Button, Container, Modal, ModalBody, ModalHeader, ModalFooter, Nav, NavItem, NavLink, TabContent, Row, Col } from 'reactstrap';
-import classnames from 'classnames';
-import { Register } from './Account/Register';
-import { Login } from './Account/Login';
+import { Button, Container, Row, Col } from 'reactstrap';
+
 
 export class Home extends Component {
     displayName = Home.name
     constructor(props) {
         super(props);
-
-        this.toggleLogin = this.toggleLogin.bind(this);
-        this.state = {
-            loginShown: false,
-            activeTab: '1'
-        };
-
-        this.switchTab = this.switchTab.bind(this);
-
     }
 
     componentDidMount() {
@@ -25,7 +14,6 @@ export class Home extends Component {
         if (footer !== null) footer.style = "display:none";
         var body = document.getElementById('body');
         if (body !== null) body.style = "margin-bottom: 0px";
-
     }
 
     componentWillUnmount() {
@@ -35,20 +23,6 @@ export class Home extends Component {
         if (body !== null) body.style = "margin-bottom: 50px";
     }
 
-
-    toggleLogin() {
-        this.setState({
-            loginShown: !this.state.loginShown
-        });
-    }
-
-    switchTab(tab) {
-        if (this.state.activeTab !== tab) {
-            this.setState({
-                activeTab: tab
-            });
-        }
-    }
 
     render() {
         let adminPortal = this.props.user === null ? null :
@@ -67,7 +41,7 @@ export class Home extends Component {
                     </Dom.NavLink>&nbsp;
                     {adminPortal}
                 </div>
-                : <Button color="primary" onClick={this.toggleLogin}>立即上车</Button>;
+                : <Button color="primary" onClick={() => this.props.toggleLogin()}>立即上车</Button>;
         return (
             <div>
                 <div className="header">
@@ -123,54 +97,6 @@ export class Home extends Component {
                     </Container>
                 </section>
 
-                <Modal isOpen={this.state.loginShown} toggle={this.toggleLogin}>
-                    <ModalHeader toggle={this.toggleLogin}>加入 MSC！</ModalHeader>
-                    <ModalBody>
-                        <p>注册 MSC Freshman 账号可以方便的申请入部、查看面试状态、查看录取结果以及收取相关通知</p>
-                        <div>
-                            <Nav tabs>
-                                <NavItem>
-                                    <NavLink
-                                        className={classnames({ active: this.state.activeTab === '1' })}
-                                        onClick={() => { this.switchTab('1'); }}
-                                        href='#'
-                                    >
-                                        登录
-                                </NavLink>
-                                </NavItem>
-                                <NavItem>
-                                    <NavLink
-                                        className={classnames({ active: this.state.activeTab === '2' })}
-                                        onClick={() => { this.switchTab('2'); }}
-                                        href='#'
-                                    >
-                                        注册
-                                </NavLink>
-                                </NavItem>
-                            </Nav>
-                            <br />
-                            <TabContent activeTab={this.state.activeTab}>
-                                <TabPane tabId="1">
-                                    <Row>
-                                        <Col sm="12">
-                                            <Login />
-                                        </Col>
-                                    </Row>
-                                </TabPane>
-                                <TabPane tabId="2">
-                                    <Row>
-                                        <Col sm="12">
-                                            <Register />
-                                        </Col>
-                                    </Row>
-                                </TabPane>
-                            </TabContent>
-                        </div>
-                    </ModalBody>
-                    <ModalFooter>
-                        <p>SYSU MSC Account</p>
-                    </ModalFooter>
-                </Modal>
             </div>
         );
     }

@@ -8,7 +8,7 @@ export class Layout extends Component {
     render() {
         return (
             <div>
-                <NavMenu user={this.props.user} />
+                <NavMenu user={this.props.user} toggleLogin={this.props.toggleLogin} />
                 <div id="body" className="body-content">
                     {this.props.children}
                 </div>

@@ -148,15 +148,15 @@ export class Portal extends Component {
     render() {
         let userInfo = this.props.user === null ? <p>加载中...</p> :
             this.props.user.isSignedIn ?
-                this.userInfoList(this.props.user.userInfo) : <p>没有数据</p>;
+                this.userInfoList(this.props.user.userInfo) : <p>请登录账户</p>;
 
         let departmentInfo = this.props.user === null ? <p>加载中...</p> :
             this.props.user.isSignedIn ?
-                Portal.ApplyStatus(this.props.user.userInfo) : <p>没有数据</p>;
+                Portal.ApplyStatus(this.props.user.userInfo) : <p>请登录账户</p>;
 
         let otherInfo = this.props.user === null ? <p>加载中...</p> :
             this.props.user.isSignedIn ?
-                Portal.OtherInfoList(this.props.user.otherInfo) : <p>没有数据</p>;
+                Portal.OtherInfoList(this.props.user.otherInfo) : <p>请登录账户</p>;
 
         let modal = this.state.modalType === 1 ? <Modify user={this.props.user} updateStatus={this.props.updateStatus} closeModal={this.toggleModal} />
             : this.state.modalType === 2 ? <ModifyOther user={this.props.user} updateStatus={this.props.updateStatus} closeModal={this.toggleModal} />
@@ -180,11 +180,11 @@ export class Portal extends Component {
                 <h4>基本信息 <Button color="primary" onClick={() => this.toggleModal(1)}>修改</Button></h4>
                 {userInfo}
                 <hr />
-                <h4>其他信息 <Button color="primary" onClick={() => this.toggleModal(2)}>修改</Button></h4>
-                {otherInfo}
-                <hr />
                 <h4>部门申请 <Button color="primary" onClick={() => this.toggleModal(3)}>修改</Button></h4>
                 {departmentInfo}
+                <hr />
+                <h4>其他信息 <Button color="primary" onClick={() => this.toggleModal(2)}>修改</Button></h4>
+                {otherInfo}
                 <hr />
                 <h4>个人二维码</h4>
                 <img id='userQR' alt='' src='' />

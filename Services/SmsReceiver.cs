@@ -13,14 +13,14 @@ namespace mscfreshman
     class SmsReceiver
     {
         private static readonly int maxThread = 2;
-        static readonly string accessId = Secrets.AliyunAccessKeyId;
-        static readonly string accessSecret = Secrets.AliyunAccessKeySecret;
-        static readonly string messageType = "SmsUp";
-        static readonly string queueName = "Alicom-Queue-1756501826101097-SmsUp";
-        static readonly string domainForPop = "dybaseapi.aliyuncs.com";
-        static readonly string regionIdForPop = "cn-hangzhou";
-        static readonly string productName = "Dybaseapi";
-        static IAcsClient acsClient = null;
+        private static readonly string accessId = Secrets.AliyunAccessKeyId;
+        private static readonly string accessSecret = Secrets.AliyunAccessKeySecret;
+        private static readonly string messageType = "SmsUp";
+        private static readonly string queueName = "Alicom-Queue-1756501826101097-SmsUp";
+        private static readonly string domainForPop = "dybaseapi.aliyuncs.com";
+        private static readonly string regionIdForPop = "cn-hangzhou";
+        private static readonly string productName = "Dybaseapi";
+        private static IAcsClient acsClient = null;
 
         public static IAcsClient InitAcsClient(string regionIdForPop, string accessId, string accessSecret, string productName, string domainForPop)
         {
@@ -70,10 +70,10 @@ namespace mscfreshman
             logs = new StreamWriter(file) { AutoFlush = true };
         }
 
-        readonly long bufferTime = 60 * 2;
-        readonly string mnsAccountEndpoint = "https://1943695596114318.mns.cn-hangzhou.aliyuncs.com/";
-        Dictionary<string, QueryTokenForMnsQueueResponse.QueryTokenForMnsQueue_MessageTokenDTO> tokenMap = new Dictionary<string, QueryTokenForMnsQueueResponse.QueryTokenForMnsQueue_MessageTokenDTO>();
-        Dictionary<string, Queue> queueMap = new Dictionary<string, Queue>();
+        private readonly long bufferTime = 60 * 2;
+        private readonly string mnsAccountEndpoint = "https://1943695596114318.mns.cn-hangzhou.aliyuncs.com/";
+        private Dictionary<string, QueryTokenForMnsQueueResponse.QueryTokenForMnsQueue_MessageTokenDTO> tokenMap = new Dictionary<string, QueryTokenForMnsQueueResponse.QueryTokenForMnsQueue_MessageTokenDTO>();
+        private Dictionary<string, Queue> queueMap = new Dictionary<string, Queue>();
 
         public QueryTokenForMnsQueueResponse.QueryTokenForMnsQueue_MessageTokenDTO GetTokenByMessageType(IAcsClient acsClient, string messageType)
         {

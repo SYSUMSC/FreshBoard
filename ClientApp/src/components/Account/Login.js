@@ -22,7 +22,7 @@ export class Login extends Component {
             FormPost('/Account/LoginAsync', form)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.succeeded) window.location = '/';
+                    if (data.succeeded) window.location.reload();
                     else {
                         alert(data.message);
                         this.setState({ disableButton: false });

@@ -97,10 +97,13 @@ export class Notification extends Component {
 
     render() {
         let canRead = this.state.notifications.length > this.state.readIndex;
+        let loginPrompt = this.props.user === null ? null :
+            this.props.user.isSignedIn ? null : <p className="text-info">请登录查看更多通知</p>;
         return (
             <Container>
                 <br />
                 <h2>通知中心</h2>
+                {loginPrompt}
                 {this.getNotificationLayout(this.state.notifications)}
                 {this.state.loading ? <div><br /><p>加载中...</p></div> : null}
 
