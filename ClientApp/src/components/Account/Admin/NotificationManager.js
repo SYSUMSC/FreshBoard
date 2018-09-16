@@ -27,8 +27,10 @@ export class NotificationManager extends Component {
         this.togglesending = this.togglesending.bind(this);
         this.showErrors = this.showErrors.bind(this);
         this.updateList = this.updateList.bind(this);
+        this.sendEmailSMS = this.sendEmailSMS.bind(this);
 
         this.sending = false;
+        this.retry = 0;
 
         this.getNotifications();
     }
@@ -91,52 +93,66 @@ export class NotificationManager extends Component {
             .catch(() => alert('发生未知错误'));
     }
 
-    async sendEmailSMS(nid) {
+    sendSingleSMS(list, nid, userId, phone, email, requireResponse) {
+        Post('/Admin/PushNotificationAsync', {}, {
+            nid: nid,
+            userId: userId,
+            phone: phone,
+            email: email,
+            requireResponse: requireResponse
+        })
+            .then(res => res.json())
+            .then(data => {
+                this.retry = 0;
+                this.setState({ currentSent: this.state.currentSent + 1 });
+                if (list !== null) {
+                    var ele = document.createElement('li');
+                    ele.className = "justify-content-between list-group-item";
+                    ele.innerHTML = `<p>${userId}</p><p>邮件 ${(data.emailSucceeded ? '√' : '×')} 短信 ${(data.phoneSucceeded ? '√' : '×')}</p>`;
+                    list.appendChild(ele);
+                }
+                if (this.state.currentSent >= this.state.pushUsers.users.length) {
+                    this.sending = false;
+                    Post('/Admin/SetNotificationPushStatusAsync', {}, { nid: nid });
+                    return;
+                }
+                this.sendSingleSMS(list, nid, this.state.pushUsers.users[this.state.currentSent].id, phone, email, requireResponse);
+            })
+            .catch(() => {
+                this.retry++;
+                if (this.retry > 3) {
+                    this.setState({ currentSent: this.state.currentSent + 1 });
+                    this.retry = 0;
+                    if (list !== null) {
+                        var ele = document.createElement('li');
+                        ele.className = "justify-content-between list-group-item";
+                        ele.innerHTML = `<p>${userId}</p><p>邮件 × 短信 ×</p>`;
+                        list.appendChild(ele);
+                    }
+                }
+                if (this.state.currentSent >= this.state.pushUsers.users.length) {
+                    this.sending = false;
+                    Post('/Admin/SetNotificationPushStatusAsync', {}, { nid: nid });
+                    return;
+                }
+                this.sendSingleSMS(list, nid, this.state.pushUsers.users[this.state.currentSent].id, phone, email, requireResponse);
+            });
+    }
+
+    sendEmailSMS(nid) {
         if (this.sending) return;
         if (this.state.pushUsers === null || this.state.pushUsers.users === null) return;
         if (this.state.notifications.length <= this.state.readIndex) return;
         this.setState({ currentSent: 0 });
         this.sending = true;
+        this.retry = 0;
         var email = document.getElementById('sendemail').checked;
         var phone = document.getElementById('sendsms').checked;
         var requireResponse = document.getElementById('requireresponse').checked;
         var list = document.getElementById('errorlist');
         if (list !== null)
             list.innerHTML = "";
-        for (var i = 0; i < this.state.pushUsers.users.length; i++) {
-            var data = null;
-            try {
-                var response = await Post('/Admin/PushNotificationAsync', {}, {
-                    nid: nid, userId: this.state.pushUsers.users[i].id, phone: phone, email: email, requireResponse: requireResponse
-                }).catch(() => false);
-                if (response)
-                    data = await response.json();
-                else data = {
-                    emailSucceeded: false,
-                    phoneSucceeded: false
-                };
-            }
-            catch (e) {
-                //ignore
-            }
-
-            this.setState({ currentSent: this.state.currentSent + 1 });
-
-            if (list !== null) {
-                var ele = document.createElement('li');
-                ele.className = "justify-content-between list-group-item";
-                ele.innerHTML = `<p>发送结果： ${this.state.pushUsers.users[i].id}</p><p>邮件 ${(data.emailSucceeded ? '√' : '×')} 短信 ${(data.phoneSucceeded ? '√' : '×')}</p>`;
-                list.appendChild(ele);
-            }
-        }
-        try {
-            await Post('/Admin/SetNotificationPushStatusAsync', {}, { nid: nid });
-        }
-        catch (e) {
-            //ignore
-        }
-        this.sending = false;
-
+        this.sendSingleSMS(list, nid, this.state.pushUsers.users[this.state.currentSent].id, phone, email, requireResponse);
     }
 
     removeNotification(nid, index) {
