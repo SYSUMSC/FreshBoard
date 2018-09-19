@@ -20,6 +20,8 @@ export class AdminIndex extends Component {
                 <NavLink to={'/Account/Admin/PrivilegeManager'}><Button color="primary">权限管理</Button></NavLink>
                 &nbsp;
                 <NavLink to={'/Account/Admin/ProblemManager'}><Button color="primary">题目管理</Button></NavLink>
+                &nbsp;
+                <NavLink to={'/Account/Admin/SearchUsers'}><Button color="primary">浏览用户</Button></NavLink>
             </div>
         );
     }

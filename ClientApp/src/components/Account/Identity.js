@@ -1,5 +1,6 @@
 ﻿import React, { Component } from "react";
-import { Container } from "reactstrap";
+import { Container, Form, Button, FormGroup, Input } from "reactstrap";
+import { FormPost } from '../../utils/HttpRequest';
 
 export class Identity extends Component {
     static UserInfoList(userInfo) {
@@ -132,7 +133,16 @@ export class Identity extends Component {
             });
     }
 
-
+    saveData() {
+        var form = document.getElementById('recordForm');
+        FormPost('/Admin/SaveRecordAsync', form)
+            .then(res => res.json())
+            .then(data => {
+                if (data.succeeded) alert("保存成功");
+                else alert(data.message);
+            })
+            .catch(() => alert('发生未知错误'));
+    }
 
     render() {
         let userInfo = this.state.loading ? <p>加载中...</p> :
@@ -144,6 +154,15 @@ export class Identity extends Component {
         let otherInfo = this.state.loading ? <p>加载中...</p> :
             this.state.otherInfo !== null ? Identity.OtherInfoList(this.state.otherInfo) : <p>没有数据</p>;
 
+        let record = this.state.loading ? <p>加载中...</p> :
+            this.state.otherInfo !== null ? <Form id="recordForm">
+                <Input type="hidden" name="userId" value={this.state.userInfo.id}></Input>
+                <FormGroup>
+                    <textarea id="record" className="form-control" name="record" defaultValue={this.state.userInfo.additionalInfo}></textarea>
+                </FormGroup>
+                <Button color="primary" onClick={this.saveData}>保存</Button>
+            </Form> : <p>没有数据</p>;
+
         return (
             <Container>
                 <br />
@@ -151,11 +170,14 @@ export class Identity extends Component {
                 <h4>基本信息</h4>
                 {userInfo}
                 <hr />
+                <h4>部门申请</h4>
+                {departmentInfo}
+                <hr />
                 <h4>其他信息</h4>
                 {otherInfo}
                 <hr />
-                <h4>部门申请</h4>
-                {departmentInfo}
+                <h4>面试记录</h4>
+                {record}
             </Container>
         );
     }

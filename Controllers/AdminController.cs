@@ -47,6 +47,23 @@ namespace mscfreshman.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> SaveRecordAsync(string userId, string record)
+        {
+            if (!await VerifyPrivilegeAsync())
+            {
+                return Json(new { succeeded = false, message = "没有权限" });
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return Json(new { succeeded = false, message = "没有找到该用户" });
+            }
+            user.AdditionalInfo = record;
+            await _userManager.UpdateAsync(user);
+            return Json(new { succeeded = true });
+        }
+
+        [HttpPost]
         public async Task<IActionResult> ModifyPrivilegeAsync(string userId, int privilege)
         {
             if (!await VerifyPrivilegeAsync())

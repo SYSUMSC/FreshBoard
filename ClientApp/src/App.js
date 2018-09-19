@@ -19,7 +19,8 @@ import { NotFound } from './components/NotFound';
 import classnames from 'classnames';
 import { Register } from './components/Account/Register';
 import { Login } from './components/Account/Login';
-import { TabPane, Modal, ModalBody, ModalHeader, ModalFooter, TabContent, Row, Col, Nav, NavLink, NavItem } from 'reactstrap';
+import { SearchUsers } from './components/Account/Admin/SearchUsers';
+import { TabPane, Modal, ModalBody, ModalHeader, ModalFooter, TabContent, Row, Col, Nav, NavLink, NavItem, Container } from 'reactstrap';
 
 export default class App extends Component {
     displayName = App.name
@@ -87,6 +88,7 @@ export default class App extends Component {
                         <Route path='/Account/Admin/ApplyManager' render={() => { this.setTitle('申请管理'); return <ApplyManager user={this.state.user} />; }} />
                         <Route path='/Account/Admin/PrivilegeManager' render={() => { this.setTitle('权限管理'); return <PrivilegeManager user={this.state.user} />; }} />
                         <Route path='/Account/Admin/ProblemManager' render={() => { this.setTitle('题目管理'); return <ProblemManager user={this.state.user} />; }} />
+                        <Route path='/Account/Admin/SearchUsers' render={() => { this.setTitle('浏览用户'); return <Container><br /><h2>浏览用户</h2><SearchUsers /></Container>; }} />
                         <Route render={() => { this.setTitle('找不到页面'); return <NotFound />; }} />
                     </Switch>
                 </Layout>
