@@ -157,6 +157,11 @@ namespace mscfreshman.Controllers
                 userList = _userManager.Users.ToList();
             }
 
+            if (patterns == "$Record")
+            {
+                userList = _userManager.Users.Where(i => !string.IsNullOrEmpty(i.AdditionalInfo)).ToList();
+            }
+
             foreach (var user in _userManager.Users.Where(i => i.Id.Contains(patterns)))
             {
                 if (!userList.Any(i => i.Id == user.Id))

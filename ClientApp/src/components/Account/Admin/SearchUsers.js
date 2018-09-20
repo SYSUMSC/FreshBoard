@@ -75,7 +75,7 @@ export class SearchUsers extends Component {
         let userInfo = this.state.loading ? <p>加载中...</p> : this.state.succeeded ? this.generateUserInfo() : <p>没有数据</p>;
         return (
             <div>
-                <Label for="patterns">可通过用户 Id/姓名/邮箱/手机搜索成员，输入 $All 查看全部成员</Label>
+                <Label for="patterns">可通过用户 Id/姓名/邮箱/手机搜索成员，输入 $All 查看全部成员，输入 $Record 查看已有面试记录的成员</Label>
                 <Input id="patterns" type="text" onInput={this.searchUsers} />
                 <br />
                 {userInfo}
