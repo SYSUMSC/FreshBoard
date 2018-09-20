@@ -140,15 +140,12 @@ namespace mscfreshman.Controllers
                 if (user.CrackProgress < 10)
                 {
                     user.CrackProgress++;
-                    await _userManager.UpdateAsync(user);
-                }
-                else
-                {
-                    if (user.ApplyStatus == 1)
+
+                    if (user.CrackProgress == 10 && user.ApplyStatus == 1)
                     {
                         user.ApplyStatus = 2;
-                        await _userManager.UpdateAsync(user);
                     }
+                    await _userManager.UpdateAsync(user);
                 }
                 
                 db.CrackRecord.Add(new CrackRecord
