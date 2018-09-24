@@ -54,7 +54,7 @@ export class ApplyManager extends Component {
         <Form id="applyForm">
           <FormGroup>
             <Label>用户 Id</Label>
-            <Input name="userIds" type="textarea" required />
+            <Input name="userIds" type="textarea" id="userIds" required />
           </FormGroup>
           <FormGroup>
             <Label>新录取状态</Label>
@@ -132,7 +132,10 @@ export class ApplyManager extends Component {
           </p>
           <br />
           <h4>成员信息搜索</h4>
-          <SearchUsers />
+          <SearchUsers
+            add={id => (document.getElementById("userIds").value += "\n" + id)}
+            exists={id => document.getElementById("userIds").value.includes(id)}
+          />
           <br />
         </Form>
         <br />

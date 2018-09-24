@@ -1,5 +1,5 @@
 ﻿import React, { Component } from "react";
-import { Input, Label, Modal, ListGroup, ListGroupItem } from "reactstrap";
+import { Button, Input, Label, ListGroup, ListGroupItem } from "reactstrap";
 import { Post } from "../../../utils/HttpRequest";
 
 export class SearchUsers extends Component {
@@ -26,7 +26,7 @@ export class SearchUsers extends Component {
       <div>
         <ListGroup>
           {this.state.users.map(x => (
-            <ListGroupItem className="justify-content-between">
+            <ListGroupItem className="justify-content-between" key={x.id}>
               <p>
                 {x.name} {x.sexual === 1 ? "♂" : "♀"}{" "}
                 {x.department === 1
@@ -46,6 +46,13 @@ export class SearchUsers extends Component {
                         ? "录取成功"
                         : "暂无"}{" "}
                 解谜进度: {x.crackProgress}
+                <Button
+                  className="float-right"
+                  color="primary"
+                  onClick={() => this.props.add(x.id)}
+                >
+                  添加
+                </Button>
               </p>
               <p>
                 Id: {x.id}{" "}
