@@ -43,7 +43,6 @@ namespace mscfreshman.Controllers
 
         public IActionResult GetBlogTree(string path)
         {
-            path = HttpUtility.UrlDecode(path, Encoding.UTF8);
             if (string.IsNullOrWhiteSpace(path))
             {
                 path = string.Empty;
@@ -69,6 +68,7 @@ namespace mscfreshman.Controllers
 
                 var fileList = Directory.GetDirectories(dir)
                         .Where(i => !Path.GetFileName(i).StartsWith("."))
+                        .OrderBy(i => i)
                         .Select(i =>
                             new BlogsRepo
                             {
@@ -78,6 +78,7 @@ namespace mscfreshman.Controllers
                             }).Concat(
                                 Directory.GetFiles(dir, "*.md")
                                     .Where(i => Path.GetFileName(i).ToLower() != "readme.md")
+                                    .OrderBy(i => i)
                                     .Select(i =>
                                         new BlogsRepo
                                         {
@@ -100,8 +101,6 @@ namespace mscfreshman.Controllers
             {
                 path = string.Empty;
             }
-
-            path = HttpUtility.UrlDecode(path, Encoding.UTF8);
 
             while (path.StartsWith("/") || path.StartsWith("\\"))
             {

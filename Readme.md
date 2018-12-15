@@ -5,7 +5,7 @@
 ```
 ./ClientApp
 ```
-#### 后端：.NET Core 2.1
+#### 后端：.NET Core 2.2
 ```
 SDK 下载：https://www.microsoft.com/net/download
 ```
@@ -88,5 +88,5 @@ Linux Bash: export ASPNETCORE_ENVIRONMENT=Development
 ```
 dotnet publish -r 目标系统 -c 发布类型
 ```
-发布完成后会生成到 ./bin/发布类型/netcoreapp2.1/目标系统/publish 中  
+发布完成后会生成到 ./bin/发布类型/netcoreapp2.2/目标系统/publish 中  
 复制 publish 里面的所有文件到目标机器上，运行 mscfreshman 主程序，网站将会自动启动并运行在 http://localhost:5000 以及 https://localhost:5001 （如果安装了证书），可使用 nginx 等做反向代理将其映射至 80/443 端口

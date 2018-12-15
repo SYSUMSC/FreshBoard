@@ -5,6 +5,7 @@ import Highlight from 'highlight.js';
 import 'highlight.js/styles/github.css';
 import { Container, Breadcrumb, Button, BreadcrumbItem, Alert, Fade, ListGroup, ListGroupItem, Badge, Col, Row } from 'reactstrap';
 import 'github-markdown-css';
+import { Redirect } from 'react-router-dom';
 
 export class Blogs extends Component {
     displayName = Blogs.name;
@@ -20,7 +21,8 @@ export class Blogs extends Component {
             fileName: '',
             fileTime: '',
             author: '',
-            subject: ''
+            subject: '',
+            redirect: false
         };
 
         Marked.setOptions({
@@ -28,8 +30,12 @@ export class Blogs extends Component {
             sanitize: false
         });
 
+        let urlParams = new URLSearchParams(window.location.search);
+        let path = urlParams.get('path');
+        if (!path) path = '';
+        
         //load root directory
-        Get('/Blog/GetBlogTree', {}, { path: this.state.path }).then(data => data.json()).then(response => {
+        Get('/Blog/GetBlogTree', {}, { path: path }).then(data => data.json()).then(response => {
             this.setState({
                 loading: false,
                 path: response.currentPath,
@@ -72,7 +78,8 @@ export class Blogs extends Component {
                     this.setState({
                         loading: false,
                         path: response.currentPath,
-                        fileTree: response.fileList
+                        fileTree: response.fileList,
+                        redirect: true
                     });
                 })
                 .catch(() => alert('加载失败'));
@@ -97,6 +104,7 @@ export class Blogs extends Component {
                         author: response.author,
                         subject: response.subject
                     });
+                    
                     if (window.MathJax) {
                         if (!this.mathjaxConfigured) {
                             this.mathjaxConfigured = true;
@@ -131,7 +139,7 @@ export class Blogs extends Component {
             })}
         </ListGroup>);
 
-        let content = this.state.subject === '' ? null : (<div>
+        let content = this.state.fileName === '' ? null : (<div>
             <Alert color="info">
                 <h4 className="alert-heading">{this.state.fileName.substring(0, this.state.fileName.lastIndexOf('.'))}</h4>
                 <p>最后更新：{this.state.subject}</p>
@@ -143,7 +151,12 @@ export class Blogs extends Component {
                 <div className="markdown-body" dangerouslySetInnerHTML={{ __html: this.state.content }} />
             </Fade>
         </div>);
-
+        if (this.state.redirect) {
+            this.setState({
+                redirect: false
+            });
+            return <Redirect replace to={'/Blogs?path=' + encodeURIComponent(this.state.path)} />
+        }
         return (
             <Container>
                 <br />

@@ -163,15 +163,10 @@ export class Portal extends Component {
                 : this.state.modalType === 3 ? <Apply user={this.props.user} updateStatus={this.props.updateStatus} closeModal={this.toggleModal} />
                     : this.state.modalType === 4 ? <ConfirmPhone user={this.props.user} updateStatus={this.props.updateStatus} /> : null;
 
-        this.props.user === null ? null :
-            this.props.user.isSignedIn ?
-                QRCode.toDataURL(window.location.protocol + '//' + window.location.host + '/Account/Identity?userId=' + this.props.user.userInfo.id)
-                    .then(url => {
-                        document.getElementById('userQR').src = url;
-                    })
-                    .catch(err => {
-                        console.error(err);
-                    }) : null;
+        if (this.props.user && this.props.user.isSignedIn)
+            QRCode.toDataURL(window.location.protocol + '//' + window.location.host + '/Account/Identity?userId=' + this.props.user.userInfo.id)
+                .then(url => document.getElementById('userQR').src = url)
+                .catch(err => console.error(err));
 
         return (
             <Container>

@@ -86,21 +86,22 @@ namespace mscfreshman.Controllers
             return Json(new { succeeded = true });
         }
 
-        public async Task<object> ModifyApplyStatusAsync(string userId, int status, bool requireResponse = false, bool noNotify = false)
+        [HttpPost]
+        public async Task<IActionResult> ModifyApplyStatusAsync(string userId, int status, bool requireResponse = false)
         {
             if (!await VerifyPrivilegeAsync())
             {
-                return new { succeeded = false, message = "没有权限", userId };
+                return Json(new { succeeded = false, message = "没有权限" });
             }
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return new { succeeded = false, message = "没有找到该用户", userId };
+                return Json(new { succeeded = false, message = "没有找到该用户" });
             }
 
             if (user.Department == 0)
             {
-                return new { succeeded = false, message = "该用户没有申请任何部门", userId };
+                return Json(new { succeeded = false, message = "该用户没有申请任何部门" });
             }
 
             if (user.ApplyStatus != status)
@@ -108,50 +109,39 @@ namespace mscfreshman.Controllers
                 user.ApplyStatus = status;
                 await _userManager.UpdateAsync(user);
 
-                if (!noNotify)
+                if (user.PhoneNumberConfirmed)
                 {
-                    if (user.PhoneNumberConfirmed)
+                    try
                     {
-                        try
-                        {
-                            var res = await _smsSender.SendSmsAsync(user.PhoneNumber, JsonConvert.SerializeObject(
-                                new
-                                {
-                                    name = user.Name,
-                                    department = user.Department == 1 ? "行政策划部" : user.Department == 2 ? "媒体宣传部" : user.Department == 3 ? "综合技术部" : "暂无",
-                                    status = user.ApplyStatus == 1 ? "等待一面" : user.ApplyStatus == 2 ? "等待二面" : user.ApplyStatus == 3 ? "录取失败" : user.ApplyStatus == 4 ? "录取成功" : "暂无"
-                                }), requireResponse ? "SMS_144943362" : "SMS_143863265");
-                        }
-                        catch
-                        {
-                            //ignored
-                        }
+                        var res = await _smsSender.SendSmsAsync(user.PhoneNumber, JsonConvert.SerializeObject(
+                            new
+                            {
+                                name = user.Name,
+                                department = user.Department == 1 ? "行政策划部" : user.Department == 2 ? "媒体宣传部" : user.Department == 3 ? "综合技术部" : "暂无",
+                                status = user.ApplyStatus == 1 ? "等待一面" : user.ApplyStatus == 2 ? "等待二面" : user.ApplyStatus == 3 ? "录取失败" : user.ApplyStatus == 4 ? "录取成功" : "暂无"
+                            }), requireResponse ? "SMS_144943362" : "SMS_143863265");
                     }
-
-                    if (user.EmailConfirmed)
+                    catch
                     {
-                        try
-                        {
-                            await _emailSender.SendEmailAsync(user.Email, "录取状态更新通知 - SYSU MSC", $"<h2>中山大学微软学生俱乐部</h2><p>{user.Name} 您好！您申请 {(user.Department == 1 ? "行政策划部" : user.Department == 2 ? "媒体宣传部" : user.Department == 3 ? "综合技术部" : "暂无")} 的录取状态更新为 {(user.ApplyStatus == 1 ? "等待一面" : user.ApplyStatus == 2 ? "等待二面" : user.ApplyStatus == 3 ? "录取失败" : user.ApplyStatus == 4 ? "录取成功" : "暂无")}，请点击 <a href='{Request.Scheme}://{Request.Host}/Account/Portal'>此处</a> 查看。</p><hr /><p>请勿回复本邮件</p><p>{DateTime.Now} - SYSU MSC</p>");
-                        }
-                        catch
-                        {
-                            //ignored
-                        }
+                        //ignored
+                    }
+                }
+
+                if (user.EmailConfirmed)
+                {
+                    try
+                    {
+                        await _emailSender.SendEmailAsync(user.Email, "录取状态更新通知 - SYSU MSC", $"<h2>中山大学微软学生俱乐部</h2><p>{user.Name} 您好！您申请 {(user.Department == 1 ? "行政策划部" : user.Department == 2 ? "媒体宣传部" : user.Department == 3 ? "综合技术部" : "暂无")} 的录取状态更新为 {(user.ApplyStatus == 1 ? "等待一面" : user.ApplyStatus == 2 ? "等待二面" : user.ApplyStatus == 3 ? "录取失败" : user.ApplyStatus == 4 ? "录取成功" : "暂无")}，请点击 <a href='{Request.Scheme}://{Request.Host}/Account/Portal'>此处</a> 查看。</p><hr /><p>请勿回复本邮件</p><p>{DateTime.Now} - SYSU MSC</p>");
+                    }
+                    catch
+                    {
+                        //ignored
                     }
                 }
             }
 
-            return new { succeeded = true, userId };
+            return Json(new { succeeded = true });
         }
-
-        [HttpPost]
-        public async Task<IActionResult> BatchModifyApplyStatusAsync(string userIds, int status, bool requireResponse = false, bool noNotify = false) =>
-            Json(
-                await Task.WhenAll(userIds.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(u =>
-                         ModifyApplyStatusAsync(u, status, requireResponse: requireResponse, noNotify: noNotify)
-                )
-            ));
 
         [HttpPost]
         public async Task<IActionResult> SearchUsersAsync(string patterns)

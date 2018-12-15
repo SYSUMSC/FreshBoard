@@ -84,7 +84,7 @@ export class NotificationManager extends Component {
         if (list !== null)
             list.innerHTML = "";
         this.setState({ readIndex: index, showSendingModal: true, currentSent: 0, pushUsers: null });
-        Post('/Admin/GetPushNotificationUsersAsync', {}, { nid: this.state.notifications[this.state.readIndex].id })
+        Post('/Admin/GetPushNotificationUsersAsync', {}, { nid: this.state.notifications[index].id })
             .then(res => res.json())
             .then(data => {
                 this.setState({ pushUsers: data });
@@ -215,11 +215,13 @@ export class NotificationManager extends Component {
     }
 
     showErrors() {
-        return (<div style={{ maxHeight: '200px', overflow: 'auto' }}><ListGroup>
-            {this.state.errors.map(x => {
-                <ListGroupItem className="justify-content-between"><p className="danger">用户 {x.id}：短信 {x.phoneSucceeded ? "√" : "×"} 邮件 {x.emailSucceeded ? "√" : "×"}</p></ListGroupItem>
-            })}
-        </ListGroup></div>);
+        return (
+            <div style={{ maxHeight: '200px', overflow: 'auto' }}><ListGroup>
+                {
+                    this.state.errors.map(x => <ListGroupItem className="justify-content-between"><p className="danger">用户 {x.id}：短信 {x.phoneSucceeded ? "√" : "×"} 邮件 {x.emailSucceeded ? "√" : "×"}</p></ListGroupItem>)
+                }
+            </ListGroup></div>
+        );
     }
 
     render() {

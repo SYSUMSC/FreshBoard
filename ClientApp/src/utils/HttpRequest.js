@@ -36,11 +36,10 @@ export function Post(url, headers = {}, data = {}) {
 
     return fetch(myRequest, myInit);
 }
-
 export function Get(url, headers = {}, data = {}) {
     var paramStr = '?';
     for (var x in data) {
-        paramStr += `${x}=${escape(data[x])}&`;
+        paramStr += `${x}=${encodeURIComponent(data[x])}&`;
     }
 
     var myHeaders = new Headers();
