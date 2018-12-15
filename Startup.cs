@@ -12,7 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using mscfreshman.Data;
 using mscfreshman.Data.Identity;
 using mscfreshman.Hubs;
-using mscfreshman.Middleware;
 using mscfreshman.Services;
 using System;
 using System.Linq;
@@ -53,10 +52,24 @@ namespace mscfreshman
                 options.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<FreshBoardUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders()
-                .AddErrorDescriber<TranslatedIdentityErrorDescriber>();
+            services.AddAuthentication(o =>
+            {
+                o.DefaultScheme = IdentityConstants.ApplicationScheme;
+                o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+            })
+            .AddIdentityCookies();
+            
+            services.AddIdentityCore<FreshBoardUser>(o =>
+            {
+                o.Stores.MaxLengthForKeys = 128;
+                o.User.RequireUniqueEmail = true;
+            })
+            .AddSignInManager()
+            .AddUserManager<UserManager<FreshBoardUser>>()
+            .AddDefaultTokenProviders()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders()
+            .AddErrorDescriber<TranslatedIdentityErrorDescriber>();
 
             services.AddEntityFrameworkSqlite();
             services.AddTransient<IEmailSender, EmailSender>();
