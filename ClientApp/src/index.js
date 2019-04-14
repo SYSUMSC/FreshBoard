@@ -1,3 +1,4 @@
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -19,10 +20,12 @@ var st = setInterval(function () {
     }
 }, 30);
 
-ReactDOM.render(
-    <BrowserRouter basename={baseUrl}>
-        <App />
-    </BrowserRouter>,
-    rootElement);
+if (window.location.href.toLowerCase().indexOf('/hackathon') === -1) {
+    ReactDOM.render(
+        <BrowserRouter basename={baseUrl}>
+            <App />
+        </BrowserRouter>,
+        rootElement);
 
-registerServiceWorker();
+    registerServiceWorker();
+}

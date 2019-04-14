@@ -108,14 +108,7 @@ namespace mscfreshman
 
             app.UseResponseCompression();
 
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                OnPrepareResponse = ctx =>
-                {
-                    ctx.Context.Response.Headers.Append("Cache-Control", "public,max-age=864000");
-                    ctx.Context.Response.Headers.Add("Expires", new[] { DateTime.UtcNow.AddDays(10).ToString("R") });
-                }
-            });
+            app.UseStaticFiles();
 
             app.UseCookiePolicy();
             app.UseSession();
