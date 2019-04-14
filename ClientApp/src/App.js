@@ -89,7 +89,6 @@ export default class App extends Component {
                         <Route path='/Account/Admin/PrivilegeManager' render={() => { this.setTitle('权限管理'); return <PrivilegeManager user={this.state.user} />; }} />
                         <Route path='/Account/Admin/ProblemManager' render={() => { this.setTitle('题目管理'); return <ProblemManager user={this.state.user} />; }} />
                         <Route path='/Account/Admin/SearchUsers' render={() => { this.setTitle('浏览用户'); return <Container><br /><h2>浏览用户</h2><SearchUsers /></Container>; }} />
-                        <Route path='/Hackathon' render={() => { window.location.reload(true); return <></>; }} />
                         <Route render={() => { this.setTitle('找不到页面'); return <NotFound />; }} />
                     </Switch>
                 </Layout>
