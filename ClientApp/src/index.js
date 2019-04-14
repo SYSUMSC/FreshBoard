@@ -4,7 +4,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
-import registerServiceWorker from './registerServiceWorker';
 
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
 const rootElement = document.getElementById('root');
@@ -26,6 +25,4 @@ if (window.location.href.toLowerCase().indexOf('/hackathon') === -1) {
             <App />
         </BrowserRouter>,
         rootElement);
-
-    //registerServiceWorker();
 }
