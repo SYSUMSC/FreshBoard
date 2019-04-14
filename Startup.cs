@@ -58,7 +58,7 @@ namespace mscfreshman
                 o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
             })
             .AddIdentityCookies();
-            
+
             services.AddIdentityCore<FreshBoardUser>(o =>
             {
                 o.Stores.MaxLengthForKeys = 128;
@@ -100,8 +100,14 @@ namespace mscfreshman
                 app.UseHsts();
             }
 
+            app.Use(async (context, next) =>
+            {
+                if (!context.Request.Path.StartsWithSegments("/Hackathon", StringComparison.CurrentCultureIgnoreCase))
+                    await next();
+            });
+
             app.UseResponseCompression();
-            
+
             app.UseStaticFiles(new StaticFileOptions
             {
                 OnPrepareResponse = ctx =>
