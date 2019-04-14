@@ -27,5 +27,5 @@ if (window.location.href.toLowerCase().indexOf('/hackathon') === -1) {
         </BrowserRouter>,
         rootElement);
 
-    registerServiceWorker();
+    //registerServiceWorker();
 }
