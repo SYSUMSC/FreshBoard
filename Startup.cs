@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using mscfreshman.Data;
 using mscfreshman.Data.Identity;
 using mscfreshman.Hubs;
@@ -19,6 +19,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Westwind.AspNetCore.LiveReload;
 
 namespace mscfreshman
 {
@@ -34,6 +35,8 @@ namespace mscfreshman
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLiveReload();
+
             services.AddResponseCompression(options =>
             {
                 options.Providers.Add<BrotliCompressionProvider>();
@@ -76,19 +79,15 @@ namespace mscfreshman
             services.AddTransient<ISmsSender, SmsSender>();
             services.AddSession();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddSignalR();
 
-            // In production, the React files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/build";
-            });
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -100,6 +99,8 @@ namespace mscfreshman
                 app.UseHsts();
             }
 
+            app.UseStatusCodePagesWithReExecute("/Error", "?code={0}");
+
             app.Use(async (context, next) =>
             {
                 if (!context.Request.Path.StartsWithSegments("/Hackathon", StringComparison.CurrentCultureIgnoreCase))
@@ -108,7 +109,11 @@ namespace mscfreshman
 
             app.UseResponseCompression();
 
+            // app.UseLiveReload();
+
             app.UseStaticFiles();
+
+            app.UseRouting();
 
             app.UseCookiePolicy();
             app.UseSession();
@@ -126,32 +131,13 @@ namespace mscfreshman
                 }
             });
 
-            app.UseSignalR(routes => { routes.MapHub<ChatHub>("/ChatHub"); });
-
-            app.UseSpaStaticFiles();
-
             app.UseAuthentication();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
-
-                routes.MapSpaFallbackRoute(
-                    name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
-            });
-
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "ClientApp";
-
-                if (env.IsDevelopment())
+            app.UseEndpoints(endpoints =>
                 {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
-                }
-            });
+                    endpoints.MapDefaultControllerRoute();
+                    endpoints.MapHub<ChatHub>("/ChatHub");
+                });
         }
 
 

@@ -1,0 +1,112 @@
+﻿@inject Microsoft.AspNetCore.Identity.SignInManager<mscfreshman.Data.Identity.FreshBoardUser> SignInManager
+@inject Microsoft.AspNetCore.Identity.UserManager<mscfreshman.Data.Identity.FreshBoardUser> UserManager
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+
+    <title>@ViewBag.Title - SYSUMSC</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.4.1/semantic.min.css">
+    
+    <style type="text/css">
+      @ViewBag.ExtraStyle
+    </style>
+  </head>
+  <body>
+    <div class="ui padded grid">
+      <div class="green row container">
+        <div class="ui container">
+          <div class="ui large inverted green menu">
+            <a href="/" class="item">SYSUMSC</a>
+            <a href="/" class="active item">首页</a>
+            <a href="/Apply" class="item basic">申请</a>
+            <a href="/Apply/Puzzle" class="item basic">解密</a>
+            <div class="right menu">
+              @if(SignInManager.IsSignedIn(User)){
+              <a class="item ui green label">@User.Identity.Name</a>
+              <a href="/SignOut" class="item ui inverted basic button">登出</a>
+              @if((await UserManager.GetUserAsync(User))?.Privilege==1) {
+              <a href="/Admin" class="item ui inverted basic button">管理</a>
+              }} else {
+              <a href="/SignIn" class="item ui inverted basic button">登入</a>
+              }
+            </div>
+          </div>
+
+          @if( ViewContext.RouteData.Values["controller"].ToString()=="Home" && ViewContext.RouteData.Values["action"].ToString()=="Index" ) {
+            <div class="ui inverted green vertical center aligned segment">
+                <div class="ui grid middle aligned" style="height: 30em;">
+                  <div class="row">
+                    <div class="column">
+                      <div class="ui text container">
+                        <h1 class="ui inverted header">
+                          中山大学微软学生俱乐部
+                        </h1>
+                        <h2 class="ui inverted header">予力众生，成就不凡</h2>
+                        <a href="/Apply" class="ui inverted large basic button">
+                          加入我们
+                          <i class="right arrow icon"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          }
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="ui container">
+          @RenderBody()
+        </div>
+      </div>
+
+      <div class="black row">
+        <div class="ui container">
+          <div class="ui inverted vertical footer segment">
+            <div class="ui stackable inverted divided equal height stackable grid">
+              <div class="three wide column">
+                <h4 class="ui inverted header">联系方式</h4>
+                <div class="ui inverted link list">
+                  <a href="#" class="item">迎新 QQ 群</a>
+                  <a href="#" class="item">邮件 admin@sysumsc.com</a>
+                </div>
+              </div>
+              <div class="three wide column">
+                <h4 class="ui inverted header">链接</h4>
+                <div class="ui inverted link list">
+                  <a href="https://studentclub.msra.cn" class="item">微软学生俱乐部</a >
+                  <a href="https://github.com/SYSU-MSC-Studio" class="item">GitHub</a >
+                  <a href="https://hjudge.com" class="item">H::Judge</a>
+                </div>
+              </div>
+              <div class="seven wide column">
+                <h4 class="ui inverted header">
+                  &copy;&nbsp;中山大学微软学生俱乐部
+                </h4>
+                <p>中山大学学生技术社团</p>
+                <p>
+                  Proudly powered by
+                  <a href="https://dotnet.microsoft.com/apps/aspnet">
+                    ASP.NET Core
+                  </a>
+                  and
+                  <a href="https://semantic-ui.com">Semantic UI</a>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.19.0/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.4.1/semantic.min.js"></script>
+    @RenderSection("Scripts",false)
+  </body>
+</html>

@@ -1,0 +1,78 @@
+@{
+  ViewBag.Title = "登入";
+}
+@section Scripts
+{
+  <script lang="js">
+    $(document).ready(function () {
+    $('#signin-submit').click(function () {
+        axios.post('/Account/Login', new FormData($('#signin')[0]))
+          .then(function (res){
+
+          })
+          .catch(function (err){
+
+          });
+      })
+    });
+  </script>
+}
+
+<div class="ui equal width grid">
+  <div class="row">
+    <div class="ui message hidden" id="message">
+      <div class="header" id="message-header"></div>
+      <p id="message-content"></p>
+    </div>
+  </div>
+  <div class="row">
+  <div class="column">
+    <h2 class="ui red image header">
+      <div class="content">
+        登入账号
+      </div>
+    </h2>
+    <form class="ui large form" id="signin">
+      <div class="ui stacked segment">
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="text" name="email" placeholder="Net ID">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="lock icon"></i>
+            <input type="password" name="password" placeholder="密码">
+          </div>
+        </div>
+        <div class="ui fluid large red submit button" id="signin-submit">登入</div>
+      </div>
+    </form>
+  </div>
+  <div class="column">
+    <h2 class="ui orange image header">
+      <div class="content">
+        注册新账号
+      </div>
+    </h2>
+    <form class="ui large form" id="signup">
+      <div class="ui stacked segment">
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="text" name="email" placeholder="Net ID">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="lock icon"></i>
+            <input type="password" name="password" placeholder="密码">
+          </div>
+        </div>
+        <div class="ui fluid large orange submit button">注册</div>
+      </div>
+    </form>
+  </div>
+</div>
+</div>

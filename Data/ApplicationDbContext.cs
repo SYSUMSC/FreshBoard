@@ -73,7 +73,7 @@ namespace mscfreshman.Data
             modelBuilder.Entity<CrackRecord>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
-                
+
                 entity.Property(e => e.Time).IsRequired();
 
                 entity.Property(e => e.UserId).IsRequired();
@@ -81,6 +81,28 @@ namespace mscfreshman.Data
                 entity.Property(e => e.ProblemId).IsRequired();
 
                 entity.Property(e => e.Result).IsRequired();
+            });
+
+            modelBuilder.Entity<Info>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+                entity.Property(e => e.Title).IsRequired();
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasDefaultValue(string.Empty);
+
+                entity.HasKey(e => e.Id);
+            });
+
+            modelBuilder.Entity<UserInfo>(entity =>
+            {
+                entity.Property(e => e.UserId).IsRequired();
+                entity.Property(e => e.InfoId).IsRequired();
+                entity.Property(e => e.Value)
+                    .IsRequired()
+                    .HasDefaultValue(string.Empty);
+
+                entity.HasKey(e => new { e.UserId, e.InfoId });
             });
         }
     }
