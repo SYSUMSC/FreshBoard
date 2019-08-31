@@ -74,6 +74,12 @@ namespace mscfreshman
             .AddDefaultTokenProviders()
             .AddErrorDescriber<TranslatedIdentityErrorDescriber>();
 
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/SignIn";
+                options.LogoutPath = "/SignOut";
+            });
+
             services.AddEntityFrameworkNpgsql();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<ISmsSender, SmsSender>();
