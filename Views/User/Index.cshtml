@@ -1,0 +1,81 @@
+@model mscfreshman.Views.User.IndexModel
+@inject Microsoft.AspNetCore.Identity.SignInManager<mscfreshman.Data.Identity.FreshBoardUser> SignInManager
+@inject Microsoft.AspNetCore.Identity.UserManager<mscfreshman.Data.Identity.FreshBoardUser> UserManager
+
+@{
+    ViewBag.Title = "个人中心";
+}
+
+<h1 class="hi heading">@User.Identity.Name</h1>
+<h2 class="ui heading">账号信息</h2>
+<form class="ui form">
+    <div class="field">
+        <label>邮箱</label>
+        <input 
+            type="text"
+            disabled 
+            name="email" 
+            id="email" 
+            placeholder="user@example.com" 
+            value="@((await UserManager.GetUserAsync(User))?.Email)">
+    </div>
+    <div class="field">
+        <label>手机号</label>
+        <input
+            type="text"
+            disabled
+            name="phone"
+            id="phone"
+            placeholder="123-1234-5678"
+            value="@((await UserManager.GetUserAsync(User))?.PhoneNumber)">
+    </div>
+    <h2 class="ui heading">个人信息</h2>
+    <div class="ui hidden icon message" id="message">
+        <i class="exclamation triangle icon"></i>
+        <div class="content">
+        <div class="header" id="message-header"></div>
+        <p id="message-content"></p>
+        </div>
+    </div>
+</form>
+<form class="ui form" id="data">
+@foreach (var data in Model.PersonalData)
+{
+  <div class="field">
+    <label>@data.Title</label>
+    <input type="text" name="data[@data.DataTypeId]" placeholder="@data.Title" value="@data.Value">
+    @if(!String.IsNullOrEmpty(data.Description))
+    {
+        <div class="ui pointing label">
+        @data.Description
+        </div>
+    }
+  </div>
+}
+  <div class="ui button" id="data-submit">保存</div>
+</form>
+
+@section Scripts
+{
+    <script lang="js">
+    $(document).ready(function () {
+      $('#data-submit').click(function () {
+        $(this).addClass('loading disabled');
+        $('#message').addClass('hidden');
+        axios.post('/User/Update', new FormData($('#data')[0]))
+          .then(function (res){
+            if(res.data.succeeded) {
+              window.location.assign('/User');
+            } else {
+              $('#message')
+                .removeClass('hidden')
+                .addClass('error');
+              $('#message-header')
+                .html(res.data.message);
+            }
+            $('#data-submit').removeClass('loading disabled');
+          });
+      });
+    });
+    </script>
+}

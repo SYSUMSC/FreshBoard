@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
@@ -51,8 +50,8 @@ namespace mscfreshman
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(
+            services.AddDbContext<Data.DbContext>(options =>
+                options.UseNpgsql(
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddAuthentication(o =>
@@ -64,17 +63,18 @@ namespace mscfreshman
 
             services.AddIdentityCore<FreshBoardUser>(o =>
             {
+                o.Password.RequireNonAlphanumeric = false;
                 o.Stores.MaxLengthForKeys = 128;
                 o.User.RequireUniqueEmail = true;
             })
             .AddSignInManager()
             .AddUserManager<UserManager<FreshBoardUser>>()
             .AddDefaultTokenProviders()
-            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddEntityFrameworkStores<Data.DbContext>()
             .AddDefaultTokenProviders()
             .AddErrorDescriber<TranslatedIdentityErrorDescriber>();
 
-            services.AddEntityFrameworkSqlite();
+            services.AddEntityFrameworkNpgsql();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<ISmsSender, SmsSender>();
             services.AddSession();
@@ -132,6 +132,7 @@ namespace mscfreshman
             });
 
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
                 {
@@ -172,7 +173,7 @@ namespace mscfreshman
                             {
                                 if (text == guid)
                                 {
-                                    using (var db = new ApplicationDbContext(Configuration.GetConnectionString("DefaultConnection")))
+                                    using (var db = new Data.DbContext(Configuration.GetConnectionString("DefaultConnection")))
                                     {
                                         var answer = await db.Problem.FirstOrDefaultAsync(i => i.Level == 10 && i.Title == "Greetings");
                                         if (answer != null)

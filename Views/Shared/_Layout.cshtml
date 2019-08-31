@@ -21,22 +21,28 @@
         <div class="ui container">
           <div class="ui large inverted green menu">
             <a href="/" class="item">SYSUMSC</a>
-            <a href="/" class="active item">首页</a>
+            <a href="/" class="item">首页</a>
             <a href="/Apply" class="item basic">申请</a>
             <a href="/Apply/Puzzle" class="item basic">解密</a>
             <div class="right menu">
-              @if(SignInManager.IsSignedIn(User)){
-              <a class="item ui green label">@User.Identity.Name</a>
-              <a href="/SignOut" class="item ui inverted basic button">登出</a>
-              @if((await UserManager.GetUserAsync(User))?.Privilege==1) {
-              <a href="/Admin" class="item ui inverted basic button">管理</a>
-              }} else {
-              <a href="/SignIn" class="item ui inverted basic button">登入</a>
+              @if(SignInManager.IsSignedIn(User))
+              {
+                <a href="/User" class="item ui green label">@User.Identity.Name</a>
+                <a href="/SignOut" class="item ui inverted basic button">登出</a>
+                @if((await UserManager.GetUserAsync(User))?.Privilege==1)
+                {
+                  <a href="/Admin" class="item ui inverted basic button">管理</a>
+                }
+              }
+              else
+              {
+                <a href="/SignIn" class="item ui inverted basic button">登入 | 注册</a>
               }
             </div>
           </div>
 
-          @if( ViewContext.RouteData.Values["controller"].ToString()=="Home" && ViewContext.RouteData.Values["action"].ToString()=="Index" ) {
+          @if( ViewContext.RouteData.Values["controller"].ToString()=="Home" && ViewContext.RouteData.Values["action"].ToString()=="Index" )
+          {
             <div class="ui inverted green vertical center aligned segment">
                 <div class="ui grid middle aligned" style="height: 30em;">
                   <div class="row">

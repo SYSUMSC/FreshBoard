@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using mscfreshman.Data.Identity;
@@ -62,7 +61,7 @@ namespace mscfreshman.Controllers
             return View();
         }
 
-        [HttpPost("/Signin")]
+        [HttpPost("/SignIn")]
         public async Task<IActionResult> SigninPostAsync(string email, string password, bool persistent = true)
         {
             await _signInManager.SignOutAsync();
@@ -86,10 +85,11 @@ namespace mscfreshman.Controllers
             return Json(new { succeeded = false, message = "用户名或密码不正确" });
         }
 
-        [HttpPost]
+        [HttpPost("/SignUp")]
         public async Task<IActionResult> RegisterAsync(
-            string email, //email
-            string password //密码
+            string email, // email
+            string password,// 密码
+            string phone // 手机号
         )
         {
             if (string.IsNullOrEmpty(email))
@@ -102,10 +102,16 @@ namespace mscfreshman.Controllers
                 return Json(new { succeeded = false, message = "未填写密码" });
             }
 
+            if (string.IsNullOrEmpty(phone))
+            {
+                return Json(new { succeeded = false, message = "未填写手机号" });
+            }
+
             var user = new FreshBoardUser
             {
                 UserName = email,
                 Email = email,
+                PhoneNumber = phone,
                 Privilege = 0
             };
 
@@ -128,6 +134,12 @@ namespace mscfreshman.Controllers
             }
 
             return Json(new { succeeded = false, message = result.Errors.Any() ? result.Errors.Select(i => i.Description).Aggregate((accu, next) => accu + "\n" + next) : "注册失败" });
+        }
+
+        public async Task<IActionResult> SignOutAsync()
+        {
+            await _signInManager.SignOutAsync();
+            return Redirect("/");
         }
     }
 }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
 
 namespace mscfreshman.Data.Identity
 {
@@ -71,5 +72,7 @@ namespace mscfreshman.Data.Identity
         /// 用户权限 1 -- admin, other -- 普通权限
         /// </summary>
         public int Privilege { get; set; }
+
+        public virtual ICollection<UserData> UserData { get; set; } = new HashSet<UserData>();
     }
 }

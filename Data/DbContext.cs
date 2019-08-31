@@ -4,15 +4,15 @@ using mscfreshman.Data.Identity;
 
 namespace mscfreshman.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<FreshBoardUser>
+    public class DbContext : IdentityDbContext<FreshBoardUser>
     {
         private readonly string _connectionString;
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public DbContext(DbContextOptions<DbContext> options)
             : base(options)
         {
         }
 
-        public ApplicationDbContext(string connectionString)
+        public DbContext(string connectionString)
         {
             _connectionString = connectionString;
         }
@@ -21,13 +21,15 @@ namespace mscfreshman.Data
         public virtual DbSet<ReadStatus> ReadStatus { get; set; }
         public virtual DbSet<Problem> Problem { get; set; }
         public virtual DbSet<CrackRecord> CrackRecord { get; set; }
+        public virtual DbSet<UserDataType> UserDataType { get; set; }
+        public virtual DbSet<UserData> UserData { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlite(_connectionString);
+                optionsBuilder.UseNpgsql(_connectionString);
             }
         }
 
@@ -47,7 +49,7 @@ namespace mscfreshman.Data
 
                 entity.Property(e => e.Title).IsRequired();
 
-                entity.Property(e => e.HasPushed).IsRequired().HasDefaultValueSql("0");
+                entity.Property(e => e.HasPushed).IsRequired().HasDefaultValue(false);
             });
 
             modelBuilder.Entity<ReadStatus>(entity =>
@@ -83,26 +85,34 @@ namespace mscfreshman.Data
                 entity.Property(e => e.Result).IsRequired();
             });
 
-            modelBuilder.Entity<Info>(entity =>
+            modelBuilder.Entity<UserDataType>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
                 entity.Property(e => e.Title).IsRequired();
                 entity.Property(e => e.Description)
                     .IsRequired()
                     .HasDefaultValue(string.Empty);
+                entity.HasMany(c => c.UserData)
+                    .WithOne(u => u.DataType);
 
                 entity.HasKey(e => e.Id);
             });
 
-            modelBuilder.Entity<UserInfo>(entity =>
+            modelBuilder.Entity<UserData>(entity =>
             {
-                entity.Property(e => e.UserId).IsRequired();
-                entity.Property(e => e.InfoId).IsRequired();
                 entity.Property(e => e.Value)
                     .IsRequired()
                     .HasDefaultValue(string.Empty);
 
-                entity.HasKey(e => new { e.UserId, e.InfoId });
+                entity.HasKey(e => new { e.UserId, e.DataTypeId });
+
+                entity.HasOne(d => d.DataType)
+                    .WithMany(t => t.UserData)
+                    .HasForeignKey("DataTypeId");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(u => u.UserData)
+                    .HasForeignKey("UserId");
             });
         }
     }

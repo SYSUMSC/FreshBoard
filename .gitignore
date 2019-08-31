@@ -1,5 +1,6 @@
 app.db
 PullMessageTask-*.txt
+*.bak*
 
 # Created by https://www.gitignore.io/api/dotnetcore,aspnetcore
 # Edit at https://www.gitignore.io/?templates=dotnetcore,aspnetcore

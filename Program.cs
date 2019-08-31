@@ -6,7 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using mscfreshman.Data;
 
 namespace mscfreshman
 {
@@ -14,6 +17,81 @@ namespace mscfreshman
     {
         public static void Main(string[] args)
         {
+            var host = CreateHostBuilder(args).Build();
+#if DEBUG
+            if (args.Length >= 1 && args[0] == "--sync-db")
+                using (var scope = host.Services.CreateScope())
+                {
+                    var services = scope.ServiceProvider;
+
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    try
+                    {
+                        var context = services.GetService<DbContext>();
+                        context.Database.EnsureDeleted();
+                        context.Database.EnsureCreated();
+                        logger.LogInformation("Database creation succeeded.");
+
+                        context.UserDataType.Add(new UserDataType
+                        {
+                            Title = "姓名",
+                            Description = ""
+                        });
+                        context.UserDataType.Add(new UserDataType
+                        {
+                            Title = "年级",
+                            Description = ""
+                        });
+                        context.UserDataType.Add(new UserDataType
+                        {
+                            Title = "QQ",
+                            Description = ""
+                        });
+                        context.UserDataType.Add(new UserDataType
+                        {
+                            Title = "微信",
+                            Description = ""
+                        });
+                        context.UserDataType.Add(new UserDataType
+                        {
+                            Title = "政治面貌",
+                            Description = ""
+                        });
+                        context.UserDataType.Add(new UserDataType
+                        {
+                            Title = "性别",
+                            Description = ""
+                        });
+                        context.UserDataType.Add(new UserDataType
+                        {
+                            Title = "学号",
+                            Description = ""
+                        });
+                        context.UserDataType.Add(new UserDataType
+                        {
+                            Title = "学院",
+                            Description = ""
+                        });
+                        context.UserDataType.Add(new UserDataType
+                        {
+                            Title = "专业",
+                            Description = ""
+                        });
+                        context.UserDataType.Add(new UserDataType
+                        {
+                            Title = "出生日期",
+                            Description = ""
+                        });
+
+                        context.SaveChanges();
+                        return;
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogError(ex, "An error occurred seeding the DB.");
+                    }
+                }
+#endif
             /* new Thread(
                 () => GitWorkingThread(
                     "https://github.com/SYSU-MSC-Studio/Blogs.git",
@@ -21,7 +99,7 @@ namespace mscfreshman
                      "Blogs"))
                 .Start(); */
             // SmsReceiver.StartThread();
-            CreateHostBuilder(args).Build().Run();
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

@@ -5,24 +5,61 @@
 {
   <script lang="js">
     $(document).ready(function () {
-    $('#signin-submit').click(function () {
-        axios.post('/Account/Login', new FormData($('#signin')[0]))
+      $('#signin-submit').click(function () {
+        $(this).addClass('loading disabled');
+        $('#message').addClass('hidden');
+        axios.post('/SignIn', new FormData($('#signin')[0]))
           .then(function (res){
-
-          })
-          .catch(function (err){
-
+            if(res.data.succeeded) {
+              window.location.assign('/');
+            } else {
+              $('#message')
+                .removeClass('hidden')
+                .addClass('error');
+              $('#message-header')
+                .html(res.data.message);
+            }
+            $('#signin-submit').removeClass('loading disabled');
           });
-      })
+      });
+      $('#signup-submit').click(function () {
+        $(this).addClass('loading disabled');
+        $('#message').addClass('hidden');
+        if($('#signup input[name=password]').val() !== $('#signup input[name=password_again]').val()) {
+          $('#message')
+            .removeClass('hidden')
+            .addClass('error');
+          $('#message-header')
+            .html('两次输入的密码不一致');
+          $('#signup-submit').removeClass('loading disabled');
+          return;
+        }
+        axios.post('/SignUp', new FormData($('#signup')[0]))
+          .then(function (res){
+            if(res.data.succeeded) {
+              window.location.assign('/');
+            } else {
+              $('#message')
+                .removeClass('hidden')
+                .addClass('error');
+              $('#message-header')
+                .html(res.data.message);
+            }
+            $('#signup-submit').removeClass('loading disabled');
+          });
+      });
     });
   </script>
 }
 
 <div class="ui equal width grid">
   <div class="row">
-    <div class="ui message hidden" id="message">
-      <div class="header" id="message-header"></div>
-      <p id="message-content"></p>
+    <div class="ui hidden icon message" id="message">
+      <i class="exclamation triangle icon"></i>
+      <div class="content">
+        <div class="header" id="message-header"></div>
+        <p id="message-content"></p>
+      </div>
     </div>
   </div>
   <div class="row">
@@ -37,7 +74,7 @@
         <div class="field">
           <div class="ui left icon input">
             <i class="user icon"></i>
-            <input type="text" name="email" placeholder="Net ID">
+            <input type="text" name="email" placeholder="邮箱">
           </div>
         </div>
         <div class="field">
@@ -61,7 +98,7 @@
         <div class="field">
           <div class="ui left icon input">
             <i class="user icon"></i>
-            <input type="text" name="email" placeholder="Net ID">
+            <input type="text" name="email" placeholder="邮箱">
           </div>
         </div>
         <div class="field">
@@ -70,7 +107,19 @@
             <input type="password" name="password" placeholder="密码">
           </div>
         </div>
-        <div class="ui fluid large orange submit button">注册</div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="lock icon"></i>
+            <input type="password" name="password_again" placeholder="再次输入密码">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="phone icon"></i>
+            <input type="text" name="phone" placeholder="手机号">
+          </div>
+        </div>
+        <div class="ui fluid large orange submit button" id="signup-submit">注册</div>
       </div>
     </form>
   </div>

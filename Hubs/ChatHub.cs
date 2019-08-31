@@ -14,11 +14,11 @@ namespace mscfreshman.Hubs
     {
         private readonly UserManager<FreshBoardUser> _userManager;
         private readonly SignInManager<FreshBoardUser> _signInManager;
-        private readonly DbContextOptions<ApplicationDbContext> _dbContextOptions;
+        private readonly DbContextOptions<Data.DbContext> _dbContextOptions;
         public ChatHub(
             UserManager<FreshBoardUser> userManager,
             SignInManager<FreshBoardUser> signInManager,
-            DbContextOptions<ApplicationDbContext> dbContextOptions)
+            DbContextOptions<Data.DbContext> dbContextOptions)
         {
             _userManager = userManager;
             _signInManager = signInManager;
