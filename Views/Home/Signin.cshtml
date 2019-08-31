@@ -37,7 +37,7 @@
         axios.post('/SignUp', new FormData($('#signup')[0]))
           .then(function (res){
             if(res.data.succeeded) {
-              window.location.assign('/');
+              window.location.assign('/User');
             } else {
               $('#message')
                 .removeClass('hidden')
@@ -46,6 +46,12 @@
                 .html(res.data.message);
             }
             $('#signup-submit').removeClass('loading disabled');
+          })
+          .catch(function (err){
+            $('#data').addClass('error');
+              $('#message-error')
+                .html(err && err.message);
+            $('#data').removeClass('loading disabled');
           });
       });
     });

@@ -30,13 +30,6 @@
             value="@((await UserManager.GetUserAsync(User))?.PhoneNumber)">
     </div>
     <h2 class="ui heading">个人信息</h2>
-    <div class="ui hidden icon message" id="message">
-        <i class="exclamation triangle icon"></i>
-        <div class="content">
-        <div class="header" id="message-header"></div>
-        <p id="message-content"></p>
-        </div>
-    </div>
 </form>
 <form class="ui form" id="data">
 @foreach (var data in Model.PersonalData)
@@ -52,6 +45,20 @@
     }
   </div>
 }
+  <div class="ui hidden success icon message">
+      <i class="exclamation triangle icon"></i>
+      <div class="content">
+      <div class="header" id="message-success"></div>
+      <p id="message-content"></p>
+      </div>
+  </div>
+  <div class="ui hidden error icon message">
+    <i class="exclamation triangle icon"></i>
+    <div class="content">
+    <div class="header" id="message-error"></div>
+    <p id="message-content"></p>
+    </div>
+  </div>
   <div class="ui button" id="data-submit">保存</div>
 </form>
 
@@ -60,20 +67,26 @@
     <script lang="js">
     $(document).ready(function () {
       $('#data-submit').click(function () {
-        $(this).addClass('loading disabled');
-        $('#message').addClass('hidden');
+        $('#data').addClass('loading disabled');
+        $('#data').removeClass('success error');
         axios.post('/User/Update', new FormData($('#data')[0]))
           .then(function (res){
             if(res.data.succeeded) {
-              window.location.assign('/User');
+              $('#data').addClass('success');
+              $('#message-success')
+                .html('修改成功');
             } else {
-              $('#message')
-                .removeClass('hidden')
-                .addClass('error');
-              $('#message-header')
+              $('#data').addClass('error');
+              $('#message-error')
                 .html(res.data.message);
             }
-            $('#data-submit').removeClass('loading disabled');
+            $('#data').removeClass('loading disabled');
+          })
+          .catch(function (err){
+            $('#data').addClass('error');
+              $('#message-error')
+                .html(err && err.message);
+            $('#data').removeClass('loading disabled');
           });
       });
     });

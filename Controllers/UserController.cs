@@ -82,7 +82,7 @@ namespace mscfreshman.Controllers
                 {
                     if (existingData.ContainsKey(kv.Key))
                     {
-                        existingData[kv.Key].Value = kv.Value;
+                        existingData[kv.Key].Value = kv.Value ?? String.Empty;
                     }
                     else
                     {
@@ -90,7 +90,7 @@ namespace mscfreshman.Controllers
                         {
                             UserId = userId,
                             DataTypeId = kv.Key,
-                            Value = kv.Value
+                            Value = kv.Value ?? String.Empty
                         });
                     }
                 }
