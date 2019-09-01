@@ -1,64 +1,8 @@
 @{
   ViewBag.Title = "登入";
 }
-@section Scripts
-{
-  <script lang="js">
-    $(document).ready(function () {
-      $('#signin-submit').click(function () {
-        $(this).addClass('loading disabled');
-        $('#message').addClass('hidden');
-        axios.post('/SignIn', new FormData($('#signin')[0]))
-          .then(function (res){
-            if(res.data.succeeded) {
-              window.location.assign('/');
-            } else {
-              $('#message')
-                .removeClass('hidden')
-                .addClass('error');
-              $('#message-header')
-                .html(res.data.message);
-            }
-            $('#signin-submit').removeClass('loading disabled');
-          });
-      });
-      $('#signup-submit').click(function () {
-        $(this).addClass('loading disabled');
-        $('#message').addClass('hidden');
-        if($('#signup input[name=password]').val() !== $('#signup input[name=password_again]').val()) {
-          $('#message')
-            .removeClass('hidden')
-            .addClass('error');
-          $('#message-header')
-            .html('两次输入的密码不一致');
-          $('#signup-submit').removeClass('loading disabled');
-          return;
-        }
-        axios.post('/SignUp', new FormData($('#signup')[0]))
-          .then(function (res){
-            if(res.data.succeeded) {
-              window.location.assign('/User');
-            } else {
-              $('#message')
-                .removeClass('hidden')
-                .addClass('error');
-              $('#message-header')
-                .html(res.data.message);
-            }
-            $('#signup-submit').removeClass('loading disabled');
-          })
-          .catch(function (err){
-            $('#data').addClass('error');
-              $('#message-error')
-                .html(err && err.message);
-            $('#data').removeClass('loading disabled');
-          });
-      });
-    });
-  </script>
-}
 
-<div class="ui equal width grid">
+<div class="ui equal width stackable grid">
   <div class="row">
     <div class="ui hidden icon message" id="message">
       <i class="exclamation triangle icon"></i>
@@ -131,3 +75,60 @@
   </div>
 </div>
 </div>
+
+@section Scripts
+{
+  <script lang="js">
+    $(document).ready(function () {
+      $('#signin-submit').click(function () {
+        $(this).addClass('loading disabled');
+        $('#message').addClass('hidden');
+        axios.post('/SignIn', new FormData($('#signin')[0]))
+          .then(function (res){
+            if(res.data.succeeded) {
+              window.location.assign('/');
+            } else {
+              $('#message')
+                .removeClass('hidden')
+                .addClass('error');
+              $('#message-header')
+                .html(res.data.message);
+            }
+            $('#signin-submit').removeClass('loading disabled');
+          });
+      });
+      $('#signup-submit').click(function () {
+        $(this).addClass('loading disabled');
+        $('#message').addClass('hidden');
+        if($('#signup input[name=password]').val() !== $('#signup input[name=password_again]').val()) {
+          $('#message')
+            .removeClass('hidden')
+            .addClass('error');
+          $('#message-header')
+            .html('两次输入的密码不一致');
+          $('#signup-submit').removeClass('loading disabled');
+          return;
+        }
+        axios.post('/SignUp', new FormData($('#signup')[0]))
+          .then(function (res){
+            if(res.data.succeeded) {
+              window.location.assign('/User');
+            } else {
+              $('#message')
+                .removeClass('hidden')
+                .addClass('error');
+              $('#message-header')
+                .html(res.data.message);
+            }
+            $('#signup-submit').removeClass('loading disabled');
+          })
+          .catch(function (err){
+            $('#data').addClass('error');
+              $('#message-error')
+                .html(err && err.message);
+            $('#data').removeClass('loading disabled');
+          });
+      });
+    });
+  </script>
+}
