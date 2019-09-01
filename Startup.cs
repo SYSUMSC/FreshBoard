@@ -51,7 +51,7 @@ namespace mscfreshman
             });
 
             services.AddDbContext<Data.DbContext>(options =>
-                options.UseSqlite(
+                options.UseNpgsql(
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddAuthentication(o =>
@@ -80,7 +80,7 @@ namespace mscfreshman
                 options.LogoutPath = "/SignOut";
             });
 
-            services.AddEntityFrameworkSqlite();
+            services.AddEntityFrameworkNpgsql();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<ISmsSender, SmsSender>();
             services.AddSession();

@@ -42,25 +42,21 @@ namespace mscfreshman.Controllers
         [HttpGet]
         public async Task<IActionResult> IndexAsync()
         {
-            var personalData = (await _dbContext.UserDataType
-                .GroupJoin(
-                    _dbContext.UserData,
-                    d => new { d.Id, UserId = _userManager.GetUserId(User) },
-                    v => new { v.DataType.Id, v.UserId },
-                    (DataType, DataValues) => new
+            var personalData = await _dbContext.UserDataType
+                .GroupJoin(_dbContext.UserData,
+                    t => new { t.Id, UserId = _userManager.GetUserId(User) },
+                    v => new { Id = v.DataTypeId, v.UserId },
+                    (DataType, DataValues) => new { DataType, DataValues })
+                .SelectMany(r => r.DataValues.DefaultIfEmpty(),
+                    (r, DataValue) => new IndexModel.PersonalDataRow
                     {
-                        DataType,
-                        DataValues
+                        DataTypeId = r.DataType.Id,
+                        Title = r.DataType.Title,
+                        Description = r.DataType.Description,
+                        Value = DataValue.Value ?? string.Empty
                     })
-                .ToArrayAsync());
-            // .SelectMany(c => c.DataValues.Select(DataValue => new IndexModel.PersonalDataRow
-            // {
-            //     DataTypeId = c.DataType.Id,
-            //     Title = c.DataType.Title,
-            //     Description = c.DataType.Description,
-            //     Value = DataValue.Value,
-            // }));
-            return View(); //new IndexModel { PersonalData = personalData });
+                .ToArrayAsync();
+            return View(new IndexModel { PersonalData = personalData });
         }
 
         [HttpPost]
