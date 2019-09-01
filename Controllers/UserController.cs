@@ -42,30 +42,25 @@ namespace mscfreshman.Controllers
         [HttpGet]
         public async Task<IActionResult> IndexAsync()
         {
-#warning "Sub-select used, try to use JOIN instead in EF Core 3.0"
-            var personalData = await _dbContext.UserDataType
-                .OrderBy(t => t.Id)
-                .Select(t => new IndexModel.PersonalDataRow
-                {
-                    DataTypeId = t.Id,
-                    Title = t.Title,
-                    Description = t.Description,
-                    Value = t.UserData.Where(d => d.UserId == _userManager.GetUserId(User)).FirstOrDefault().Value
-                })
-                .ToArrayAsync();
-            // .GroupJoin(
-            //     _dbContext.UserData.Where(d => d.UserId == _userManager.GetUserId(User)),
-            //     d => d.Id,
-            //     v => v.DataType.Id,
-            //     (d, v) => new IndexModel.PersonalDataRow
-            //     {
-            //         DataTypeId = d.Id,
-            //         Title = d.Title,
-            //         Description = d.Description,
-            //         Value = v.FirstOrDefault().Value
-            //     })
-            // .ToArrayAsync();
-            return View(new IndexModel { PersonalData = personalData });
+            var personalData = (await _dbContext.UserDataType
+                .GroupJoin(
+                    _dbContext.UserData,
+                    d => new { d.Id, UserId = _userManager.GetUserId(User) },
+                    v => new { v.DataType.Id, v.UserId },
+                    (DataType, DataValues) => new
+                    {
+                        DataType,
+                        DataValues
+                    })
+                .ToArrayAsync());
+            // .SelectMany(c => c.DataValues.Select(DataValue => new IndexModel.PersonalDataRow
+            // {
+            //     DataTypeId = c.DataType.Id,
+            //     Title = c.DataType.Title,
+            //     Description = c.DataType.Description,
+            //     Value = DataValue.Value,
+            // }));
+            return View(); //new IndexModel { PersonalData = personalData });
         }
 
         [HttpPost]

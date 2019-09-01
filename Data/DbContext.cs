@@ -33,7 +33,7 @@ namespace mscfreshman.Data
             base.OnConfiguring(optionsBuilder);
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql(_connectionString);
+                optionsBuilder.UseSqlite(_connectionString);
             }
         }
 
