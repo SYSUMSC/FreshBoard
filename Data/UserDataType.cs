@@ -9,6 +9,6 @@ namespace mscfreshman.Data
         public string Title { get; set; }
         public string Description { get; set; }
 
-        public virtual ICollection<UserData> UserData { get; set; } = new HashSet<UserData>();
+        public virtual ICollection<UserData> UserDatas { get; set; } = new HashSet<UserData>();
     }
 }

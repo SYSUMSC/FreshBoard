@@ -23,6 +23,10 @@ namespace mscfreshman.Data
         public virtual DbSet<CrackRecord> CrackRecord { get; set; }
         public virtual DbSet<UserDataType> UserDataType { get; set; }
         public virtual DbSet<UserData> UserData { get; set; }
+        public virtual DbSet<Application> Application { get; set; }
+        public virtual DbSet<ApplicationPeriod> ApplicationPeriod { get; set; }
+        public virtual DbSet<ApplicationPeriodData> ApplicationPeriodData { get; set; }
+        public virtual DbSet<ApplicationPeriodDataType> ApplicationPeriodDataType { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -92,7 +96,7 @@ namespace mscfreshman.Data
                 entity.Property(e => e.Description)
                     .IsRequired()
                     .HasDefaultValue(string.Empty);
-                entity.HasMany(c => c.UserData)
+                entity.HasMany(c => c.UserDatas)
                     .WithOne(u => u.DataType);
 
                 entity.HasKey(e => e.Id);
@@ -107,12 +111,86 @@ namespace mscfreshman.Data
                 entity.HasKey(e => new { e.UserId, e.DataTypeId });
 
                 entity.HasOne(d => d.DataType)
-                    .WithMany(t => t.UserData)
+                    .WithMany(t => t.UserDatas)
                     .HasForeignKey("DataTypeId");
 
                 entity.HasOne(d => d.User)
                     .WithMany(u => u.UserData)
                     .HasForeignKey("UserId");
+            });
+
+            modelBuilder.Entity<Application>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                entity.HasOne(e => e.Period)
+                    .WithMany(e => e.Applications)
+                    .HasForeignKey("PeriodId");
+
+                entity.HasOne(e => e.User)
+                    .WithMany(e => e.Application)
+                    .HasForeignKey("UserId");
+
+                entity.HasMany(e => e.Datas)
+                    .WithOne(e => e.Application);
+
+                entity.HasKey(e => e.Id);
+            });
+
+            modelBuilder.Entity<ApplicationPeriod>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Title).IsRequired().HasDefaultValue(string.Empty);
+
+                entity.Property(e => e.Description).IsRequired().HasDefaultValue(string.Empty);
+
+                entity.Property(e => e.UserApproved).IsRequired().HasDefaultValue(false);
+
+                // entity.Property(e => e.Order).IsRequired().HasDefaultValue(0);
+
+                entity.HasMany(e => e.PeriodDataTypes)
+                    .WithOne(e => e.Period);
+
+                entity.HasMany(e => e.Applications)
+                    .WithOne(e => e.Period);
+            });
+
+            modelBuilder.Entity<ApplicationPeriodData>(entity =>
+            {
+                entity.Property(e => e.Value).IsRequired().HasDefaultValue(string.Empty);
+
+                entity.HasOne(e => e.Application)
+                    .WithMany(e => e.Datas)
+                    .HasForeignKey("ApplicationId");
+
+                entity.HasOne(e => e.DataType)
+                    .WithMany(e => e.PeriodDatas)
+                    .HasForeignKey("DataTypeId");
+
+                entity.HasKey(e => new { e.ApplicationId, e.DataTypeId });
+            });
+
+            modelBuilder.Entity<ApplicationPeriodDataType>(entity =>
+            {
+                entity.Property(e => e.Id).IsRequired();
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Title).IsRequired().HasDefaultValue(string.Empty);
+
+                entity.Property(e => e.Description).IsRequired().HasDefaultValue(string.Empty);
+
+                entity.Property(e => e.UserEditable).IsRequired().HasDefaultValue(true);
+
+                entity.Property(e => e.UserVisible).IsRequired().HasDefaultValue(true);
+
+                entity.HasOne(e => e.Period)
+                    .WithMany(e => e.PeriodDataTypes)
+                    .HasForeignKey("PeriodId");
+
+                entity.HasMany(e => e.PeriodDatas)
+                    .WithOne(e => e.DataType);
             });
         }
     }

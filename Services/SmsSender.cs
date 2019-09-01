@@ -16,7 +16,7 @@ namespace mscfreshman.Services
         {
             var product = "Dysmsapi";
             var domain = "dysmsapi.aliyuncs.com";
-            
+
             var accessKeyId = Secrets.AliyunAccessKeyId;
             var accessKeySecret = Secrets.AliyunAccessKeySecret;
 

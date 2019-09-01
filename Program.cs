@@ -83,6 +83,43 @@ namespace mscfreshman
                             Description = ""
                         });
 
+                        context.ApplicationPeriod.Add(new ApplicationPeriod(1, "申请", "递交申请，自动通过", true));
+                        context.ApplicationPeriod.Add(new ApplicationPeriod(2, "一面", "第一次面试，非技术面试"));
+                        context.ApplicationPeriod.Add(new ApplicationPeriod(3, "二面", "第二次面试，技术面试"));
+
+                        context.ApplicationPeriodDataType.AddRange(
+                            new[] {
+                                new ApplicationPeriodDataType(
+                                    context.ApplicationPeriod.Find(1),
+                                    "申请部门",
+                                    "行政策划部、媒体宣传部、综合技术部"),
+                                new ApplicationPeriodDataType(
+                                    context.ApplicationPeriod.Find(1),
+                                    "自我介绍",
+                                    ""),
+                                new ApplicationPeriodDataType(
+                                    context.ApplicationPeriod.Find(1),
+                                    "个性特长",
+                                    ""),
+                                new ApplicationPeriodDataType(
+                                    context.ApplicationPeriod.Find(1),
+                                    "对俱乐部的期待",
+                                    ""),
+                                new ApplicationPeriodDataType(
+                                    context.ApplicationPeriod.Find(2),
+                                    "一面评价",
+                                    "", false, false),
+                                new ApplicationPeriodDataType(
+                                    context.ApplicationPeriod.Find(3),
+                                    "分组",
+                                    "", true, false),
+                                new ApplicationPeriodDataType(
+                                    context.ApplicationPeriod.Find(3),
+                                    "二面评价",
+                                    "", false, false),
+                            }
+                        );
+
                         context.SaveChanges();
                         return;
                     }
