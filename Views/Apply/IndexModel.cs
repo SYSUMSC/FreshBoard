@@ -26,6 +26,7 @@ namespace mscfreshman.Views.Apply
 
         public int CurrentPeriod { get; set; }
         public bool? ApplicationIsSuccessful { get; set; }
+        public bool PersonDataInvalid { get; set; }
 
         public IEnumerable<Period> Periods { get; set; }
     }

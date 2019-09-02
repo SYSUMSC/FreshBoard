@@ -41,11 +41,9 @@ namespace mscfreshman.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<FreshBoardUser>(entity =>
-            {
-                entity.HasOne(e => e.Application)
-                    .WithOne(e => e.User);
-            });
+            modelBuilder.Entity<FreshBoardUser>()
+                .HasOne(e => e.Application)
+                .WithOne(e => e.User);
 
             modelBuilder.Entity<Notification>(entity =>
             {

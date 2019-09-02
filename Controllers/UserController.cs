@@ -24,19 +24,22 @@ namespace mscfreshman.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly Data.DbContext _dbContext;
+        private readonly ILogger<UserController> _logger;
 
         public UserController(
             UserManager<FreshBoardUser> userManager,
             SignInManager<FreshBoardUser> signInManager,
             IEmailSender emailSender,
             ISmsSender smsSender,
-            Data.DbContext dbContext)
+            Data.DbContext dbContext,
+            ILogger<UserController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _smsSender = smsSender;
             _dbContext = dbContext;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -91,6 +94,7 @@ namespace mscfreshman.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "更新用户信息时发生错误");
                 return Json(new { succeeded = false, message = ex.Message });
             }
         }

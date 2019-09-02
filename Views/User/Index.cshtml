@@ -32,11 +32,11 @@
 </form>
 <h2 class="ui heading">个人信息</h2>
 <div class="ui hidden info icon message">
-    <i class="exclamation triangle icon"></i>
-    <div class="content">
-      <div class="header" id="message-info">请填写全部个人信息，否则面试申请无效。</div>
-    </div>
+  <i class="exclamation triangle icon"></i>
+  <div class="content">
+    <div class="header" id="message-info">请填写全部个人信息，否则面试申请无效。</div>
   </div>
+</div>
 <form class="ui form" id="data">
 @foreach (var data in Model.PersonalData)
 {
@@ -52,7 +52,7 @@
   </div>
 }
   <div class="ui hidden success icon message">
-      <i class="exclamation triangle icon"></i>
+      <i class="save icon"></i>
       <div class="content">
       <div class="header" id="message-success"></div>
       <p id="message-content"></p>
