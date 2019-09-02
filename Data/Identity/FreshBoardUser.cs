@@ -22,7 +22,6 @@ namespace mscfreshman.Data.Identity
 
         public virtual ICollection<UserData> UserData { get; set; }
             = new HashSet<UserData>();
-        public virtual ICollection<Application> Application { get; set; }
-            = new HashSet<Application>();
+        public Application Application { get; set; }
     }
 }

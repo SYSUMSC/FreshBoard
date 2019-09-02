@@ -1,0 +1,114 @@
+@model mscfreshman.Views.Apply.IndexModel
+
+<div class="ui fluid ordered steps">
+    @functions
+    {
+        string MapStatusToString(int target, int current, bool? final = null)
+        {
+            if (target < current)
+                return "completed";
+            else if (target == current)
+            {
+                if (final == null)
+                    return "active";
+                else if (final == true)
+                    return "completed";
+                else if (final == false)
+                    return "failed";
+                return "";
+            }
+            else if (target > current)
+                return "disabled";
+            else return "";
+        }
+    }
+    @foreach (var period in Model.Periods)
+    {
+        <div class="step @MapStatusToString(@period.Id, @Model.CurrentPeriod, @Model.ApplicationIsSuccessful)">
+            <div class="content">
+                <div class="title">@period.Title</div>
+                <div class="description">@period.Summary</div>
+            </div>
+        </div>
+    }
+</div>
+<div class="ui styled fluid accordion">
+    @foreach (var period in Model.Periods)
+    {
+        var active = period.Id == Model.CurrentPeriod ? "active" : "";
+        var visible = period.Id == Model.CurrentPeriod ? "visible" : "hidden";
+        <div class="title @active">
+            <i class="dropdown icon"></i>
+            @period.Title
+        </div>
+        <div class="content @active">
+            <div class="transition @visible">
+                <p>@period.Description</p>
+                @if(period.Datas.Count() > 0)
+                {
+                <form class="ui form" id="data">
+                @foreach (var data in period.Datas)
+                {
+                <div class="field">
+                    <label>@data.Title</label>
+                    <input
+                        type="text"
+                        name="data[@data.Id]"
+                        placeholder="@data.Title"
+                        value="@data.Value"
+                        @if(!data.Editable){<text>disabled</text>}
+                    >
+                    @if(!String.IsNullOrEmpty(data.Description))
+                    {
+                        <div class="ui pointing label">
+                        @data.Description
+                        </div>
+                    }
+                </div>
+                }
+                <div class="ui hidden success icon message">
+                    <i class="exclamation triangle icon"></i>
+                    <div class="content">
+                    <div class="header" id="message-success"></div>
+                    <p id="message-content"></p>
+                    </div>
+                </div>
+                <div class="ui hidden error icon message">
+                    <i class="exclamation triangle icon"></i>
+                    <div class="content">
+                    <div class="header" id="message-error"></div>
+                    <p id="message-content"></p>
+                    </div>
+                </div>
+                <div class="ui button green" id="data-submit">保存</div>
+                </form>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@section Styles
+{
+    <style type="text/css">
+        .ui.steps .step.failed > .icon:before,
+        .ui.ordered.steps .step.failed:before {
+            color: #DB2828;
+        }
+
+        .ui.steps .step.failed > .icon:before,
+        .ui.ordered.steps .step.failed:before {
+            font-family: 'Icons';
+            content: '\f00d';
+            /* '' */
+        }
+    </style>
+}
+@section Scripts
+{
+    <script lang="js">
+        $(document).ready(function() {
+            $('.ui.accordion').accordion();
+        });
+    </script>
+}

@@ -41,6 +41,12 @@ namespace mscfreshman.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<FreshBoardUser>(entity =>
+            {
+                entity.HasOne(e => e.Application)
+                    .WithOne(e => e.User);
+            });
+
             modelBuilder.Entity<Notification>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
@@ -121,20 +127,18 @@ namespace mscfreshman.Data
 
             modelBuilder.Entity<Application>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
                 entity.HasOne(e => e.Period)
                     .WithMany(e => e.Applications)
                     .HasForeignKey("PeriodId");
 
                 entity.HasOne(e => e.User)
-                    .WithMany(e => e.Application)
-                    .HasForeignKey("UserId");
+                    .WithOne(e => e.Application)
+                    .HasForeignKey<Application>(e => e.UserId);
 
                 entity.HasMany(e => e.Datas)
                     .WithOne(e => e.Application);
 
-                entity.HasKey(e => e.Id);
+                entity.HasKey(e => e.UserId);
             });
 
             modelBuilder.Entity<ApplicationPeriod>(entity =>

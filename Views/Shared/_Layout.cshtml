@@ -11,9 +11,7 @@
     <title>@ViewBag.Title - SYSUMSC</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.4.1/semantic.min.css">
     
-    <style type="text/css">
-      @ViewBag.ExtraStyle
-    </style>
+    @RenderSection("Styles",false)
   </head>
   <body>
     <div class="ui padded grid">

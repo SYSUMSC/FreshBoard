@@ -5,7 +5,7 @@ namespace mscfreshman.Data
 {
     public class ApplicationPeriodData
     {
-        public int ApplicationId { get; set; }
+        public string ApplicationId { get; set; }
         public Application Application { get; set; }
 
         public int DataTypeId { get; set; }

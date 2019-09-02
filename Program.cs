@@ -83,7 +83,7 @@ namespace mscfreshman
                             Description = ""
                         });
 
-                        context.ApplicationPeriod.Add(new ApplicationPeriod(1, "申请", "递交申请，自动通过", true));
+                        context.ApplicationPeriod.Add(new ApplicationPeriod(1, "申请", "递交申请，自动通过", userApproved: true));
                         context.ApplicationPeriod.Add(new ApplicationPeriod(2, "一面", "第一次面试，非技术面试"));
                         context.ApplicationPeriod.Add(new ApplicationPeriod(3, "二面", "第二次面试，技术面试"));
 
@@ -121,12 +121,12 @@ namespace mscfreshman
                         );
 
                         context.SaveChanges();
-                        return;
                     }
                     catch (Exception ex)
                     {
                         logger.LogError(ex, "An error occurred seeding the DB.");
                     }
+                    return;
                 }
 #endif
             /* new Thread(

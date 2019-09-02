@@ -5,8 +5,6 @@ namespace mscfreshman.Data
 {
     public class Application
     {
-        public int Id { get; set; }
-
         public string UserId { get; set; }
         public Identity.FreshBoardUser User { get; set; }
 

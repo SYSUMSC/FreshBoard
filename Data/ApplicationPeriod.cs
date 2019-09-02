@@ -9,10 +9,15 @@ namespace mscfreshman.Data
         {
         }
 
-        public ApplicationPeriod(int id, string title = "", string description = "", bool userApproved = false)
+        public ApplicationPeriod(int id,
+                                 string title = "",
+                                 string summary = "",
+                                 string description = "",
+                                 bool userApproved = false)
         {
             Id = id;
             Title = title;
+            Summary = summary;
             Description = description;
             UserApproved = userApproved;
         }
@@ -20,6 +25,8 @@ namespace mscfreshman.Data
         public int Id { get; set; }
 
         public string Title { get; set; }
+
+        public string Summary { get; set; }
 
         public string Description { get; set; }
 

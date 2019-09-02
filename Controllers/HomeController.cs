@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using mscfreshman.Data.Identity;
 using mscfreshman.Models;
@@ -76,7 +77,11 @@ namespace mscfreshman.Controllers
                 return Json(new { succeeded = false, message = "未填写密码" });
             }
 
-            var result = await _signInManager.PasswordSignInAsync(email, password, persistent, false);
+            var result = await _signInManager.PasswordSignInAsync(email,
+                password,
+                persistent,
+                await _userManager.Users.CountAsync() <= 0);
+
             if (result.Succeeded)
             {
                 return Json(new { succeeded = true });
