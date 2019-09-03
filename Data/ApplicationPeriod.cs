@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace mscfreshman.Data
+namespace FreshBoard.Data
 {
     public class ApplicationPeriod
     {

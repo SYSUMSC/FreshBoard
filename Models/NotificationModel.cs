@@ -1,6 +1,6 @@
 using System;
 
-namespace mscfreshman.Models
+namespace FreshBoard.Models
 {
     public class NotificationModel
     {

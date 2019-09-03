@@ -2,8 +2,9 @@
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
-namespace mscfreshman.Services
+namespace FreshBoard.Services
 {
     public interface IEmailSender
     {
@@ -12,7 +13,14 @@ namespace mscfreshman.Services
 
     public class EmailSender : IEmailSender
     {
-        public Task SendEmailAsync(string email, string subject, string message)
+        private readonly IConfiguration _configuration;
+
+        public EmailSender(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
+        public async Task SendEmailAsync(string email, string subject, string message)
         {
             var msg = new MailMessage
             {
@@ -26,15 +34,15 @@ namespace mscfreshman.Services
             };
             msg.To.Add(new MailAddress(email));
 
-            var smtp = new SmtpClient
+            using var smtp = new SmtpClient
             {
-                Host = "smtpdm.aliyun.com",
+                Host = _configuration["Email:HostName"],
                 Port = 25,
                 Credentials =
-                    new NetworkCredential("services@sysumsc.com", Secrets.EmailPassword)
+                    new NetworkCredential(_configuration["Email:UserName"], _configuration["Email:Password"])
             };
 
-            return smtp.SendMailAsync(msg);
+            await smtp.SendMailAsync(msg);
         }
     }
 }

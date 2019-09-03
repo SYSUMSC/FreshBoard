@@ -8,18 +8,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using mscfreshman.Data.Identity;
-using mscfreshman.Hubs;
-using mscfreshman.Services;
 using System;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using FreshBoard.Data.Identity;
+using FreshBoard.Hubs;
+using FreshBoard.Services;
 using Westwind.AspNetCore.LiveReload;
 
-namespace mscfreshman
+namespace FreshBoard
 {
     public class Startup
     {

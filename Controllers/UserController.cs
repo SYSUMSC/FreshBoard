@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using FreshBoard.Data;
+using FreshBoard.Data.Identity;
+using FreshBoard.Services;
+using FreshBoard.Views.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using mscfreshman.Data;
-using mscfreshman.Data.Identity;
-using mscfreshman.Models;
-using mscfreshman.Services;
-using mscfreshman.Views.User;
+using FreshBoard.Models;
 
-namespace mscfreshman.Controllers
+namespace FreshBoard.Controllers
 {
     [Authorize]
     public class UserController : Controller
@@ -43,7 +43,7 @@ namespace mscfreshman.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> IndexAsync()
+        public async Task<IActionResult> Index()
         {
             var personalData = await _dbContext.UserDataType
                 .GroupJoin(_dbContext.UserData,

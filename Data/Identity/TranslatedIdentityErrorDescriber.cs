@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace mscfreshman.Data.Identity
+namespace FreshBoard.Data.Identity
 {
     public class TranslatedIdentityErrorDescriber : IdentityErrorDescriber
     {

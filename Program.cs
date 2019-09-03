@@ -4,14 +4,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using FreshBoard.Data;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using mscfreshman.Data;
 
-namespace mscfreshman
+namespace FreshBoard
 {
     public static class WebBuilderExtensions
     {

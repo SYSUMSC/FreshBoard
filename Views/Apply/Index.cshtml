@@ -1,4 +1,4 @@
-@model mscfreshman.Views.Apply.IndexModel
+@model FreshBoard.Views.Apply.IndexModel
 @{
     ViewBag.Title = "入部申请";
 }
@@ -99,7 +99,7 @@
                     <div class="content @active">
                         <div class="transition @visible">
                             <p>@period.Description</p>
-                            @if (period.Datas != null && period.Datas.Count() > 0)
+                            @if (period.Datas != null && period.Datas.Any())
                             {
                                 <form class="ui form" id="data">
                                     @foreach (var data in period.Datas)

@@ -1,6 +1,6 @@
-using mscfreshman.Data.Identity;
+using FreshBoard.Data.Identity;
 
-namespace mscfreshman.Data
+namespace FreshBoard.Data
 {
     public class UserData
     {

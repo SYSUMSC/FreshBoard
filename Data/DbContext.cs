@@ -1,9 +1,9 @@
 ﻿#nullable disable
+using FreshBoard.Data.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using mscfreshman.Data.Identity;
 
-namespace mscfreshman.Data
+namespace FreshBoard.Data
 {
     public class DbContext : IdentityDbContext<FreshBoardUser>
     {

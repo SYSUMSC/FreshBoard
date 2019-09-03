@@ -1,6 +1,6 @@
 using System;
 
-namespace mscfreshman.Data
+namespace FreshBoard.Data
 {
     public class CrackRecord
     {

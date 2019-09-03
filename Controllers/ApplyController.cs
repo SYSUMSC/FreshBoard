@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using FreshBoard.Data;
+using FreshBoard.Data.Identity;
+using FreshBoard.Services;
+using FreshBoard.Views.Apply;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using mscfreshman.Data;
-using mscfreshman.Data.Identity;
-using mscfreshman.Models;
-using mscfreshman.Services;
-using mscfreshman.Views.Apply;
+using FreshBoard.Models;
 
-namespace mscfreshman.Controllers
+namespace FreshBoard.Controllers
 {
     [Authorize]
     public class ApplyController : Controller

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace mscfreshman.Views.Apply
+namespace FreshBoard.Views.Apply
 {
     public class IndexModel
     {

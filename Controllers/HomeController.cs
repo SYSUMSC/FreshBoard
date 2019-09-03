@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using FreshBoard.Data.Identity;
+using FreshBoard.Models;
+using FreshBoard.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using mscfreshman.Data.Identity;
-using mscfreshman.Models;
-using mscfreshman.Services;
 
-namespace mscfreshman.Controllers
+namespace FreshBoard.Controllers
 {
     [Route("/{action=Index}/{id?}")]
     public class HomeController : Controller

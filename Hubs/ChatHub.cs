@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using mscfreshman.Data;
-using mscfreshman.Data.Identity;
+using FreshBoard.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FreshBoard.Data.Identity;
 
-namespace mscfreshman.Hubs
+namespace FreshBoard.Hubs
 {
     public class ChatHub : Hub
     {
