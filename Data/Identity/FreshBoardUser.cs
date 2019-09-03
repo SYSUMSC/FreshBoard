@@ -10,10 +10,10 @@ namespace FreshBoard.Data.Identity
     // 2. 使用创建的 migration 自动修改数据库定义：dotnet ef database update
     public class FreshBoardUser : IdentityUser // IdentityUser 中已有 PhoneNumber、Email、UserName 字段，无需再建立
     {
-        // /// <summary>
-        // /// 解谜进度
-        // /// </summary>
-        // public int CrackProgress { get; set; }
+        /// <summary>
+        /// 解谜进度
+        /// </summary>
+        public int PuzzleProgress { get; set; }
 
         /// <summary>
         /// 用户权限 1 -- admin, other -- 普通权限
