@@ -94,6 +94,7 @@ namespace FreshBoard
 
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<ISmsSender, SmsSender>();
+            services.AddScoped<IPuzzleService, PuzzleService>();
             services.AddSession();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
