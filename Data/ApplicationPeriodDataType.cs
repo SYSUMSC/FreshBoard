@@ -5,10 +5,6 @@ namespace mscfreshman.Data
 {
     public class ApplicationPeriodDataType
     {
-        public ApplicationPeriodDataType()
-        {
-        }
-
         public ApplicationPeriodDataType(
             ApplicationPeriod period,
             string title = "",

@@ -48,7 +48,7 @@ namespace mscfreshman.Controllers
             var personalData = await _dbContext.UserDataType
                 .GroupJoin(_dbContext.UserData,
                     t => new { t.Id, UserId = _userManager.GetUserId(User) },
-                    v => new { Id = v.DataTypeId, v.UserId },
+                    v => new { Id = v.DataTypeId, UserId = v.UserId ?? "" },
                     (DataType, DataValues) => new { DataType, DataValues })
                 .SelectMany(r => r.DataValues.DefaultIfEmpty(),
                     (r, DataValue) => new IndexModel.PersonalDataRow

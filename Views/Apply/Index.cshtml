@@ -5,46 +5,46 @@
 
 <div class="ui grid">
     <div class="row">
-    @if(Model.PersonDataInvalid)
-    {
-        <div class="ui error icon message">
-            <i class="exclamation triangle icon"></i>
-            <div class="content">
-                <div class="header" id="message-info">个人信息不完整</div>
-                <p>请填写全部个人信息，否则面试申请无效。<a href="/User">点击此处</a>前去填写。</p>
+        @if (Model.PersonDataInvalid)
+        {
+            <div class="ui error icon message">
+                <i class="exclamation triangle icon"></i>
+                <div class="content">
+                    <div class="header" id="message-info">个人信息不完整</div>
+                    <p>请填写全部个人信息，否则面试申请无效。<a href="/User">点击此处</a>前去填写。</p>
+                </div>
             </div>
-        </div>
-    }
-    @if(Model.ApplicationIsSuccessful == true)
-    {
-        <div class="ui success icon message">
-            <i class="thumbs up icon"></i>
-            <div class="content">
-            <div class="header">入部成功</div>
-            <p>恭喜你加入中山大学微软学生俱乐部，后续详细信息将通过个人资料中的联系方式联系你。</p>
+        }
+        @if (Model.ApplicationIsSuccessful == true)
+        {
+            <div class="ui success icon message">
+                <i class="thumbs up icon"></i>
+                <div class="content">
+                    <div class="header">入部成功</div>
+                    <p>恭喜你加入中山大学微软学生俱乐部，后续详细信息将通过个人资料中的联系方式联系你。</p>
+                </div>
             </div>
-        </div>
-    }
-    else if(Model.ApplicationIsSuccessful == false)
-    {
-        <div class="ui error icon message">
-            <i class="lemon outline icon"></i>
-            <div class="content">
-            <div class="header">入部失败</div>
-            <p>虽然你面试表现较好，但入部名额有限，很遗憾我们无法与你共同探索计算机世界的奥秘。</p>
+        }
+        else if (Model.ApplicationIsSuccessful == false)
+        {
+            <div class="ui error icon message">
+                <i class="lemon outline icon"></i>
+                <div class="content">
+                    <div class="header">入部失败</div>
+                    <p>虽然你面试表现较好，但入部名额有限，很遗憾我们无法与你共同探索计算机世界的奥秘。</p>
+                </div>
             </div>
-        </div>
-    }
-    else
-    {
-        <div class="ui info icon message">
-            <i class="info circle icon"></i>
-            <div class="content">
-            <div class="header">等待面试结果</div>
-            <p>在优秀的各位中选出更好的非常困难，请耐心等待。</p>
+        }
+        else
+        {
+            <div class="ui info icon message">
+                <i class="info circle icon"></i>
+                <div class="content">
+                    <div class="header">等待面试结果</div>
+                    <p>在优秀的各位中选出更好的非常困难，请耐心等待。</p>
+                </div>
             </div>
-        </div>
-    }
+        }
     </div>
     <div class="row">
         <div class="ui fluid ordered bottom attached steps">
@@ -69,79 +69,83 @@
                     else return "";
                 }
             }
-            @foreach (var period in Model.Periods)
+            @if (Model.Periods != null)
             {
-                <div class="step @MapStatusToString(@period.Id, @Model.CurrentPeriod, @Model.ApplicationIsSuccessful)">
-                    <div class="content">
-                        <div class="title">@period.Title</div>
-                        <div class="description">@period.Summary</div>
+                foreach (var period in Model.Periods)
+                {
+                    <div class="step @MapStatusToString(@period.Id, @Model.CurrentPeriod, @Model.ApplicationIsSuccessful)">
+                        <div class="content">
+                            <div class="title">@period.Title</div>
+                            <div class="description">@period.Summary</div>
+                        </div>
                     </div>
-                </div>
+                }
             }
         </div>
     </div>
     <div class="row">
         <div class="ui styled fluid accordion">
-        @foreach (var period in Model.Periods)
-        {
-            var enabled = period.Id == Model.CurrentPeriod ? "" : "disabled";
-            var active = period.Id == Model.CurrentPeriod ? "active" : "";
-            var visible = period.Id == Model.CurrentPeriod ? "visible" : "hidden";
-            <div class="title @active">
-                <i class="dropdown icon"></i>
-                @period.Title
-            </div>
-            <div class="content @active">
-                <div class="transition @visible">
-                    <p>@period.Description</p>
-                    @if(period.Datas.Count() > 0)
-                    {
-                    <form class="ui form" id="data">
-                    @foreach (var data in period.Datas)
-                    {
-                    <div class="field">
-                        <label>@data.Title</label>
-                        <textarea
-                            name="data[@data.Id]"
-                            placeholder="@data.Title"
-                            @if(!data.Editable){<text>disabled</text>}
-                            @enabled
-                        >@data.Value</textarea>
-                        @if(!String.IsNullOrEmpty(data.Description))
-                        {
-                            <div class="ui pointing label">
-                            @data.Description
-                            </div>
-                        }
+            @if (Model.Periods != null)
+            {
+                foreach (var period in Model.Periods)
+                {
+                    var enabled = period.Id == Model.CurrentPeriod ? "" : "disabled";
+                    var active = period.Id == Model.CurrentPeriod ? "active" : "";
+                    var visible = period.Id == Model.CurrentPeriod ? "visible" : "hidden";
+                    <div class="title @active">
+                        <i class="dropdown icon"></i>
+                        @period.Title
                     </div>
-                    }
-                    <div class="ui hidden success icon message">
-                        <i class="exclamation triangle icon"></i>
-                        <div class="content">
-                        <div class="header">修改成功</div>
+                    <div class="content @active">
+                        <div class="transition @visible">
+                            <p>@period.Description</p>
+                            @if (period.Datas != null && period.Datas.Count() > 0)
+                            {
+                                <form class="ui form" id="data">
+                                    @foreach (var data in period.Datas)
+                                    {
+                                        <div class="field">
+                                            <label>@data.Title</label>
+                                            <textarea name="data[@data.Id]"
+                                                      placeholder="@data.Title"
+                                                      @if (!data.Editable) { <text> disabled</text>}
+                                                      @enabled>@data.Value</textarea>
+                                            @if (!String.IsNullOrEmpty(data.Description))
+                                            {
+                                                <div class="ui pointing label">
+                                                    @data.Description
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    <div class="ui hidden success icon message">
+                                        <i class="exclamation triangle icon"></i>
+                                        <div class="content">
+                                            <div class="header">修改成功</div>
+                                        </div>
+                                    </div>
+                                    <div class="ui hidden error icon message">
+                                        <i class="exclamation triangle icon"></i>
+                                        <div class="content">
+                                            <div class="header"></div>
+                                        </div>
+                                    </div>
+                                    <div class="ui green @enabled button">
+                                        @if (enabled != "disabled")
+                                        {
+                                            <text>保存</text>
+                                        }
+                                        else
+                                        {
+                                            <text>不能修改历史数据</text>
+                                        }
+                                    </div>
+                                </form>
+                            }
                         </div>
                     </div>
-                    <div class="ui hidden error icon message">
-                        <i class="exclamation triangle icon"></i>
-                        <div class="content">
-                        <div class="header"></div>
-                        </div>
-                    </div>
-                    <div class="ui green @enabled button">
-                        @if(enabled != "disabled")
-                        {
-                            <text>保存</text>
-                        }
-                        else
-                        {
-                            <text>不能修改历史数据</text>
-                        }
-                    </div>
-                    </form>
-                    }
-                </div>
-            </div>
-        }
+                }
+            }
         </div>
     </div>
 </div>
@@ -165,34 +169,34 @@
 @section Scripts
 {
     <script lang="js">
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('.ui.accordion').accordion();
         });
     </script>
     <script lang="js">
-    $(document).ready(function () {
-      $('form > .button').click(function () {
-        var form = $(this).parent()[0];
-        $(form).addClass('loading disabled');
-        $(form).removeClass('success error');
-        axios.post('/Apply/Update', new FormData($(this).parent()[0]))
-          .then(function (res){
-            if(res.data.succeeded) {
-              $(form).addClass('success');
-            } else {
-              $(form).addClass('error');
-              $('.message.error .header', form)
-                .html(res.data.message);
-            }
-            $(form).removeClass('loading disabled');
-          })
-          .catch(function (err) {
-            $(form).addClass('error');
-              $('.message.error .header', form)
-                .html(err && err.message);
-            $(form).removeClass('loading disabled');
-          });
-      });
-    });
+        $(document).ready(function () {
+            $('form > .button').click(function () {
+                var form = $(this).parent()[0];
+                $(form).addClass('loading disabled');
+                $(form).removeClass('success error');
+                axios.post('/Apply/Update', new FormData($(this).parent()[0]))
+                    .then(function (res) {
+                        if (res.data.succeeded) {
+                            $(form).addClass('success');
+                        } else {
+                            $(form).addClass('error');
+                            $('.message.error .header', form)
+                                .html(res.data.message);
+                        }
+                        $(form).removeClass('loading disabled');
+                    })
+                    .catch(function (err) {
+                        $(form).addClass('error');
+                        $('.message.error .header', form)
+                            .html(err && err.message);
+                        $(form).removeClass('loading disabled');
+                    });
+            });
+        });
     </script>
 }

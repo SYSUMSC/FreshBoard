@@ -22,6 +22,8 @@ namespace mscfreshman.Data.Identity
 
         public virtual ICollection<UserData> UserData { get; set; }
             = new HashSet<UserData>();
+#nullable disable
         public virtual Application Application { get; set; }
+#nullable enable
     }
 }

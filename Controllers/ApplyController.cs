@@ -56,7 +56,7 @@ namespace mscfreshman.Controllers
                     (v, DataType) => new { v.Period, DataType })
                 .GroupJoin(_dbContext.ApplicationPeriodData,
                     o => new { Id = o.DataType.Id, UserId = _userManager.GetUserId(User) },
-                    i => new { Id = i.DataTypeId, UserId = i.ApplicationId },
+                    i => new { Id = i.DataTypeId, UserId = i.ApplicationId ?? "" },
                     (r, DataValues) => new
                     {
                         r.Period,
@@ -95,7 +95,7 @@ namespace mscfreshman.Controllers
                 PersonDataInvalid = (await _dbContext.UserDataType
                 .GroupJoin(_dbContext.UserData,
                     t => new { t.Id, UserId = _userManager.GetUserId(User) },
-                    v => new { Id = v.DataTypeId, v.UserId },
+                    v => new { Id = v.DataTypeId, UserId = v.UserId ?? "" },
                     (DataType, DataValues) => new { DataType, DataValues })
                 .SelectMany(r => r.DataValues.DefaultIfEmpty(),
                     (r, DataValue) => DataValue.Value)

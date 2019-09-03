@@ -38,25 +38,28 @@
   </div>
 </div>
 <form class="ui form" id="data">
-@foreach (var data in Model.PersonalData)
+@if (Model.PersonalData != null)
 {
-  <div class="field">
-    <label>@data.Title</label>
-    <input type="text" name="data[@data.DataTypeId]" placeholder="@data.Title" value="@data.Value">
-    @if(!String.IsNullOrEmpty(data.Description))
-    {
-        <div class="ui pointing label">
-        @data.Description
-        </div>
-    }
-  </div>
+  foreach (var data in Model.PersonalData)
+  {
+    <div class="field">
+      <label>@data.Title</label>
+      <input type="text" name="data[@data.DataTypeId]" placeholder="@data.Title" value="@data.Value">
+      @if (!String.IsNullOrEmpty(data.Description))
+      {
+         <div class="ui pointing label">
+         @data.Description
+         </div>
+      }
+    </div>
+  }
 }
   <div class="ui hidden success icon message">
-      <i class="save icon"></i>
-      <div class="content">
-      <div class="header" id="message-success"></div>
-      <p id="message-content"></p>
-      </div>
+    <i class="save icon"></i>
+    <div class="content">
+    <div class="header" id="message-success"></div>
+    <p id="message-content"></p>
+    </div>
   </div>
   <div class="ui hidden error icon message">
     <i class="exclamation triangle icon"></i>

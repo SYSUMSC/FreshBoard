@@ -190,17 +190,15 @@ namespace mscfreshman
                             {
                                 if (text == guid)
                                 {
-                                    using (var db = new Data.DbContext(Configuration.GetConnectionString("DefaultConnection")))
+                                    var db = context.RequestServices.GetRequiredService<Data.DbContext>();
+                                    var answer = await db.Problem.FirstOrDefaultAsync(i => i.Level == 10 && i.Title == "Greetings");
+                                    if (answer != null)
                                     {
-                                        var answer = await db.Problem.FirstOrDefaultAsync(i => i.Level == 10 && i.Title == "Greetings");
-                                        if (answer != null)
-                                        {
-                                            await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes($"Wow! {guid}! That's it! Congratulations! Here is the answer: {answer.Answer}. Bye~")), WebSocketMessageType.Text, true, CancellationToken.None);
-                                        }
-                                        else
-                                        {
-                                            await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes($"Wow! {guid}! That's it! Congratulations! But unfortunately I don't know the answer. Bye~")), WebSocketMessageType.Text, true, CancellationToken.None);
-                                        }
+                                        await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes($"Wow! {guid}! That's it! Congratulations! Here is the answer: {answer.Answer}. Bye~")), WebSocketMessageType.Text, true, CancellationToken.None);
+                                    }
+                                    else
+                                    {
+                                        await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes($"Wow! {guid}! That's it! Congratulations! But unfortunately I don't know the answer. Bye~")), WebSocketMessageType.Text, true, CancellationToken.None);
                                     }
                                 }
                                 else

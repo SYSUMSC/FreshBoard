@@ -9,8 +9,8 @@ namespace mscfreshman.Data
         /// 消息展示时间
         /// </summary>
         public DateTime Time { get; set; }
-        public string Title { get; set; }
-        public string Content { get; set; }
+        public string? Title { get; set; }
+        public string? Content { get; set; }
         /// <summary>
         /// 接收模式
         /// 0 -- 无推送, 仅管理后台可见
@@ -21,7 +21,7 @@ namespace mscfreshman.Data
         /// 多个 Targets 可用 | 分割
         /// </summary>
         public int Mode { get; set; }
-        public string Targets { get; set; }
+        public string? Targets { get; set; }
         public bool? HasPushed { get; set; }
     }
 }

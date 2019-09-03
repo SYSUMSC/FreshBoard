@@ -5,10 +5,6 @@ namespace mscfreshman.Data
 {
     public class ApplicationPeriod
     {
-        public ApplicationPeriod()
-        {
-        }
-
         public ApplicationPeriod(int id,
                                  string title = "",
                                  string summary = "",

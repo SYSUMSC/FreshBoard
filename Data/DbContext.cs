@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿#nullable disable
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using mscfreshman.Data.Identity;
 
@@ -6,15 +7,9 @@ namespace mscfreshman.Data
 {
     public class DbContext : IdentityDbContext<FreshBoardUser>
     {
-        private readonly string _connectionString;
         public DbContext(DbContextOptions<DbContext> options)
             : base(options)
         {
-        }
-
-        public DbContext(string connectionString)
-        {
-            _connectionString = connectionString;
         }
 
         public virtual DbSet<Notification> Notification { get; set; }

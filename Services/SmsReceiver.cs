@@ -20,7 +20,7 @@ namespace mscfreshman
         private static readonly string domainForPop = "dybaseapi.aliyuncs.com";
         private static readonly string regionIdForPop = "cn-hangzhou";
         private static readonly string productName = "Dybaseapi";
-        private static IAcsClient acsClient = null;
+        private static IAcsClient? acsClient = null;
 
         public static IAcsClient InitAcsClient(string regionIdForPop, string accessId, string accessSecret, string productName, string domainForPop)
         {
@@ -30,15 +30,9 @@ namespace mscfreshman
             return acsClient;
         }
 
-        // 初始化环境
-        private static void InitData()
-        {
-            acsClient = InitAcsClient(regionIdForPop, accessId, accessSecret, productName, domainForPop);
-        }
-
         public static void StartThread()
         {
-            InitData();
+            acsClient = InitAcsClient(regionIdForPop, accessId, accessSecret, productName, domainForPop);
             for (int i = 0; i < maxThread; i++)
             {
                 var testTask = new ReceiveThread("PullMessageTask-thread-" + i, messageType, queueName, acsClient);
@@ -92,8 +86,8 @@ namespace mscfreshman
             {
                 try
                 {
-                    QueryTokenForMnsQueueResponse.QueryTokenForMnsQueue_MessageTokenDTO token = null;
-                    Queue queue = null;
+                    QueryTokenForMnsQueueResponse.QueryTokenForMnsQueue_MessageTokenDTO? token = null;
+                    Queue? queue = null;
                     lock (o)
                     {
                         if (tokenMap.ContainsKey(MessageType))
