@@ -28,15 +28,6 @@ namespace mscfreshman.Data
         public virtual DbSet<ApplicationPeriodData> ApplicationPeriodData { get; set; }
         public virtual DbSet<ApplicationPeriodDataType> ApplicationPeriodDataType { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseNpgsql(_connectionString);
-            }
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

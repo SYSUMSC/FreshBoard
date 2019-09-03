@@ -13,9 +13,37 @@ using mscfreshman.Data;
 
 namespace mscfreshman
 {
+    public static class WebBuilderExtensions
+    {
+        public static IWebHostBuilder UseSystemfdLiveReload(this IWebHostBuilder builder)
+        {
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT) return builder;
+            return builder
+#if DEBUG
+                    // systemfd debug support, only on Unix system
+                    // run the following command to get continous
+                    // socket listening
+                    //   systemfd --no-pid -s http::5000 -- dotnet watch run
+            #region systemfd
+                    // enable libuv to support ListenHandle
+                    .UseLibuv()
+                    .ConfigureKestrel(serverOptions =>
+                    {
+                        // detect systemfd environment
+                        var fds = Environment.GetEnvironmentVariable("LISTEN_FDS");
+                        if (fds != null)
+                            // listen to given file handle
+                            // file handle begins at 3
+                            serverOptions.ListenHandle(3);
+                    })
+            #endregion
+#endif
+                    ;
+        }
+    }
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
 #if DEBUG
@@ -120,7 +148,7 @@ namespace mscfreshman
                             }
                         );
 
-                        context.SaveChanges();
+                        await context.SaveChangesAsync();
                     }
                     catch (Exception ex)
                     {
@@ -136,7 +164,7 @@ namespace mscfreshman
                      "Blogs"))
                 .Start(); */
             // SmsReceiver.StartThread();
-            host.Run();
+            await host.RunAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -145,25 +173,7 @@ namespace mscfreshman
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder
-#if DEBUG
-                    // systemfd debug support, only on Unix system
-                    // run the following command to get continous
-                    // socket listening
-                    //   systemfd --no-pid -s http::5000 -- dotnet watch run
-                    #region systemfd
-                    // enable libuv to support ListenHandle
-                    .UseLibuv()
-                    .ConfigureKestrel(serverOptions =>
-                    {
-                        // detect systemfd environment
-                        var fds = Environment.GetEnvironmentVariable("LISTEN_FDS");
-                        if (fds != null)
-                            // listen to given file handle
-                            // file handle begins at 3
-                            serverOptions.ListenHandle(3);
-                    })
-                    #endregion
-#endif
+                        .UseSystemfdLiveReload()
                         .UseStartup<Startup>();
                 });
 

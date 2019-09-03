@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using mscfreshman.Data;
 using mscfreshman.Data.Identity;
 using mscfreshman.Hubs;
 using mscfreshman.Services;
@@ -51,8 +50,14 @@ namespace mscfreshman
             });
 
             services.AddDbContext<Data.DbContext>(options =>
-                options.UseNpgsql(
-                    Configuration.GetConnectionString("DefaultConnection")));
+            {
+#if SQLITE
+                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+#endif
+#if POSTGRESQL
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
+#endif
+            });
 
             services.AddAuthentication(o =>
             {
@@ -80,7 +85,13 @@ namespace mscfreshman
                 options.LogoutPath = "/SignOut";
             });
 
+#if SQLITE
+            services.AddEntityFrameworkSqlite();
+#endif
+#if POSTGRESQL
             services.AddEntityFrameworkNpgsql();
+#endif
+
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<ISmsSender, SmsSender>();
             services.AddSession();
@@ -115,7 +126,7 @@ namespace mscfreshman
 
             app.UseResponseCompression();
 
-            // app.UseLiveReload();
+            //app.UseLiveReload();
 
             app.UseStaticFiles();
 
