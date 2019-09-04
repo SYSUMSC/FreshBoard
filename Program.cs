@@ -19,12 +19,12 @@ namespace FreshBoard
         {
             if (Environment.OSVersion.Platform == PlatformID.Win32NT) return builder;
             return builder
+            #region systemfd
 #if DEBUG
                     // systemfd debug support, only on Unix system
                     // run the following command to get continous
                     // socket listening
                     //   systemfd --no-pid -s http::5000 -- dotnet watch run
-            #region systemfd
                     // enable libuv to support ListenHandle
                     .UseLibuv()
                     .ConfigureKestrel(serverOptions =>
@@ -36,8 +36,8 @@ namespace FreshBoard
                             // file handle begins at 3
                             serverOptions.ListenHandle(3);
                     })
-            #endregion
 #endif
+            #endregion
                     ;
         }
     }

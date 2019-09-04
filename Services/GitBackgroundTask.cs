@@ -44,7 +44,7 @@ namespace FreshBoard.Services
                 Process.Start(new ProcessStartInfo
                 {
                     FileName = "git",
-                    Arguments = "pull",
+                    Arguments = "pull --force",
                     WorkingDirectory = options.WorkingDirectory,
                     UseShellExecute = false
                 }).WaitForExit();
