@@ -46,6 +46,7 @@ namespace FreshBoard
         public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
+            #region SyncDatabase
 #if DEBUG
             if (args.Length >= 1 && args[0] == "--sync-db")
                 using (var scope = host.Services.CreateScope())
@@ -157,13 +158,7 @@ namespace FreshBoard
                     return;
                 }
 #endif
-            /* new Thread(
-                () => GitWorkingThread(
-                    "https://github.com/SYSU-MSC-Studio/Blogs.git",
-                     Path.Combine(Environment.CurrentDirectory, "BlogsRepo"), 
-                     "Blogs"))
-                .Start(); */
-            // SmsReceiver.StartThread();
+            #endregion
             await host.RunAsync();
         }
 
@@ -176,26 +171,5 @@ namespace FreshBoard
                         .UseSystemfdLiveReload()
                         .UseStartup<Startup>();
                 });
-
-        public static readonly ConcurrentDictionary<string, string> GitRepos = new ConcurrentDictionary<string, string>();
-        public static void GitWorkingThread(string gitUrl, string saveDir, string name)
-        {
-            GitRepos[name] = saveDir;
-            if (!Directory.Exists(saveDir))
-            {
-                Process.Start("git", $"clone {gitUrl} {saveDir}").WaitForExit();
-            }
-            while (!Environment.HasShutdownStarted)
-            {
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = "git",
-                    Arguments = "pull --force",
-                    WorkingDirectory = saveDir,
-                    UseShellExecute = false
-                }).WaitForExit();
-                Thread.Sleep(120 * 1000);
-            }
-        }
     }
 }

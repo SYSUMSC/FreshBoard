@@ -18,6 +18,7 @@ using FreshBoard.Data.Identity;
 using FreshBoard.Hubs;
 using FreshBoard.Services;
 using Westwind.AspNetCore.LiveReload;
+using System.IO;
 
 namespace FreshBoard
 {
@@ -102,6 +103,12 @@ namespace FreshBoard
             services.AddSignalR();
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+            services.AddHostedService<GitBackgroundTask>()
+                .Configure<GitTaskOptions>(options => {
+                    options.GitRepoUrl = "https://github.com/SYSU-MSC-Studio/Blogs.git";
+                    options.WorkingDirectory = Path.Combine(Environment.CurrentDirectory, "BlogsRepo");
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
