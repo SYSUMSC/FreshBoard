@@ -50,13 +50,9 @@ namespace FreshBoard.Controllers
             var user = await _userManager.GetUserAsync(User);
             // TODO: show an error message in View
             if (user == null) throw new Exception("用户未登录");
-            var problems = _puzzleService.GetProblemsByLevelAsync(user.PuzzleProgress);
-            await foreach (var i in problems)
-            {
-                // TODO: UI
-                if (i.Answer == answer) return Ok();
-                return Forbid();
-            }
+            var problem = await _puzzleService.GetProblemByIdAsync(id);
+            if (problem == null) return NotFound();
+            if (problem.Answer == answer) return Ok();
             return Forbid();
         }
     }
