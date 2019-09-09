@@ -15,7 +15,7 @@ namespace FreshBoard.Data
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<ReadStatus> ReadStatus { get; set; }
         public virtual DbSet<Problem> Problem { get; set; }
-        public virtual DbSet<CrackRecord> CrackRecord { get; set; }
+        public virtual DbSet<PuzzleRecord> PuzzleRecord { get; set; }
         public virtual DbSet<UserDataType> UserDataType { get; set; }
         public virtual DbSet<UserData> UserData { get; set; }
         public virtual DbSet<Application> Application { get; set; }
@@ -33,7 +33,11 @@ namespace FreshBoard.Data
 
             modelBuilder.Entity<Notification>(entity =>
             {
+#if POSTGRESQL
+                entity.Property(e => e.Id).UseIdentityByDefaultColumn().ValueGeneratedOnAdd();
+#elif SQLITE
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
+#endif
 
                 entity.Property(e => e.Content).IsRequired();
 
@@ -48,7 +52,11 @@ namespace FreshBoard.Data
 
             modelBuilder.Entity<ReadStatus>(entity =>
             {
+#if POSTGRESQL
+                entity.Property(e => e.Id).UseIdentityByDefaultColumn().ValueGeneratedOnAdd();
+#elif SQLITE
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
+#endif
 
                 entity.Property(e => e.UserId).IsRequired();
 
@@ -57,7 +65,11 @@ namespace FreshBoard.Data
 
             modelBuilder.Entity<Problem>(entity =>
             {
+#if POSTGRESQL
+                entity.Property(e => e.Id).UseIdentityByDefaultColumn().ValueGeneratedOnAdd();
+#elif SQLITE
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
+#endif
 
                 entity.Property(e => e.Title).IsRequired();
 
@@ -66,9 +78,13 @@ namespace FreshBoard.Data
                 entity.Property(e => e.Level).IsRequired();
             });
 
-            modelBuilder.Entity<CrackRecord>(entity =>
+            modelBuilder.Entity<PuzzleRecord>(entity =>
             {
+#if POSTGRESQL
+                entity.Property(e => e.Id).UseIdentityByDefaultColumn().ValueGeneratedOnAdd();
+#elif SQLITE
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
+#endif
 
                 entity.Property(e => e.Time).IsRequired();
 
@@ -81,7 +97,11 @@ namespace FreshBoard.Data
 
             modelBuilder.Entity<UserDataType>(entity =>
             {
+#if POSTGRESQL
+                entity.Property(e => e.Id).UseIdentityByDefaultColumn().ValueGeneratedOnAdd();
+#elif SQLITE
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
+#endif
                 entity.Property(e => e.Title).IsRequired();
                 entity.Property(e => e.Description)
                     .IsRequired()
@@ -127,7 +147,11 @@ namespace FreshBoard.Data
 
             modelBuilder.Entity<ApplicationPeriod>(entity =>
             {
+#if POSTGRESQL
+                entity.Property(e => e.Id).UseIdentityByDefaultColumn().ValueGeneratedOnAdd();
+#elif SQLITE
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
+#endif
                 entity.HasKey(e => e.Id);
 
                 entity.Property(e => e.Title).IsRequired().HasDefaultValue(string.Empty);

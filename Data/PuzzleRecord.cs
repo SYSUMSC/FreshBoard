@@ -2,7 +2,7 @@ using System;
 
 namespace FreshBoard.Data
 {
-    public class CrackRecord
+    public class PuzzleRecord
     {
         public int Id { get; set; }
         public DateTime Time { get; set; }

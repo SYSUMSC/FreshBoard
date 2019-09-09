@@ -16,6 +16,7 @@ namespace FreshBoard.Services
         IQueryable<Problem> QueryProblem();
         IAsyncEnumerable<Problem> GetProblemsByLevelAsync(int level);
         Task<Problem?> GetProblemByIdAsync(int id);
+        Task RecordSubmission(int problemId, string userId, string? answer, int result);
     }
     public class PuzzleService : IPuzzleService
     {
@@ -53,5 +54,18 @@ namespace FreshBoard.Services
         public IAsyncEnumerable<Problem> GetProblemsByLevelAsync(int level) => _dbContext.Problem.Where(i => i.Level == level).AsAsyncEnumerable();
 
         public Task<Problem?> GetProblemByIdAsync(int id) => _dbContext.Problem.FirstOrDefaultAsync(i => i.Id == id);
+
+        public Task RecordSubmission(int problemId, string userId, string? answer, int result)
+        {
+            _dbContext.PuzzleRecord.Add(new PuzzleRecord
+            {
+                ProblemId = problemId,
+                Content = answer,
+                Result = result,
+                Time = DateTime.Now,
+                UserId = userId
+            });
+            return _dbContext.SaveChangesAsync();
+        }
     }
 }

@@ -113,27 +113,39 @@ namespace FreshBoard
                         });
 
                         context.ApplicationPeriod.Add(new ApplicationPeriod(1, "申请", "递交申请，自动通过", userApproved: true));
-                        context.ApplicationPeriod.Add(new ApplicationPeriod(2, "一面", "第一次面试，非技术面试"));
-                        context.ApplicationPeriod.Add(new ApplicationPeriod(3, "二面", "第二次面试，技术面试"));
+                        context.ApplicationPeriod.Add(new ApplicationPeriod(2, "一面", "第一次面试"));
+                        context.ApplicationPeriod.Add(new ApplicationPeriod(3, "二面", "第二次面试"));
 
                         context.ApplicationPeriodDataType.AddRange(
                             new[] {
                                 new ApplicationPeriodDataType(
                                     context.ApplicationPeriod.Find(1),
-                                    "申请部门",
-                                    "行政策划部、媒体宣传部、综合技术部"),
-                                new ApplicationPeriodDataType(
-                                    context.ApplicationPeriod.Find(1),
-                                    "自我介绍",
+                                    "简单的自我介绍一下",
                                     ""),
                                 new ApplicationPeriodDataType(
                                     context.ApplicationPeriod.Find(1),
-                                    "个性特长",
+                                    "你有什么个性或者特长",
                                     ""),
                                 new ApplicationPeriodDataType(
                                     context.ApplicationPeriod.Find(1),
-                                    "对俱乐部的期待",
+                                    "你对俱乐部有什么了解",
                                     ""),
+                                new ApplicationPeriodDataType(
+                                    context.ApplicationPeriod.Find(1),
+                                    "为什么想要加入俱乐部",
+                                    ""),
+                                new ApplicationPeriodDataType(
+                                    context.ApplicationPeriod.Find(1),
+                                    "你认为你能给俱乐部带来什么",
+                                    ""),
+                                new ApplicationPeriodDataType(
+                                    context.ApplicationPeriod.Find(1),
+                                    "你觉得俱乐部能给你带来什么",
+                                    ""),
+                                new ApplicationPeriodDataType(
+                                    context.ApplicationPeriod.Find(1),
+                                    "还有什么其他想补充的",
+                                    "可以留空"),
                                 new ApplicationPeriodDataType(
                                     context.ApplicationPeriod.Find(2),
                                     "一面评价",
@@ -149,13 +161,71 @@ namespace FreshBoard
                             }
                         );
 
+                        context.Problem.AddRange(new[] {
+                            new Problem
+                            {
+                                Level = 1,
+                                Title = "测试题目 1.1",
+                                Content = "<p>Test<a href=\"javascript:void(0)\" onclick=\"emmm()\">？</a></p>",
+                                Script = "function emmm() { alert('123456') }",
+                                Answer = "123456"
+                            },
+                            new Problem
+                            {
+                                Level = 1,
+                                Title = "测试题目 1.2",
+                                Content = "<p>Test<a href=\"javascript:void(0)\" onclick=\"emmm()\">？</a></p>",
+                                Script = "function emmm() { alert('123456') }",
+                                Answer = "123456"
+                            },
+                            new Problem
+                            {
+                                Level = 2,
+                                Title = "测试题目 2",
+                                Content = "<p>Test<a href=\"javascript:void(0)\" onclick=\"emmm()\">？</a></p>",
+                                Script = "function emmm() { alert('123456') }",
+                                Answer = "123456"
+                            },
+                            new Problem
+                            {
+                                Level = 3,
+                                Title = "测试题目 3.1",
+                                Content = "<p>Test<a href=\"javascript:void(0)\" onclick=\"emmm()\">？</a></p>",
+                                Script = "function emmm() { alert('123456') }",
+                                Answer = "123456"
+                            },
+                            new Problem
+                            {
+                                Level = 3,
+                                Title = "测试题目 3.2",
+                                Content = "<p>Test<a href=\"javascript:void(0)\" onclick=\"emmm()\">？</a></p>",
+                                Script = "function emmm() { alert('123456') }",
+                                Answer = "123456"
+                            },
+                            new Problem
+                            {
+                                Level = 4,
+                                Title = "测试题目 4",
+                                Content = "<p>Test<a href=\"javascript:void(0)\" onclick=\"emmm()\">？</a></p>",
+                                Script = "function emmm() { alert('123456') }",
+                                Answer = "123456"
+                            },
+                            new Problem
+                            {
+                                Level = 5,
+                                Title = "测试题目 5",
+                                Content = "<p>Test<a href=\"javascript:void(0)\" onclick=\"emmm()\">？</a></p>",
+                                Script = "function emmm() { alert('123456') }",
+                                Answer = "123456"
+                            },
+                        });
+
                         await context.SaveChangesAsync();
                     }
                     catch (Exception ex)
                     {
                         logger.LogError(ex, "An error occurred seeding the DB.");
                     }
-                    return;
                 }
 #endif
             #endregion

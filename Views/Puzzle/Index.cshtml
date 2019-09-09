@@ -1,29 +1,55 @@
 ﻿@model FreshBoard.Views.Puzzle.ProblemModel
+@using FreshBoard.Views.Puzzle
 @{
     ViewBag.Title = "解密";
 }
 
-<h1>#@Model.Id @Model.Title</h1>
-@Html.Raw(Model.Content)
+@if (Model.ShowContent)
+{
+    <h1>Level @Model.Level @Model.Title</h1>
+}
 
-<h4>答案</h4>
-<form action="Submit" class="ui form">
-    <input name="id" type="hidden" value="@Model.Id"/>
-    <div class="field">
-        <label>答案</label>
-        <input
-            type="text"
-            disabled
-            name="answer"
-            id="answer"
-            placeholder="输入该题目的答案">
+@if (Model.MessageType != MessageType.None)
+{
+    var (icon, type, title) = Model.MessageType switch
+    {
+        MessageType.Error => ("exclamation triangle", "error", "错误"),
+        MessageType.Success => ("thumbs up", "success", "恭喜"),
+        MessageType.Warning => ("info circle", "yellow", "提示"),
+        _ => ("", "", "")
+    };
+
+    <div class="ui @type icon message">
+        <i class="@icon icon"></i>
+        <div class="content">
+            <div class="header">@title</div>
+            <p>@Model.Message</p>
+        </div>
     </div>
-    <button class="ui button" id="data-submit" type="submit">提交</button>
-</form>
+}
+@if (Model.ShowContent)
+{
+    @Html.Raw(Model.Content)
+
+    <hr />
+
+    <form method="post" class="ui form">
+        <input type="hidden" asp-for="Id" />
+        <div class="field">
+            <label>答案</label>
+            <textarea asp-for="Answer"
+                   placeholder="输入该题目的答案"></textarea>
+        </div>
+        <button class="ui button" id="data-submit" type="submit">提交</button>
+    </form>
+}
 
 @section Scripts
 {
-    <script type="text/javascript">
+    @if (Model.ShowContent)
+    {
+        <script type="text/javascript">
         @Html.Raw(Model.Script)
-    </script>
+        </script>
+    }
 }
