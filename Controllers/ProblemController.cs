@@ -15,10 +15,17 @@ namespace FreshBoard.Controllers
             _puzzleService = puzzleService;
         }
 
+        private bool Authenticate()
+        {
+            if (!Request.Cookies.TryGetValue("problem", out var value)) return false;
+            return value == "vnu3uvnwmerovdg";
+        }
+
         [Route("acsn973ncrw3rv")]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            if (!Authenticate()) return Forbid();
             var problems = await _puzzleService.QueryProblem().ToListAsync();
             return View(problems);
         }
@@ -27,6 +34,7 @@ namespace FreshBoard.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
+            if (!Authenticate()) return Forbid();
             var problem = await _puzzleService.GetProblemByIdAsync(id);
             return View(problem ?? new Problem { Id = 0 });
         }
@@ -35,6 +43,7 @@ namespace FreshBoard.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(Problem problem)
         {
+            if (!Authenticate()) return Forbid();
             if (!ModelState.IsValid) return BadRequest();
             if (problem.Id == 0)
                 await _puzzleService.CreateProblemAsync(problem);
@@ -47,6 +56,7 @@ namespace FreshBoard.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
+            if (!Authenticate()) return Forbid();
             await _puzzleService.RemoveProblemAsync(id);
             return RedirectToAction("Index");
         }
@@ -55,6 +65,7 @@ namespace FreshBoard.Controllers
         [HttpGet]
         public async Task<IActionResult> Preview(int id)
         {
+            if (!Authenticate()) return Forbid();
             var problem = await _puzzleService.GetProblemByIdAsync(id);
             if (problem == null) return View(new ProblemModel
             {
@@ -77,6 +88,7 @@ namespace FreshBoard.Controllers
         [HttpPost]
         public async Task<IActionResult> Preview(ProblemModel model)
         {
+            if (!Authenticate()) return Forbid();
             var problem = await _puzzleService.GetProblemByIdAsync(model.Id);
             if (problem == null) return View(new ProblemModel
             {

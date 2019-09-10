@@ -43,12 +43,12 @@ namespace FreshBoard
                 options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { "image/svg+xml" });
             });
 
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
+            // services.Configure<CookiePolicyOptions>(options =>
+            // {
+            //     // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+            //     options.CheckConsentNeeded = context => true;
+            //     options.MinimumSameSitePolicy = SameSiteMode.None;
+            // });
 
             services.AddDbContext<Data.FreshBoardDbContext>(options =>
             {
@@ -81,12 +81,7 @@ namespace FreshBoard
                 options.LogoutPath = "/SignOut";
             });
 
-#if SQLITE
             services.AddEntityFrameworkSqlite();
-#endif
-#if POSTGRESQL
-            services.AddEntityFrameworkNpgsql();
-#endif
 
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<ISmsSender, SmsSender>();
