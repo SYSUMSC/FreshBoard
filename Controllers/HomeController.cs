@@ -47,7 +47,7 @@ namespace FreshBoard.Controllers
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error([FromQuery] int code = 500)
+        public IActionResult Error([FromQuery]int code = 500)
         {
             return View(new ErrorViewModel
             {
