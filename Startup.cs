@@ -50,7 +50,7 @@ namespace FreshBoard
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<Data.DbContext>(options =>
+            services.AddDbContext<Data.FreshBoardDbContext>(options =>
             {
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
@@ -71,7 +71,7 @@ namespace FreshBoard
             .AddSignInManager()
             .AddUserManager<UserManager<FreshBoardUser>>()
             .AddDefaultTokenProviders()
-            .AddEntityFrameworkStores<Data.DbContext>()
+            .AddEntityFrameworkStores<Data.FreshBoardDbContext>()
             .AddDefaultTokenProviders()
             .AddErrorDescriber<TranslatedIdentityErrorDescriber>();
 
@@ -193,7 +193,7 @@ namespace FreshBoard
                             {
                                 if (text == guid)
                                 {
-                                    var db = context.RequestServices.GetRequiredService<Data.DbContext>();
+                                    var db = context.RequestServices.GetRequiredService<Data.FreshBoardDbContext>();
                                     var answer = await db.Problem.FirstOrDefaultAsync(i => i.Level == 10 && i.Title == "Greetings");
                                     if (answer != null)
                                     {

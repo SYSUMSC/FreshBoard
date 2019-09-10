@@ -23,7 +23,7 @@ namespace FreshBoard.Controllers
         private readonly SignInManager<FreshBoardUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
-        private readonly Data.DbContext _dbContext;
+        private readonly Data.FreshBoardDbContext _dbContext;
         private readonly ILogger<ApplyController> _logger;
 
         public ApplyController(
@@ -31,7 +31,7 @@ namespace FreshBoard.Controllers
             SignInManager<FreshBoardUser> signInManager,
             IEmailSender emailSender,
             ISmsSender smsSender,
-            Data.DbContext dbContext,
+            Data.FreshBoardDbContext dbContext,
             ILogger<ApplyController> logger)
         {
             _userManager = userManager;

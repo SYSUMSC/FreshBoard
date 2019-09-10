@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FreshBoard.Data
 {
-    public class DbContext : IdentityDbContext<FreshBoardUser>
+    public class FreshBoardDbContext : IdentityDbContext<FreshBoardUser>
     {
-        public DbContext(DbContextOptions<DbContext> options)
+        public FreshBoardDbContext(DbContextOptions<FreshBoardDbContext> options)
             : base(options)
         {
         }

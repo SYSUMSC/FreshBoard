@@ -14,11 +14,11 @@ namespace FreshBoard.Hubs
     {
         private readonly UserManager<FreshBoardUser> _userManager;
         private readonly SignInManager<FreshBoardUser> _signInManager;
-        private readonly DbContextOptions<Data.DbContext> _dbContextOptions;
+        private readonly DbContextOptions<Data.FreshBoardDbContext> _dbContextOptions;
         public ChatHub(
             UserManager<FreshBoardUser> userManager,
             SignInManager<FreshBoardUser> signInManager,
-            DbContextOptions<Data.DbContext> dbContextOptions)
+            DbContextOptions<Data.FreshBoardDbContext> dbContextOptions)
         {
             _userManager = userManager;
             _signInManager = signInManager;

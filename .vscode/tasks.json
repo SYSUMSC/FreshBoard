@@ -6,10 +6,7 @@
             "command": "dotnet",
             "type": "process",
             "args": [
-                "build",
-                "${workspaceFolder}/mscfreshman.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
+                "build"
             ],
             "problemMatcher": "$msCompile"
         },
@@ -18,10 +15,7 @@
             "command": "dotnet",
             "type": "process",
             "args": [
-                "publish",
-                "${workspaceFolder}/mscfreshman.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
+                "publish"
             ],
             "problemMatcher": "$msCompile"
         },

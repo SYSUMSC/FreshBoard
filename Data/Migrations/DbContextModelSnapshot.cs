@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FreshBoard.Data.Migrations
 {
-    [DbContext(typeof(DbContext))]
+    [DbContext(typeof(FreshBoardDbContext))]
     partial class DbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -250,6 +250,9 @@ namespace FreshBoard.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Script")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ServerSideScript")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")

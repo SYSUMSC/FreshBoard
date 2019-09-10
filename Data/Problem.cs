@@ -6,6 +6,7 @@ namespace FreshBoard.Data
         public string? Title { get; set; }
         public string? Content { get; set; }
         public string? Script { get; set; }
+        public string? ServerSideScript { get; set; }
         public int Level { get; set; }
         public string? Answer { get; set; }
     }

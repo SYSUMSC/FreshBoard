@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FreshBoard.Data;
 using Microsoft.EntityFrameworkCore;
-using DbContext = FreshBoard.Data.DbContext;
+using FreshBoardDbContext = FreshBoard.Data.FreshBoardDbContext;
 
 namespace FreshBoard.Services
 {
@@ -20,9 +20,9 @@ namespace FreshBoard.Services
     }
     public class PuzzleService : IPuzzleService
     {
-        private readonly DbContext _dbContext;
+        private readonly FreshBoardDbContext _dbContext;
 
-        public PuzzleService(DbContext dbContext)
+        public PuzzleService(FreshBoardDbContext dbContext)
         {
             _dbContext = dbContext;
         }
