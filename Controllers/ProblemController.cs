@@ -81,11 +81,17 @@ namespace FreshBoard.Controllers
                 ShowContent = false
             });
 
+            model.Content = problem.Content;
+            model.Level = problem.Level;
+            model.Script = problem.Script;
+            model.Title = problem.Title;
+
             if (problem.Answer == model.Answer)
             {
                 model.Message = "答案正确";
                 model.MessageType = MessageType.Success;
                 model.ShowContent = true;
+                model.Answer = "";
                 ModelState.Clear();
                 return View(model);
             }
