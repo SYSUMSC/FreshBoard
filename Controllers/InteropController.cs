@@ -30,7 +30,6 @@ namespace FreshBoard.Controllers
         public class ValidateModel
         {
             public int Id { get; set; }
-            public string Script { get; set; } = "";
             public string Param { get; set; } = "";
         }
 
