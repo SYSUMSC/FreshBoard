@@ -83,7 +83,7 @@ namespace FreshBoard.Controllers
                 return View(new ProblemModel
                 {
                     MessageType = MessageType.Error,
-                    Message = "没有这个难度的题目",
+                    Message = "找不到这个题目",
                     ShowContent = false
                 });
             }

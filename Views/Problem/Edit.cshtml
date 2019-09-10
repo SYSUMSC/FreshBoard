@@ -1,0 +1,45 @@
+@using FreshBoard.Data
+@model Problem
+@{
+    ViewBag.Title = "编辑题目";
+}
+
+<form asp-action="Edit" method="post" class="ui form">
+    <input type="hidden" asp-for="Id" />
+    <div class="field">
+        <label>题目名称</label>
+        <input asp-for="Title"
+            placeholder="输入该题目的名称" />
+    </div>
+    <div class="field">
+        <label>题目难度</label>
+        <input asp-for="Level"
+            placeholder="输入该题目的难度" />
+    </div>
+    <div class="field">
+        <label>题目描述</label>
+        <textarea asp-for="Content"
+            placeholder="输入该题目的描述，支持 HTML"></textarea>
+    </div>
+    <div class="field">
+        <label>题目客户端脚本</label>
+        <textarea asp-for="Script"
+            placeholder="输入该题目的客户端 JavaScript，支持使用 jQuery 和 axios"></textarea>
+    </div>
+    <div class="field">
+        <label>题目服务端脚本</label>
+        <hr />
+            <p>服务端 JavaScript 验证接口：POST /interop/validate</p>
+            <p>Body: JSON: { id: 题目Id, param: '参数' }</p>
+            <p>服务端将会执行该题目的服务端脚本：run(param)，并返回其返回值</p>
+        <hr />
+        <textarea asp-for="ServerSideScript"
+            placeholder="输入该题目的服务端 JavaScript"></textarea>
+    </div>
+    <div class="field">
+        <label>题目答案</label>
+        <textarea asp-for="Answer"
+            placeholder="输入该题目的答案"></textarea>
+    </div>
+    <button class="ui button" type="submit">提交</button>
+</form>

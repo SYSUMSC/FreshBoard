@@ -1,0 +1,47 @@
+@using FreshBoard.Data
+@model List<Problem>
+@{
+    ViewBag.Title = "题目管理";
+}
+<table class="ui celled table">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>名称</th>
+      <th>难度</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var item in Model)
+    {
+      <tr>
+        <td data-label="Id">@item.Id</td>
+        <td data-label="Name">@item.Title</td>
+        <td data-label="Level">@item.Level</td>
+        <td data-label="Action">
+          <form asp-action="Delete" method="post">
+            <a asp-action="Edit" asp-route-id="@item.Id">
+              <button class="ui button" type="button">
+                编辑
+              </button>
+            </a>
+            <a asp-action="Preview" asp-route-id="@item.Id" target="_blank">
+              <button class="ui button" type="button">
+                预览
+              </button>
+            </a>
+            <input type="hidden" name="id" value="@item.Id" />
+            <button type="submit" class="ui red button">
+              删除
+            </button>
+          </form>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<a asp-action="Edit" asp-route-id="0">
+  <button class="ui button">添加</button>
+</a>
