@@ -33,11 +33,7 @@ namespace FreshBoard.Data
 
             modelBuilder.Entity<Notification>(entity =>
             {
-#if POSTGRESQL
-                entity.Property(e => e.Id).UseIdentityByDefaultColumn().ValueGeneratedOnAdd();
-#elif SQLITE
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
-#endif
 
                 entity.Property(e => e.Content).IsRequired();
 
@@ -52,11 +48,7 @@ namespace FreshBoard.Data
 
             modelBuilder.Entity<ReadStatus>(entity =>
             {
-#if POSTGRESQL
-                entity.Property(e => e.Id).UseIdentityByDefaultColumn().ValueGeneratedOnAdd();
-#elif SQLITE
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
-#endif
 
                 entity.Property(e => e.UserId).IsRequired();
 
@@ -65,11 +57,7 @@ namespace FreshBoard.Data
 
             modelBuilder.Entity<Problem>(entity =>
             {
-#if POSTGRESQL
-                entity.Property(e => e.Id).UseIdentityByDefaultColumn().ValueGeneratedOnAdd();
-#elif SQLITE
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
-#endif
 
                 entity.Property(e => e.Title).IsRequired();
 
@@ -80,11 +68,7 @@ namespace FreshBoard.Data
 
             modelBuilder.Entity<PuzzleRecord>(entity =>
             {
-#if POSTGRESQL
-                entity.Property(e => e.Id).UseIdentityByDefaultColumn().ValueGeneratedOnAdd();
-#elif SQLITE
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
-#endif
 
                 entity.Property(e => e.Time).IsRequired();
 
@@ -97,11 +81,7 @@ namespace FreshBoard.Data
 
             modelBuilder.Entity<UserDataType>(entity =>
             {
-#if POSTGRESQL
-                entity.Property(e => e.Id).UseIdentityByDefaultColumn().ValueGeneratedOnAdd();
-#elif SQLITE
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
-#endif
                 entity.Property(e => e.Title).IsRequired();
                 entity.Property(e => e.Description)
                     .IsRequired()
@@ -147,11 +127,8 @@ namespace FreshBoard.Data
 
             modelBuilder.Entity<ApplicationPeriod>(entity =>
             {
-#if POSTGRESQL
-                entity.Property(e => e.Id).UseIdentityByDefaultColumn().ValueGeneratedOnAdd();
-#elif SQLITE
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
-#endif
+
                 entity.HasKey(e => e.Id);
 
                 entity.Property(e => e.Title).IsRequired().HasDefaultValue(string.Empty);

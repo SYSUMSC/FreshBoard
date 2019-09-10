@@ -4,20 +4,17 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <Nullable>enable</Nullable>
-    <DefineConstants>$(DefineConstants);SQLITE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.0.0-preview9.*" />
-    <!-- <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.0.0-preview9.*" /> -->
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.0.0-preview9.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0-preview9.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0-preview9.*">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Condition="$(DefineConstants.Contains('SQLITE'))" Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.0.0-preview9.*" />
-    <PackageReference Condition="$(DefineConstants.Contains('POSTGRESQL'))" Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.0.0-preview9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.0.0-preview9.*" />
     <PackageReference Include="WestWind.AspnetCore.LiveReload" Version="0.1.5.2" />
   </ItemGroup>
 

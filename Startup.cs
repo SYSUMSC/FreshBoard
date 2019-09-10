@@ -52,12 +52,7 @@ namespace FreshBoard
 
             services.AddDbContext<Data.DbContext>(options =>
             {
-#if SQLITE
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
-#endif
-#if POSTGRESQL
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
-#endif
             });
 
             services.AddAuthentication(o =>
