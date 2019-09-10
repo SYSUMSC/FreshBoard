@@ -90,7 +90,7 @@ namespace FreshBoard.Controllers
                 return View(model);
             }
 
-            model.Message = "答案不正确哦，再仔细想想吧";
+            model.Message = "答案不正确";
             model.MessageType = MessageType.Warning;
             model.ShowContent = true;
             return View(model);
