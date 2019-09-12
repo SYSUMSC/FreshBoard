@@ -24,7 +24,7 @@ namespace FreshBoard.Services
         {
             var msg = new MailMessage
             {
-                From = new MailAddress("services@sysumsc.com", "SYSU MSC", Encoding.UTF8),
+                From = new MailAddress("noreply@sysumsc.com", "SYSU MSC", Encoding.UTF8),
                 Subject = subject,
                 SubjectEncoding = Encoding.UTF8,
                 Body = message.Replace("http://localhost:5000", "https://sysumsc.com")
@@ -37,7 +37,7 @@ namespace FreshBoard.Services
             using var smtp = new SmtpClient
             {
                 Host = _configuration["Email:HostName"],
-                Port = 25,
+                Port = 587,
                 Credentials =
                     new NetworkCredential(_configuration["Email:UserName"], _configuration["Email:Password"])
             };

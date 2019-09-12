@@ -1,10 +1,12 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using FreshBoard.Data.Identity;
 using FreshBoard.Models;
 using FreshBoard.Services;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -51,10 +53,13 @@ namespace FreshBoard.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error([FromQuery]int code = 500)
         {
+            var exceptionHandlerPathFeature =
+                HttpContext.Features.Get<IExceptionHandlerPathFeature>();
             return View(new ErrorViewModel
             {
                 RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
-                StatusCode = code
+                StatusCode = code,
+                Exception = code != 500 ? null : exceptionHandlerPathFeature?.Error
             });
         }
 
@@ -126,13 +131,14 @@ namespace FreshBoard.Controllers
             if (result.Succeeded)
             {
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, Request.Scheme);
+                var callbackUrl = Url.Action("ConfirmEmail", "User", new { userId = user.Id, code }, Request.Scheme);
                 try
                 {
                     await _emailSender.SendEmailAsync(email, "验证邮箱 - SYSU MSC", $"<h2>中山大学微软学生俱乐部</h2><p>感谢您的注册，请点击 <a href='{callbackUrl}'>此处</a> 验证你的邮箱地址。</p><hr /><p>请勿回复本邮件</p><p>{DateTime.Now} - SYSU MSC</p>");
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError(ex, "An error occured while sending confirmation email.");
                     Console.WriteLine(ex.Message);
                 }
                 await _signInManager.SignOutAsync();

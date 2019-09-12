@@ -9,7 +9,7 @@
     <div class="row">
       <h1 class="text-danger">错误 - @Model.StatusCode</h1>
       <h2 class="text-danger">
-        处理请求时发生错误。
+        处理请求时发生错误: @(Model.Exception?.Message ?? Model.StatusCode.ToString())
       </h2>
 
       @if (Model.ShowRequestId) {

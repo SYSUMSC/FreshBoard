@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FreshBoard.Data;
 using FreshBoard.Data.Identity;
@@ -95,6 +96,103 @@ namespace FreshBoard.Controllers
                 _logger.LogError(ex, "更新用户信息时发生错误");
                 return Json(new { succeeded = false, message = ex.Message });
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendRegisterEmailAsync()
+        {
+            if (!_signInManager.IsSignedIn(User))
+            {
+                return Json(new { succeeded = false, message = "未登录" });
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Json(new { succeeded = false, message = "发生未知错误" });
+            }
+
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var email = user.Email;
+            var callbackUrl = Url.Action("ConfirmEmail", "User", new { userId = user.Id, code }, Request.Scheme);
+
+            try
+            {
+                await _emailSender.SendEmailAsync(email, "验证邮箱 - SYSU MSC", $"<h2>中山大学微软学生俱乐部</h2><p>感谢您的注册，请点击 <a href='{callbackUrl}'>此处</a> 验证你的邮箱地址。</p><hr /><p>请勿回复本邮件</p><p>{DateTime.Now} - SYSU MSC</p>");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, "An error occured while sending confirmation email.");
+            }
+
+            return Json(new { succeeded = true });
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmailAsync(string userId, string code)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) throw new Exception("找不到该用户");
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            if (!result.Succeeded) throw new Exception(String.Join("; ", result.Errors.Select(e => e.Description)));
+            return Redirect(Url.Action("Index"));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateCredentialAsync(string email, string phone)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (!string.IsNullOrEmpty(email) && user.Email != email)
+                await _userManager.SetEmailAsync(user, email);
+            if (!string.IsNullOrEmpty(phone) && user.PhoneNumber != phone)
+                await _userManager.SetPhoneNumberAsync(user, phone);
+            return Json(new { succeeded = true });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendSMSAsync()
+        {
+            if (!_signInManager.IsSignedIn(User))
+            {
+                return Json(new { succeeded = false, message = "未登录" });
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Json(new { succeeded = false, message = "发生未知错误" });
+            }
+            var token = await _userManager.GenerateChangePhoneNumberTokenAsync(user, user.PhoneNumber);
+
+            try
+            {
+                var res = await _smsSender.SendSmsAsync(user.PhoneNumber, JsonSerializer.Serialize(new { code = token }), "SMS_143868088");
+                return Json(new { succeeded = res.Code.ToUpper() == "OK", message = res.Message });
+            }
+            catch
+            {
+                return Json(new { succeeded = false, message = "发生未知错误" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmPhoneAsync(string token)
+        {
+            if (!_signInManager.IsSignedIn(User))
+            {
+                return Json(new { succeeded = false, message = "未登录" });
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Json(new { succeeded = false, message = "发生未知错误" });
+            }
+            var res = await _userManager.VerifyChangePhoneNumberTokenAsync(user, token, user.PhoneNumber);
+            user.PhoneNumberConfirmed = res;
+            await _userManager.UpdateAsync(user);
+            return Json(new { succeeded = res });
         }
     }
 }

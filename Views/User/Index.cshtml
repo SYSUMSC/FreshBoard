@@ -10,27 +10,33 @@
 
 <h1 class="hi heading">@User.Identity.Name</h1>
 <h2 class="ui heading">账号信息</h2>
-<form class="ui form">
+<form class="ui form" id="modify-form">
   <div class="field">
       <label>邮箱</label>
       <input 
           type="text"
-          disabled 
           name="email" 
           id="email" 
           placeholder="user@example.com" 
           value="@((await UserManager.GetUserAsync(User))?.Email)">
+      @if(!(await UserManager.GetUserAsync(User)).EmailConfirmed)
+      {
+      <div class="ui pointing red basic label" id="verify-message">
+        邮箱未验证
+      </div>
+      <div class="ui tiny green button" id="verify-email">验证邮箱</div>
+      }
   </div>
   <div class="field">
       <label>手机号</label>
       <input
           type="text"
-          disabled
           name="phone"
           id="phone"
           placeholder="123-1234-5678"
           value="@((await UserManager.GetUserAsync(User))?.PhoneNumber)">
   </div>
+  <div class="ui tiny orange button" id="modify">修改信息</div>
 </form>
 <h2 class="ui heading">个人信息</h2>
 <div class="ui hidden info icon message">
@@ -70,7 +76,7 @@
     <p id="message-content"></p>
     </div>
   </div>
-  <div class="ui button" id="data-submit">保存</div>
+  <div class="ui green button" id="data-submit">保存</div>
 </form>
 
 @section Scripts
@@ -89,6 +95,27 @@
     }
     $(document).ready(function () {
       checkDataFilled();
+      $('#verify-email').click(function () {
+        $('#verify-email').addClass('loading');
+        axios.post('/User/SendRegisterEmail')
+          .then(function (res) {
+            $('#verify-message')
+              .removeClass('red')
+              .addClass('green')
+              .html('验证邮件已发送');
+          })
+          .finally(function () {
+            $('#verify-email').removeClass('loading')
+          });
+      });
+      $('#modify').click(function () {
+        $('#modify').addClass('loading');
+        axios.post('/User/UpdateCredential', new FormData($('#modify-form')[0]))
+          .finally(function () {
+            $('#modify').removeClass('loading');
+            document.location.reload();
+          });
+      });
       $('#data-submit').click(function () {
         checkDataFilled();
         $('#data').addClass('loading disabled');
