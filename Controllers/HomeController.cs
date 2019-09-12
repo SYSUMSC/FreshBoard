@@ -20,19 +20,22 @@ namespace FreshBoard.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly ILogger<HomeController> _logger;
+        private readonly Data.FreshBoardDbContext _dbContext;
 
         public HomeController(
             ILogger<HomeController> logger,
             UserManager<FreshBoardUser> userManager,
             SignInManager<FreshBoardUser> signInManager,
             IEmailSender emailSender,
-            ISmsSender smsSender)
+            ISmsSender smsSender,
+            Data.FreshBoardDbContext dbContext)
         {
             _logger = logger;
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _smsSender = smsSender;
+            _dbContext = dbContext;
         }
 
         public IActionResult Index()
@@ -116,7 +119,7 @@ namespace FreshBoard.Controllers
                 UserName = email,
                 Email = email,
                 PhoneNumber = phone,
-                Privilege = 0
+                Privilege = (await _userManager.Users.CountAsync()) == 0 ? 1 : 0
             };
 
             var result = await _userManager.CreateAsync(user, password);

@@ -40,6 +40,15 @@
               }
             </div>
           </div>
+          @if(ViewContext.RouteData.Values["controller"].ToString()=="Admin")
+          {
+          <div class="ui large inverted green stackable menu">
+            <a href="/Admin" class="item">管理中心</a>
+            <a href="/Admin/Users" class="item">用户管理</a>
+            <a href="/Admin/Apply" class="item basic">申请流程</a>
+            <!-- <a href="/Puzzle" class="item basic">解谜题目</a> -->
+          </div>
+          }
 
           @if( ViewContext.RouteData.Values["controller"].ToString()=="Home" && ViewContext.RouteData.Values["action"].ToString()=="Index" )
           {
