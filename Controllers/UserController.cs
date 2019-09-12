@@ -144,9 +144,14 @@ namespace FreshBoard.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             if (!string.IsNullOrEmpty(email) && user.Email != email)
+            {
                 await _userManager.SetEmailAsync(user, email);
+                user.UserName = email;
+                await _signInManager.RefreshSignInAsync(user);
+            }
             if (!string.IsNullOrEmpty(phone) && user.PhoneNumber != phone)
                 await _userManager.SetPhoneNumberAsync(user, phone);
+            await _userManager.UpdateAsync(user);
             return Json(new { succeeded = true });
         }
 
