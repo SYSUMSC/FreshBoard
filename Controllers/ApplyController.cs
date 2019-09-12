@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using FreshBoard.Data;
@@ -12,7 +11,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using FreshBoard.Models;
 
 namespace FreshBoard.Controllers
 {
@@ -23,7 +21,7 @@ namespace FreshBoard.Controllers
         private readonly SignInManager<FreshBoardUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
-        private readonly Data.FreshBoardDbContext _dbContext;
+        private readonly FreshBoardDbContext _dbContext;
         private readonly ILogger<ApplyController> _logger;
 
         public ApplyController(
@@ -31,7 +29,7 @@ namespace FreshBoard.Controllers
             SignInManager<FreshBoardUser> signInManager,
             IEmailSender emailSender,
             ISmsSender smsSender,
-            Data.FreshBoardDbContext dbContext,
+            FreshBoardDbContext dbContext,
             ILogger<ApplyController> logger)
         {
             _userManager = userManager;
@@ -42,7 +40,7 @@ namespace FreshBoard.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> IndexAsync()
+        public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
             var application = await _dbContext.Application.FindAsync(user.Id);
@@ -51,20 +49,20 @@ namespace FreshBoard.Controllers
                 .GroupJoin(_dbContext.ApplicationPeriodDataType,
                     o => new { o.Id, UserVisible = true },
                     i => new { Id = i.PeriodId, UserVisible = i.UserVisible ?? false },
-                    (Period, DataTypes) => new { Period, DataTypes })
+                    (period, dataTypes) => new { Period = period, DataTypes = dataTypes })
                 .SelectMany(r => r.DataTypes.DefaultIfEmpty(),
-                    (v, DataType) => new { v.Period, DataType })
+                    (v, dataType) => new { v.Period, DataType = dataType })
                 .GroupJoin(_dbContext.ApplicationPeriodData,
-                    o => new { Id = o.DataType.Id, UserId = _userManager.GetUserId(User) },
+                    o => new {o.DataType.Id, UserId = _userManager.GetUserId(User) },
                     i => new { Id = i.DataTypeId, UserId = i.ApplicationId ?? "" },
-                    (r, DataValues) => new
+                    (r, dataValues) => new
                     {
                         r.Period,
                         r.DataType,
-                        DataValues = DataValues
+                        DataValues = dataValues
                     })
                 .SelectMany(r => r.DataValues.DefaultIfEmpty(),
-                    (r, DataValue) => new
+                    (r, dataValue) => new
                     {
                         r.Period,
                         Data = new IndexModel.PeriodData
@@ -73,8 +71,8 @@ namespace FreshBoard.Controllers
                             Title = r.DataType.Title,
                             Description = r.DataType.Description,
                             Editable = r.DataType.UserEditable ?? false,
-                            Value = DataValue.Value,
-                        },
+                            Value = dataValue.Value
+                        }
                     })
                 .ToArrayAsync())
                 .GroupBy(r => r.Period.Id)
@@ -85,7 +83,7 @@ namespace FreshBoard.Controllers
                     Summary = group.FirstOrDefault().Period.Summary,
                     Description = group.FirstOrDefault().Period.Description,
                     UserApproved = group.FirstOrDefault().Period.UserApproved,
-                    Datas = group.Select(r => r.Data).Where(r => r.Title != null).OrderBy(r => r.Id),
+                    Datas = group.Select(r => r.Data).Where(r => r.Title != null).OrderBy(r => r.Id)
                 });
             return View(new IndexModel
             {
@@ -96,10 +94,10 @@ namespace FreshBoard.Controllers
                 .GroupJoin(_dbContext.UserData,
                     t => new { t.Id, UserId = _userManager.GetUserId(User) },
                     v => new { Id = v.DataTypeId, UserId = v.UserId ?? "" },
-                    (DataType, DataValues) => new { DataType, DataValues })
+                    (dataType, dataValues) => new { DataType = dataType, DataValues = dataValues })
                 .SelectMany(r => r.DataValues.DefaultIfEmpty(),
-                    (r, DataValue) => DataValue.Value)
-                .CountAsync(r => String.IsNullOrEmpty(r))) > 0
+                    (r, dataValue) => dataValue.Value)
+                .CountAsync(r => string.IsNullOrEmpty(r))) > 0
             });
         }
 
@@ -118,7 +116,7 @@ namespace FreshBoard.Controllers
                     {
                         User = user,
                         PeriodId = 1,
-                        IsSuccessful = null,
+                        IsSuccessful = null
                     };
                 }
                 // 校验申请信息修改合法性
@@ -136,20 +134,20 @@ namespace FreshBoard.Controllers
                 var existingData = await _dbContext.ApplicationPeriodData
                     .Where(d => d.ApplicationId == user.Id)
                     .ToDictionaryAsync(d => d.DataTypeId);
-                List<ApplicationPeriodData> newData = new List<ApplicationPeriodData>();
-                foreach (var kv in data)
+                var newData = new List<ApplicationPeriodData>();
+                foreach (var (key, value) in data)
                 {
-                    if (existingData.ContainsKey(kv.Key))
+                    if (existingData.ContainsKey(key))
                     {
-                        existingData[kv.Key].Value = kv.Value ?? String.Empty;
+                        existingData[key].Value = value ?? string.Empty;
                     }
                     else
                     {
                         newData.Add(new ApplicationPeriodData
                         {
                             ApplicationId = user.Id,
-                            DataTypeId = kv.Key,
-                            Value = kv.Value ?? String.Empty
+                            DataTypeId = key,
+                            Value = value ?? string.Empty
                         });
                     }
                 }

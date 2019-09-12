@@ -11,7 +11,7 @@
                 <i class="exclamation triangle icon"></i>
                 <div class="content">
                     <div class="header" id="message-info">个人信息不完整</div>
-                    <p>请填写全部个人信息，否则面试申请无效。<a href="/User">点击此处</a>前去填写。</p>
+                    <p>请填写全部个人信息，否则面试申请无效。<a asp-controller="User" asp-action="Index">点击此处</a>前去填写。</p>
                 </div>
             </div>
         }
@@ -50,30 +50,27 @@
         <div class="ui fluid ordered bottom attached steps">
             @functions
             {
-                string MapStatusToString(int target, int current, bool? final = null)
+                static string MapStatusToString(int target, int current, bool? final = null)
                 {
                     if (target < current)
                         return "completed";
-                    else if (target == current)
+                    if (target == current)
                     {
-                        if (final == null)
-                            return "active";
-                        else if (final == true)
-                            return "completed";
-                        else if (final == false)
-                            return "failed";
-                        return "";
+                        return final switch
+                        {
+                            null => "active",
+                            true => "completed",
+                            false => "failed"
+                        };
                     }
-                    else if (target > current)
-                        return "disabled";
-                    else return "";
+                    return target > current ? "disabled" : "";
                 }
             }
             @if (Model.Periods != null)
             {
                 foreach (var period in Model.Periods)
                 {
-                    <div class="step @MapStatusToString(@period.Id, @Model.CurrentPeriod, @Model.ApplicationIsSuccessful)">
+                    <div class="step @MapStatusToString(period.Id, Model.CurrentPeriod, Model.ApplicationIsSuccessful)">
                         <div class="content">
                             <div class="title">@period.Title</div>
                             <div class="description">@period.Summary</div>

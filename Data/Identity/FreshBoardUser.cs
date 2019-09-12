@@ -1,6 +1,5 @@
-using Microsoft.AspNetCore.Identity;
-using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace FreshBoard.Data.Identity
 {

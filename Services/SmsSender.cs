@@ -1,7 +1,7 @@
-﻿using Aliyun.Acs.Core;
+﻿using System.Threading.Tasks;
+using Aliyun.Acs.Core;
 using Aliyun.Acs.Core.Profile;
 using Aliyun.Acs.Dysmsapi.Model.V20170525;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
 namespace FreshBoard.Services

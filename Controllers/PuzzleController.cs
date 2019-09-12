@@ -1,14 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Threading.Tasks;
 using FreshBoard.Data.Identity;
+using FreshBoard.Extensions;
 using FreshBoard.Services;
 using FreshBoard.Views.Puzzle;
 using Microsoft.AspNetCore.Identity;
-using FreshBoard.Extensions;
-using FreshBoard.Data;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FreshBoard.Controllers
 {

@@ -1,3 +1,14 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Net.WebSockets;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using FreshBoard.Data;
+using FreshBoard.Data.Identity;
+using FreshBoard.Hubs;
+using FreshBoard.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -8,17 +19,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Linq;
-using System.Net.WebSockets;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using FreshBoard.Data.Identity;
-using FreshBoard.Hubs;
-using FreshBoard.Services;
 using Westwind.AspNetCore.LiveReload;
-using System.IO;
 
 namespace FreshBoard
 {
@@ -50,7 +51,7 @@ namespace FreshBoard
             //     options.MinimumSameSitePolicy = SameSiteMode.None;
             // });
 
-            services.AddDbContext<Data.FreshBoardDbContext>(options =>
+            services.AddDbContext<FreshBoardDbContext>(options =>
             {
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
@@ -71,7 +72,7 @@ namespace FreshBoard
             .AddSignInManager()
             .AddUserManager<UserManager<FreshBoardUser>>()
             .AddDefaultTokenProviders()
-            .AddEntityFrameworkStores<Data.FreshBoardDbContext>()
+            .AddEntityFrameworkStores<FreshBoardDbContext>()
             .AddDefaultTokenProviders()
             .AddErrorDescriber<TranslatedIdentityErrorDescriber>();
 
@@ -188,7 +189,7 @@ namespace FreshBoard
                             {
                                 if (text == guid)
                                 {
-                                    var db = context.RequestServices.GetRequiredService<Data.FreshBoardDbContext>();
+                                    var db = context.RequestServices.GetRequiredService<FreshBoardDbContext>();
                                     var answer = await db.Problem.FirstOrDefaultAsync(i => i.Level == 10 && i.Title == "Greetings");
                                     if (answer != null)
                                     {

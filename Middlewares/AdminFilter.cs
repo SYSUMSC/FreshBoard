@@ -1,10 +1,10 @@
-﻿using FreshBoard.Data.Identity;
+﻿using System;
+using System.Threading.Tasks;
+using FreshBoard.Data.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Threading.Tasks;
 
 namespace FreshBoard.Middlewares
 {

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using FreshBoard.Data;
@@ -12,7 +11,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using FreshBoard.Models;
 
 namespace FreshBoard.Controllers
 {
@@ -23,7 +21,7 @@ namespace FreshBoard.Controllers
         private readonly SignInManager<FreshBoardUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
-        private readonly Data.FreshBoardDbContext _dbContext;
+        private readonly FreshBoardDbContext _dbContext;
         private readonly ILogger<UserController> _logger;
 
         public UserController(
@@ -31,7 +29,7 @@ namespace FreshBoard.Controllers
             SignInManager<FreshBoardUser> signInManager,
             IEmailSender emailSender,
             ISmsSender smsSender,
-            Data.FreshBoardDbContext dbContext,
+            FreshBoardDbContext dbContext,
             ILogger<UserController> logger)
         {
             _userManager = userManager;
@@ -49,14 +47,14 @@ namespace FreshBoard.Controllers
                 .GroupJoin(_dbContext.UserData,
                     t => new { t.Id, UserId = _userManager.GetUserId(User) },
                     v => new { Id = v.DataTypeId, UserId = v.UserId ?? "" },
-                    (DataType, DataValues) => new { DataType, DataValues })
+                    (dataType, dataValues) => new { DataType = dataType, DataValues = dataValues })
                 .SelectMany(r => r.DataValues.DefaultIfEmpty(),
-                    (r, DataValue) => new IndexModel.PersonalDataRow
+                    (r, dataValue) => new IndexModel.PersonalDataRow
                     {
                         DataTypeId = r.DataType.Id,
                         Title = r.DataType.Title,
                         Description = r.DataType.Description,
-                        Value = DataValue.Value ?? string.Empty
+                        Value = dataValue.Value ?? string.Empty
                     })
                 .ToArrayAsync();
             return View(new IndexModel { PersonalData = personalData });
@@ -71,12 +69,12 @@ namespace FreshBoard.Controllers
                 var existingData = await _dbContext.UserData
                     .Where(d => d.UserId == userId)
                     .ToDictionaryAsync(d => d.DataTypeId);
-                List<UserData> newData = new List<UserData>();
+                var newData = new List<UserData>();
                 foreach (var kv in data)
                 {
                     if (existingData.ContainsKey(kv.Key))
                     {
-                        existingData[kv.Key].Value = kv.Value ?? String.Empty;
+                        existingData[kv.Key].Value = kv.Value ?? string.Empty;
                     }
                     else
                     {
@@ -84,7 +82,7 @@ namespace FreshBoard.Controllers
                         {
                             UserId = userId,
                             DataTypeId = kv.Key,
-                            Value = kv.Value ?? String.Empty
+                            Value = kv.Value ?? string.Empty
                         });
                     }
                 }

@@ -30,7 +30,7 @@ namespace FreshBoard.Services
             {
                 if (!Directory.Exists(options.WorkingDirectory))
                 {
-                    Process.Start("git", $"clone \"{options.GitRepoUrl}\" \"{options.WorkingDirectory}\"").WaitForExit();
+                    Process.Start("git", $"clone \"{options.GitRepoUrl}\" \"{options.WorkingDirectory}\"")?.WaitForExit();
                 }
 
                 Process.Start(new ProcessStartInfo
@@ -39,7 +39,7 @@ namespace FreshBoard.Services
                     Arguments = "reset --hard",
                     WorkingDirectory = options.WorkingDirectory,
                     UseShellExecute = false
-                }).WaitForExit();
+                })?.WaitForExit();
                 
                 Process.Start(new ProcessStartInfo
                 {
@@ -47,9 +47,9 @@ namespace FreshBoard.Services
                     Arguments = "pull --force",
                     WorkingDirectory = options.WorkingDirectory,
                     UseShellExecute = false
-                }).WaitForExit();
+                })?.WaitForExit();
 
-                await Task.Delay(120 * 1000);
+                await Task.Delay(120 * 1000, stoppingToken);
             }
         }
     }

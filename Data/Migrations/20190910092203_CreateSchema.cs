@@ -11,10 +11,10 @@ namespace FreshBoard.Data.Migrations
                 name: "ApplicationPeriod",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>()
                         .Annotation("Sqlite:Autoincrement", true),
                     Title = table.Column<string>(nullable: false, defaultValue: ""),
-                    Summary = table.Column<string>(nullable: false),
+                    Summary = table.Column<string>(),
                     Description = table.Column<string>(nullable: false, defaultValue: ""),
                     UserApproved = table.Column<bool>(nullable: false, defaultValue: false)
                 },
@@ -27,7 +27,7 @@ namespace FreshBoard.Data.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<string>(),
                     Name = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true)
@@ -41,23 +41,23 @@ namespace FreshBoard.Data.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<string>(),
                     UserName = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
                     Email = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(nullable: false),
+                    EmailConfirmed = table.Column<bool>(),
                     PasswordHash = table.Column<string>(nullable: true),
                     SecurityStamp = table.Column<string>(nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
                     PhoneNumber = table.Column<string>(nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    PhoneNumberConfirmed = table.Column<bool>(),
+                    TwoFactorEnabled = table.Column<bool>(),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
-                    LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    PuzzleProgress = table.Column<int>(nullable: false),
-                    Privilege = table.Column<int>(nullable: false)
+                    LockoutEnabled = table.Column<bool>(),
+                    AccessFailedCount = table.Column<int>(),
+                    PuzzleProgress = table.Column<int>(),
+                    Privilege = table.Column<int>()
                 },
                 constraints: table =>
                 {
@@ -68,11 +68,11 @@ namespace FreshBoard.Data.Migrations
                 name: "Notification",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>()
                         .Annotation("Sqlite:Autoincrement", true),
-                    Time = table.Column<DateTime>(nullable: false),
-                    Title = table.Column<string>(nullable: false),
-                    Content = table.Column<string>(nullable: false),
+                    Time = table.Column<DateTime>(),
+                    Title = table.Column<string>(),
+                    Content = table.Column<string>(),
                     Mode = table.Column<int>(nullable: false, defaultValueSql: "1")
                         .Annotation("Sqlite:Autoincrement", true),
                     Targets = table.Column<string>(nullable: true),
@@ -87,12 +87,12 @@ namespace FreshBoard.Data.Migrations
                 name: "Problem",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>()
                         .Annotation("Sqlite:Autoincrement", true),
-                    Title = table.Column<string>(nullable: false),
-                    Content = table.Column<string>(nullable: false),
+                    Title = table.Column<string>(),
+                    Content = table.Column<string>(),
                     Script = table.Column<string>(nullable: true),
-                    Level = table.Column<int>(nullable: false),
+                    Level = table.Column<int>(),
                     Answer = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -104,12 +104,12 @@ namespace FreshBoard.Data.Migrations
                 name: "PuzzleRecord",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>()
                         .Annotation("Sqlite:Autoincrement", true),
-                    Time = table.Column<DateTime>(nullable: false),
-                    ProblemId = table.Column<int>(nullable: false),
-                    UserId = table.Column<string>(nullable: false),
-                    Result = table.Column<int>(nullable: false),
+                    Time = table.Column<DateTime>(),
+                    ProblemId = table.Column<int>(),
+                    UserId = table.Column<string>(),
+                    Result = table.Column<int>(),
                     Content = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -121,10 +121,10 @@ namespace FreshBoard.Data.Migrations
                 name: "ReadStatus",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>()
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(nullable: false),
-                    NotificationId = table.Column<int>(nullable: false)
+                    UserId = table.Column<string>(),
+                    NotificationId = table.Column<int>()
                 },
                 constraints: table =>
                 {
@@ -135,9 +135,9 @@ namespace FreshBoard.Data.Migrations
                 name: "UserDataType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>()
                         .Annotation("Sqlite:Autoincrement", true),
-                    Title = table.Column<string>(nullable: false),
+                    Title = table.Column<string>(),
                     Description = table.Column<string>(nullable: false, defaultValue: "")
                 },
                 constraints: table =>
@@ -149,13 +149,13 @@ namespace FreshBoard.Data.Migrations
                 name: "ApplicationPeriodDataType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>()
                         .Annotation("Sqlite:Autoincrement", true),
                     Title = table.Column<string>(nullable: false, defaultValue: ""),
                     Description = table.Column<string>(nullable: false, defaultValue: ""),
                     UserVisible = table.Column<bool>(nullable: false, defaultValue: true),
                     UserEditable = table.Column<bool>(nullable: false, defaultValue: true),
-                    PeriodId = table.Column<int>(nullable: false)
+                    PeriodId = table.Column<int>()
                 },
                 constraints: table =>
                 {
@@ -172,9 +172,9 @@ namespace FreshBoard.Data.Migrations
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>()
                         .Annotation("Sqlite:Autoincrement", true),
-                    RoleId = table.Column<string>(nullable: false),
+                    RoleId = table.Column<string>(),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
                 },
@@ -193,8 +193,8 @@ namespace FreshBoard.Data.Migrations
                 name: "Application",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(nullable: false),
-                    PeriodId = table.Column<int>(nullable: false),
+                    UserId = table.Column<string>(),
+                    PeriodId = table.Column<int>(),
                     IsSuccessful = table.Column<bool>(nullable: true)
                 },
                 constraints: table =>
@@ -218,9 +218,9 @@ namespace FreshBoard.Data.Migrations
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>()
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(nullable: false),
+                    UserId = table.Column<string>(),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
                 },
@@ -239,10 +239,10 @@ namespace FreshBoard.Data.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(maxLength: 128),
+                    ProviderKey = table.Column<string>(maxLength: 128),
                     ProviderDisplayName = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: false)
+                    UserId = table.Column<string>()
                 },
                 constraints: table =>
                 {
@@ -259,8 +259,8 @@ namespace FreshBoard.Data.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(nullable: false),
-                    RoleId = table.Column<string>(nullable: false)
+                    UserId = table.Column<string>(),
+                    RoleId = table.Column<string>()
                 },
                 constraints: table =>
                 {
@@ -283,9 +283,9 @@ namespace FreshBoard.Data.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
-                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    UserId = table.Column<string>(),
+                    LoginProvider = table.Column<string>(maxLength: 128),
+                    Name = table.Column<string>(maxLength: 128),
                     Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -303,8 +303,8 @@ namespace FreshBoard.Data.Migrations
                 name: "UserData",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(nullable: false),
-                    DataTypeId = table.Column<int>(nullable: false),
+                    UserId = table.Column<string>(),
+                    DataTypeId = table.Column<int>(),
                     Value = table.Column<string>(nullable: false, defaultValue: "")
                 },
                 constraints: table =>
@@ -328,8 +328,8 @@ namespace FreshBoard.Data.Migrations
                 name: "ApplicationPeriodData",
                 columns: table => new
                 {
-                    ApplicationId = table.Column<string>(nullable: false),
-                    DataTypeId = table.Column<int>(nullable: false),
+                    ApplicationId = table.Column<string>(),
+                    DataTypeId = table.Column<int>(),
                     Value = table.Column<string>(nullable: false, defaultValue: "")
                 },
                 constraints: table =>

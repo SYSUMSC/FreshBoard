@@ -1,13 +1,11 @@
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using JavaScriptEngineSwitcher.ChakraCore;
-using JavaScriptEngineSwitcher.Core;
 using System;
-using System.Text;
-using System.Collections;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using FreshBoard.Data;
+using JavaScriptEngineSwitcher.ChakraCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace FreshBoard.Controllers
@@ -16,7 +14,7 @@ namespace FreshBoard.Controllers
     [Route("interop")]
     public class InteropController : ControllerBase
     {
-        private FreshBoardDbContext _context;
+        private readonly FreshBoardDbContext _context;
         public InteropController(FreshBoardDbContext context)
         {
             _context = context;
@@ -60,13 +58,11 @@ namespace FreshBoard.Controllers
                     sb.AppendLine($"Exception: {ex.Message}");
                     sb.AppendLine($"Source: {ex.Source}");
                     sb.AppendLine($"Stack trace: {ex.StackTrace}");
-                    if (ex.Data != null && ex.Data.Count != 0)
+                    if (ex.Data.Count != 0)
                     {
-                        var keys = new List<object?>();
-                        var values = new List<object?>();
-                        foreach (var i in ex.Data.Keys) keys.Add(i);
-                        foreach (var i in ex.Data.Values) keys.Add(i);
-                        sb.AppendLine($"Addition data: ");
+                        var keys = ex.Data.Keys.Cast<object>().ToList();
+                        var values = ex.Data.Values.Cast<object>().ToList();
+                        sb.AppendLine("Addition data: ");
                         for (var i = 0; i < keys.Count; i++)
                             sb.AppendLine($"{keys[i]} = {values[i]}");
                     }

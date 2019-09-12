@@ -1,5 +1,7 @@
-﻿@inject Microsoft.AspNetCore.Identity.SignInManager<FreshBoard.Data.Identity.FreshBoardUser> SignInManager
-@inject Microsoft.AspNetCore.Identity.UserManager<FreshBoard.Data.Identity.FreshBoardUser> UserManager
+﻿@using FreshBoard.Data.Identity
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<FreshBoardUser> SignInManager
+@inject UserManager<FreshBoardUser> UserManager
 
 <!DOCTYPE html>
 <html>

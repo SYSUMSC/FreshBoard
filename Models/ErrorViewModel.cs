@@ -1,5 +1,3 @@
-using System;
-
 namespace FreshBoard.Models
 {
     public class ErrorViewModel
