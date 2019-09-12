@@ -20,6 +20,7 @@ namespace FreshBoard.Data
             UserVisible = userVisible;
             UserEditable = userEditable;
             Period = period;
+            PeriodId = period.Id;
         }
 
         public int Id { get; set; }

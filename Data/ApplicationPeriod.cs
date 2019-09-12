@@ -8,13 +8,13 @@ namespace FreshBoard.Data
         {
 
         }
-        public ApplicationPeriod(int id,
+        public ApplicationPeriod(uint order,
                                  string title = "",
                                  string summary = "",
                                  string description = "",
                                  bool userApproved = false)
         {
-            Id = id;
+            Order = order;
             Title = title;
             Summary = summary;
             Description = description;
@@ -22,6 +22,8 @@ namespace FreshBoard.Data
         }
 
         public int Id { get; set; }
+
+        public uint Order { get; set; }
 
         public string Title { get; set; } = "";
 

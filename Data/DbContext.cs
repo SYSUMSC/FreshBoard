@@ -137,13 +137,15 @@ namespace FreshBoard.Data
 
                 entity.Property(e => e.UserApproved).IsRequired().HasDefaultValue(false);
 
-                // entity.Property(e => e.Order).IsRequired().HasDefaultValue(0);
+                entity.Property(e => e.Order).IsRequired().HasDefaultValue(0);
 
                 entity.HasMany(e => e.PeriodDataTypes)
                     .WithOne(e => e.Period);
 
                 entity.HasMany(e => e.Applications)
                     .WithOne(e => e.Period);
+
+                entity.HasIndex(e => e.Order).IsUnique();
             });
 
             modelBuilder.Entity<ApplicationPeriodData>(entity =>

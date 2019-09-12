@@ -3,14 +3,16 @@ using System;
 using FreshBoard.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FreshBoard.Data.Migrations
 {
     [DbContext(typeof(FreshBoardDbContext))]
-    partial class DbContextModelSnapshot : ModelSnapshot
+    [Migration("20190912102107_ProvideOrderForApplicationPeriod")]
+    partial class ProvideOrderForApplicationPeriod
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

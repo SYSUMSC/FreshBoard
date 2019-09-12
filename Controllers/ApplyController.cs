@@ -45,7 +45,7 @@ namespace FreshBoard.Controllers
             var user = await _userManager.GetUserAsync(User);
             var application = await _dbContext.Application.FindAsync(user.Id);
             var periods = (await _dbContext.ApplicationPeriod
-                .OrderBy(p => p.Id)
+                .OrderBy(p => p.Order)
                 .GroupJoin(_dbContext.ApplicationPeriodDataType,
                     o => new { o.Id, UserVisible = true },
                     i => new { Id = i.PeriodId, UserVisible = i.UserVisible ?? false },
@@ -53,7 +53,7 @@ namespace FreshBoard.Controllers
                 .SelectMany(r => r.DataTypes.DefaultIfEmpty(),
                     (v, dataType) => new { v.Period, DataType = dataType })
                 .GroupJoin(_dbContext.ApplicationPeriodData,
-                    o => new {o.DataType.Id, UserId = _userManager.GetUserId(User) },
+                    o => new { o.DataType.Id, UserId = _userManager.GetUserId(User) },
                     i => new { Id = i.DataTypeId, UserId = i.ApplicationId ?? "" },
                     (r, dataValues) => new
                     {
