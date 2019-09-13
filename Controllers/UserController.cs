@@ -131,6 +131,7 @@ namespace FreshBoard.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmailAsync(string userId, string code)
         {
             var user = await _userManager.FindByIdAsync(userId);

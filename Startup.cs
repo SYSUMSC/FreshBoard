@@ -84,10 +84,6 @@ namespace FreshBoard
             services.AddTransient<IEmailSender, EmailSender>()
                 .Configure<EmailOptions>(Configuration.GetSection("Email"));
 
-            foreach (var line in Configuration.AsEnumerable().Select(kv => $"{kv.Key} == {kv.Value}"))
-            {
-                Console.WriteLine(line);
-            }
             services.AddTransient<ISmsSender, SmsSender>()
                 .Configure<SmsOptions>(Configuration.GetSection("Sms"));
             services.AddScoped<IPuzzleService, PuzzleService>();
