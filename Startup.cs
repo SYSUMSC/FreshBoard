@@ -19,7 +19,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Westwind.AspNetCore.LiveReload;
 
 namespace FreshBoard
 {
@@ -35,8 +34,6 @@ namespace FreshBoard
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddLiveReload();
-
             services.AddResponseCompression(options =>
             {
                 options.Providers.Add<BrotliCompressionProvider>();
@@ -84,8 +81,15 @@ namespace FreshBoard
 
             services.AddEntityFrameworkSqlite();
 
-            services.AddTransient<IEmailSender, EmailSender>();
-            services.AddTransient<ISmsSender, SmsSender>();
+            services.AddTransient<IEmailSender, EmailSender>()
+                .Configure<EmailOptions>(Configuration.GetSection("Email"));
+
+            foreach (var line in Configuration.AsEnumerable().Select(kv => $"{kv.Key} == {kv.Value}"))
+            {
+                Console.WriteLine(line);
+            }
+            services.AddTransient<ISmsSender, SmsSender>()
+                .Configure<SmsOptions>(Configuration.GetSection("Sms"));
             services.AddScoped<IPuzzleService, PuzzleService>();
             services.AddSession();
 
@@ -96,7 +100,8 @@ namespace FreshBoard
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
             services.AddHostedService<GitBackgroundTask>()
-                .Configure<GitTaskOptions>(options => {
+                .Configure<GitTaskOptions>(options =>
+                {
                     options.GitRepoUrl = "https://github.com/SYSU-MSC-Studio/Blogs.git";
                     options.WorkingDirectory = Path.Combine(Environment.CurrentDirectory, "BlogsRepo");
                 });

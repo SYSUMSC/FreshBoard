@@ -3,6 +3,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace FreshBoard.Services
 {
@@ -13,18 +14,18 @@ namespace FreshBoard.Services
 
     public class EmailSender : IEmailSender
     {
-        private readonly IConfiguration _configuration;
+        private readonly EmailOptions _config;
 
-        public EmailSender(IConfiguration configuration)
+        public EmailSender(IOptionsMonitor<EmailOptions> _accessor)
         {
-            _configuration = configuration;
+            _config = _accessor.CurrentValue;
         }
 
         public async Task SendEmailAsync(string email, string subject, string message)
         {
             var msg = new MailMessage
             {
-                From = new MailAddress("noreply@sysumsc.com", "SYSU MSC", Encoding.UTF8),
+                From = new MailAddress(_config.FromAddress, _config.FromName, Encoding.UTF8),
                 Subject = subject,
                 SubjectEncoding = Encoding.UTF8,
                 Body = message.Replace("http://localhost:5000", "https://sysumsc.com")
@@ -36,10 +37,10 @@ namespace FreshBoard.Services
 
             using var smtp = new SmtpClient
             {
-                Host = _configuration["Email:HostName"],
-                Port = 587,
+                Host = _config.HostName,
+                Port = _config.Port,
                 Credentials =
-                    new NetworkCredential(_configuration["Email:UserName"], _configuration["Email:Password"])
+                    new NetworkCredential(_config.UserName, _config.Password)
             };
 
             await smtp.SendMailAsync(msg);

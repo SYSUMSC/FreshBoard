@@ -10,6 +10,32 @@
 
 <h1 class="hi heading">@User.Identity.Name</h1>
 <h2 class="ui heading">账号信息</h2>
+<div class="ui mini modal">
+  <i class="close icon"></i>
+  <div class="header">
+    验证手机号码
+  </div>
+  <div class="content">
+    <form class="ui form" id="submit-code-form">
+      <div class="field">
+        <label>验证码</label>
+        <input 
+          type="text"
+          name="token"
+          placeholder="123456">
+      </div>
+    </form>
+  </div>
+  <div class="actions">
+    <div class="ui black deny button">
+      取消
+    </div>
+    <div class="ui positive right labeled icon button" id="submit-code">
+      提交
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+</div>
 <form class="ui form" id="modify-form">
   <div class="field">
       <label>邮箱</label>
@@ -30,11 +56,18 @@
   <div class="field">
       <label>手机号</label>
       <input
-          type="text"
-          name="phone"
-          id="phone"
-          placeholder="123-1234-5678"
-          value="@((await UserManager.GetUserAsync(User))?.PhoneNumber)">
+        type="text"
+        name="phone"
+        id="phone"
+        placeholder="123-1234-5678"
+        value="@((await UserManager.GetUserAsync(User))?.PhoneNumber)">
+      @if(!(await UserManager.GetUserAsync(User)).PhoneNumberConfirmed)
+      {
+      <div class="ui pointing red basic label" id="verify-phone-message">
+        手机号码未验证
+      </div>
+      <div class="ui tiny green button" id="verify-phone">验证手机号码</div>
+      }
   </div>
   <div class="ui tiny orange button" id="modify">修改信息</div>
 </form>
@@ -104,10 +137,67 @@
               .addClass('green')
               .html('验证邮件已发送');
           })
+          .catch(function (err) {
+            $('#verify-message')
+              .removeClass('red')
+              .addClass('orange')
+              .html('验证邮件发送失败');
+          })
           .finally(function () {
             $('#verify-email').removeClass('loading')
           });
       });
+      $('#verify-phone').click(function () {
+        $('#verify-phone').addClass('loading');
+        axios.post('/User/SendSMS')
+          .then(function (res) {
+            if(!(res && res.data && res.data.succeeded)){
+              $('#verify-phone-message')
+                .removeClass('red')
+                .addClass('orange')
+                .html(res && res.data && res.data.message);
+              return;
+            }
+            $('.modal').modal('show');
+          })
+          .catch(function (err) {
+            $('#verify-phone-message')
+              .removeClass('red')
+              .addClass('orange')
+              .html(err && ((err.data && err.data.message) || err.message));
+          })
+          .finally(function () {
+            $('#verify-phone').removeClass('loading')
+          });
+      });
+      $('.modal').modal({ onApprove: function () {
+        $('#submit-code').addClass('loading');
+        axios.post('/User/ConfirmPhone', new FormData($('#submit-code-form')[0]))
+          .then(function (res) {
+            if(!(res && res.data && res.data.succeeded)){
+              $('#verify-phone-message')
+                .removeClass('red')
+                .addClass('orange')
+                .html('验证失败');
+            } else {
+              $('#verify-phone-message')
+                .removeClass('red')
+                .addClass('green')
+                .html("验证成功");
+            }
+          })
+          .catch(function (err) {
+            $('#verify-phone-message')
+              .removeClass('red')
+              .addClass('orange')
+              .html(err && ((err.data && err.data.message) || err.message));
+          })
+          .finally(function () {
+            $('.modal').modal('hide');
+            $('#submit-code').removeClass('loading')
+          });
+        return false;
+      }});
       $('#modify').click(function () {
         $('#modify').addClass('loading');
         axios.post('/User/UpdateCredential', new FormData($('#modify-form')[0]))

@@ -123,6 +123,7 @@ namespace FreshBoard.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, "An error occured while sending confirmation email.");
+                return Json(new { succeeded = false, message = "邮件发送失败" });
             }
 
             return Json(new { succeeded = true });
@@ -172,8 +173,12 @@ namespace FreshBoard.Controllers
 
             try
             {
-                var res = await _smsSender.SendSmsAsync(user.PhoneNumber, JsonSerializer.Serialize(new { code = token }), "SMS_143868088");
-                return Json(new { succeeded = res.Code.ToUpper() == "OK", message = res.Message });
+                await _smsSender.SendValidationCodeAsync(user.PhoneNumber, token);
+                return Json(new { succeeded = true, message = "短信发送成功" });
+            }
+            catch (SmsException ex)
+            {
+                return Json(new { succeeded = false, message = ex.Message });
             }
             catch
             {
