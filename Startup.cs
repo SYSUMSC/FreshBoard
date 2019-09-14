@@ -50,6 +50,7 @@ namespace FreshBoard
 
             services.AddDbContext<FreshBoardDbContext>(options =>
             {
+                options.UseLazyLoadingProxies();
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
 

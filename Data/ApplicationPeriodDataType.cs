@@ -34,9 +34,9 @@ namespace FreshBoard.Data
         public bool? UserEditable { get; set; }
 
         public int PeriodId { get; set; }
-        public ApplicationPeriod Period { get; set; } = new ApplicationPeriod();
+        public virtual ApplicationPeriod Period { get; set; } = new ApplicationPeriod();
 
-        public ICollection<ApplicationPeriodData> PeriodDatas { get; set; }
+        public virtual ICollection<ApplicationPeriodData> PeriodDatas { get; set; }
             = new HashSet<ApplicationPeriodData>();
     }
 }
