@@ -28,26 +28,29 @@ namespace FreshBoard.Services
             var options = _options.Value;
             while (!stoppingToken.IsCancellationRequested)
             {
-                if (!Directory.Exists(options.WorkingDirectory))
+                await Task.Run(() =>
                 {
-                    Process.Start("git", $"clone \"{options.GitRepoUrl}\" \"{options.WorkingDirectory}\"")?.WaitForExit();
-                }
+                    if (!Directory.Exists(options.WorkingDirectory))
+                    {
+                        Process.Start("git", $"clone \"{options.GitRepoUrl}\" \"{options.WorkingDirectory}\"")?.WaitForExit();
+                    }
 
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = "git",
-                    Arguments = "reset --hard",
-                    WorkingDirectory = options.WorkingDirectory,
-                    UseShellExecute = false
-                })?.WaitForExit();
-                
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = "git",
-                    Arguments = "pull --force",
-                    WorkingDirectory = options.WorkingDirectory,
-                    UseShellExecute = false
-                })?.WaitForExit();
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = "git",
+                        Arguments = "reset --hard",
+                        WorkingDirectory = options.WorkingDirectory,
+                        UseShellExecute = false
+                    })?.WaitForExit();
+
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = "git",
+                        Arguments = "pull --force",
+                        WorkingDirectory = options.WorkingDirectory,
+                        UseShellExecute = false
+                    })?.WaitForExit();
+                });
 
                 await Task.Delay(120 * 1000, stoppingToken);
             }

@@ -224,7 +224,6 @@ namespace FreshBoard.Controllers
                 var prevPeriod = user.Application.Period?.Title ?? "申请";
                 user.Application.Period = await _dbContext.ApplicationPeriod.FindAsync(period);
                 user.Application.IsSuccessful = status;
-                await _dbContext.SaveChangesAsync();
                 // 发送通知
                 if (sendNotification == true)
                 {
@@ -260,6 +259,7 @@ namespace FreshBoard.Controllers
                         }
                     }
                 }
+                await _dbContext.SaveChangesAsync();
                 return Json(new { succeeded = true });
             }
             catch (Exception ex)
