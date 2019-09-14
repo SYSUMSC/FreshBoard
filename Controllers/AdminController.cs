@@ -5,6 +5,12 @@ using FreshBoard.Services;
 using System.Threading.Tasks;
 using FreshBoard.Middlewares;
 using Microsoft.EntityFrameworkCore;
+using FreshBoard.Views.Admin;
+using System.Linq;
+using FreshBoard.Data;
+using System.Collections.Generic;
+using System;
+using Microsoft.Extensions.Logging;
 
 namespace FreshBoard.Controllers
 {
@@ -15,17 +21,23 @@ namespace FreshBoard.Controllers
         private readonly SignInManager<FreshBoardUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
+        private readonly FreshBoardDbContext _dbContext;
+        private readonly ILogger<AdminController> _logger;
 
         public AdminController(
             UserManager<FreshBoardUser> userManager,
             SignInManager<FreshBoardUser> signInManager,
             IEmailSender emailSender,
-            ISmsSender smsSender)
+            ISmsSender smsSender,
+            FreshBoardDbContext dbContext,
+            ILogger<AdminController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _smsSender = smsSender;
+            _dbContext = dbContext;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -35,8 +47,226 @@ namespace FreshBoard.Controllers
 
         public async Task<IActionResult> UsersAsync()
         {
-            _userManager.Users.ToListAsync();
-            return View();
+            var model = new UsersModel();
+            model.Users = await _userManager.Users
+                .Select(u => new UsersModel.UserItem()
+                {
+                    Id = u.Id,
+                    Email = u.Email,
+                    Phone = u.PhoneNumber,
+                    Period =
+                        u.Application.IsSuccessful == null ?
+                        (u.Application.Period.Title ??
+                        _dbContext.ApplicationPeriod.OrderBy(p => p.Order).FirstOrDefault().Title) :
+                        (u.Application.IsSuccessful == true ? "成功" : "失败"),
+                    HasPrivilege = u.Privilege == 1
+                })
+                .ToListAsync();
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> UserAsync(string id)
+        {
+            var personalData = await _dbContext.UserDataType
+                .GroupJoin(_dbContext.UserData,
+                    t => new { t.Id, UserId = id },
+                    v => new { Id = v.DataTypeId, UserId = v.UserId ?? "" },
+                    (dataType, dataValues) => new { DataType = dataType, DataValues = dataValues })
+                .SelectMany(r => r.DataValues.DefaultIfEmpty(),
+                    (r, dataValue) => new UserModel.PersonalDataRow
+                    {
+                        DataTypeId = r.DataType.Id,
+                        Title = r.DataType.Title,
+                        Description = r.DataType.Description,
+                        Value = dataValue.Value ?? string.Empty
+                    })
+                .ToArrayAsync();
+            var user = await _userManager.FindByIdAsync(id);
+            // 本行查询是必要的，以保证加载相关的申请信息
+            var application = await _dbContext.Application
+                .Where(e => e.UserId == user.Id)
+                .Include(e => e.Period)
+                .SingleOrDefaultAsync();
+            var periods = (await _dbContext.ApplicationPeriod
+                .OrderBy(p => p.Order)
+                .GroupJoin(_dbContext.ApplicationPeriodDataType,
+                    o => new { o.Id },
+                    i => new { Id = i.PeriodId },
+                    (period, dataTypes) => new { Period = period, DataTypes = dataTypes })
+                .SelectMany(r => r.DataTypes.DefaultIfEmpty(),
+                    (v, dataType) => new { v.Period, DataType = dataType })
+                .GroupJoin(_dbContext.ApplicationPeriodData,
+                    o => new { o.DataType.Id, UserId = user.Id },
+                    i => new { Id = i.DataTypeId, UserId = i.ApplicationId ?? "" },
+                    (r, dataValues) => new
+                    {
+                        r.Period,
+                        r.DataType,
+                        DataValues = dataValues
+                    })
+                .SelectMany(r => r.DataValues.DefaultIfEmpty(),
+                    (r, dataValue) => new
+                    {
+                        r.Period,
+                        Data = new UserModel.PeriodData
+                        {
+                            Id = r.DataType.Id,
+                            Title = r.DataType.Title,
+                            Description = r.DataType.Description,
+                            Editable = r.DataType.UserEditable ?? false,
+                            Value = dataValue.Value
+                        }
+                    })
+                .ToArrayAsync())
+                .GroupBy(r => r.Period.Id)
+                .Select((group, id) => new UserModel.Period
+                {
+                    Id = group.FirstOrDefault().Period.Id,
+                    Title = group.FirstOrDefault().Period.Title,
+                    Summary = group.FirstOrDefault().Period.Summary,
+                    Description = group.FirstOrDefault().Period.Description,
+                    UserApproved = group.FirstOrDefault().Period.UserApproved,
+                    Datas = group.Select(r => r.Data).Where(r => r.Title != null).OrderBy(r => r.Id)
+                });
+            return View(new UserModel()
+            {
+                Id = id,
+                PersonalData = personalData,
+                Periods = periods,
+                CurrentPeriod = user.Application?.PeriodId ?? 1,
+                ApplicationIsSuccessful = user.Application?.IsSuccessful
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateUserApplyAsync(string id, Dictionary<int, string> data)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(id);
+                // 本行查询是必要的，以保证加载相关的申请信息
+                var application = await _dbContext.Application
+                    .Where(e => e.UserId == user.Id)
+                    .Include(e => e.Period)
+                    .SingleOrDefaultAsync();
+                // 确保用户存在有效申请
+                if (user.Application == null)
+                {
+                    user.Application = new Application
+                    {
+                        User = user,
+                        PeriodId = 1,
+                        IsSuccessful = null
+                    };
+                }
+                // 校验申请信息修改合法性
+                var dataTypes = await _dbContext.ApplicationPeriodDataType.ToDictionaryAsync(e => e.Id);
+                foreach (var key in data.Keys)
+                {
+                    if (!dataTypes.ContainsKey(key))
+                        throw new Exception("指定的申请信息类型无效");
+                }
+                // 匹配数据库已有的信息并修改
+                var existingData = await _dbContext.ApplicationPeriodData
+                    .Where(d => d.ApplicationId == user.Id)
+                    .ToDictionaryAsync(d => d.DataTypeId);
+                var newData = new List<ApplicationPeriodData>();
+                foreach (var (key, value) in data)
+                {
+                    if (existingData.ContainsKey(key))
+                    {
+                        existingData[key].Value = value ?? string.Empty;
+                    }
+                    else
+                    {
+                        newData.Add(new ApplicationPeriodData
+                        {
+                            ApplicationId = user.Id,
+                            DataTypeId = key,
+                            Value = value ?? string.Empty
+                        });
+                    }
+                }
+                _dbContext.AddRange(newData);
+                await _dbContext.SaveChangesAsync();
+                return Json(new { succeeded = true });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "更新用户信息时发生错误");
+                return Json(new { succeeded = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateUserApplyPeriodAsync(string id, int period, bool? status, bool sendNotification = false)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(id);
+                // 本行查询是必要的，以保证加载相关的申请信息
+                var application = await _dbContext.Application
+                    .Where(e => e.UserId == user.Id)
+                    .Include(e => e.Period)
+                    .SingleOrDefaultAsync();
+                // 确保用户存在有效申请
+                if (user.Application == null)
+                {
+                    user.Application = new Application
+                    {
+                        User = user,
+                        PeriodId = 1,
+                        IsSuccessful = null
+                    };
+                }
+                // 处理阶段更新
+                var prevPeriod = user.Application.Period?.Title ?? "申请";
+                user.Application.Period = await _dbContext.ApplicationPeriod.FindAsync(period);
+                user.Application.IsSuccessful = status;
+                await _dbContext.SaveChangesAsync();
+                // 发送通知
+                if (sendNotification == true)
+                {
+                    // 发送邮件通知
+                    if (user.EmailConfirmed)
+                    {
+                        if (status != null)
+                        {
+                            if (status == false)
+                                await _emailSender.SendStatusChangeAsync(user.PhoneNumber, false, user.Application.Period?.Title ?? "申请");
+                            else if (status == true)
+                                await _emailSender.SendStatusChangeAsync(user.PhoneNumber, "全部面试通过");
+                        }
+                        else
+                        {
+                            await _emailSender.SendStatusChangeAsync(user.PhoneNumber, prevPeriod, user.Application.Period?.Title ?? "申请");
+                        }
+                    }
+
+                    // 发送短信通知
+                    if (user.PhoneNumberConfirmed)
+                    {
+                        if (status != null)
+                        {
+                            if (status == false)
+                                await _smsSender.SendStatusChangeAsync(user.PhoneNumber, false, user.Application.Period?.Title ?? "申请");
+                            else if (status == true)
+                                await _smsSender.SendStatusChangeAsync(user.PhoneNumber, "全部面试通过");
+                        }
+                        else
+                        {
+                            await _smsSender.SendStatusChangeAsync(user.PhoneNumber, prevPeriod, user.Application.Period?.Title ?? "申请");
+                        }
+                    }
+                }
+                return Json(new { succeeded = true });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "UpdateUserApplyPeriodAsync");
+                return Json(new { succeeded = false, message = ex.Message });
+            }
         }
     }
 }

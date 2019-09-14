@@ -1,40 +1,76 @@
-<table class="ui compact celled table">
-  <thead>
-    <tr>
-      <th></th>
-      <th>邮箱</th>
-      <th>手机号</th>
-      <th>申请阶段</th>
-      <th>权限</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td class="collapsing">
-        <div class="ui fitted slider checkbox">
-          <input type="checkbox"> <label></label>
-        </div>
-      </td>
-      <td>John Lilki</td>
-      <td>September 14, 2013</td>
-      <td>jhlilk22@yahoo.com</td>
-      <td>No</td>
-    </tr>
-  </tbody>
-  <tfoot class="full-width">
-    <tr>
-      <th></th>
-      <th colspan="4">
-        <div class="ui right floated small primary labeled icon button">
-          <i class="user icon"></i> Add User
-        </div>
-        <div class="ui small button">
-          Approve
-        </div>
-        <div class="ui small  disabled button">
-          Approve All
-        </div>
-      </th>
-    </tr>
-  </tfoot>
-</table>
+@model FreshBoard.Views.Admin.UsersModel
+@{
+  ViewBag.Title = "用户管理";
+}
+
+<form id="form">
+  <table class="ui compact celled table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>邮箱</th>
+        <th>手机号</th>
+        <th>申请阶段</th>
+        <th>权限</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach(var user in Model.Users)
+      {
+      <tr>
+        <td class="collapsing">
+          <div class="ui fitted checkbox">
+            <input type="checkbox" name="users[]" value="@user.Id"> <label></label>
+          </div>
+        </td>
+        <!-- <td>@user.Name</td> -->
+        <td><a asp-action="User" asp-route-id="@user.Id">@user.Email</a></td>
+        <td>@user.Phone</td>
+        <td>@user.Period</td>
+        <td>@user.HasPrivilege</td>
+      </tr>
+      }
+    </tbody>
+    <tfoot class="full-width">
+      <tr>
+        <th></th>
+        <th colspan="4">
+          <div class="ui small disabled button">
+            修改申请阶段
+          </div>
+          <div class="ui small disabled button" id="button-grant-admin">
+            授予管理员权限
+          </div>
+        </th>
+      </tr>
+    </tfoot>
+  </table>
+</form>
+
+<!-- 修改申请阶段 -->
+<div class="ui modal">
+  <i class="close icon"></i>
+  <div class="header">
+    验证手机号码
+  </div>
+  <div class="content">
+    <form class="ui form" id="submit-code-form">
+      <div class="field">
+        <label>验证码</label>
+        <input 
+          type="text"
+          name="token"
+          placeholder="123456">
+      </div>
+    </form>
+  </div>
+  <div class="actions">
+    <div class="ui black deny button">
+      取消
+    </div>
+    <div class="ui positive right labeled icon button" id="submit-code">
+      提交
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+</div>

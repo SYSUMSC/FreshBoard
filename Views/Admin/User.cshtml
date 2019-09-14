@@ -1,0 +1,234 @@
+@model FreshBoard.Views.Admin.UserModel
+@{
+  ViewBag.Title = "入部申请";
+}
+
+<h1 class="ui heading">@Model.Id</h1>
+<div class="ui grid">
+  <div class="row">
+    <div class="column">
+      <h2 class="ui heading">个人信息</h2>
+      <form class="ui fluid form" id="data">
+        <div class="ui grid">
+          @if (Model.PersonalData != null)
+          {
+            @foreach (var data in Model.PersonalData)
+            {
+              <div class="five wide column">
+                <div class="field">
+                <label>@data.Title</label>
+                <input type="text" name="data[@data.DataTypeId]" placeholder="@data.Title" value="@data.Value">
+                </div>
+              </div>
+            }
+          }
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column">
+      <div class="ui fluid ordered bottom attached steps">
+        @functions
+        {
+          static string MapStatusToString(int target, int current, bool? final = null)
+          {
+            if (target < current)
+              return "completed";
+            if (target == current)
+            {
+              return final switch
+              {
+                null => "active",
+                true => "completed",
+                false => "failed"
+              };
+            }
+            return target > current ? "disabled" : "";
+          }
+        }
+        @if (Model.Periods != null)
+        {
+          @foreach (var period in Model.Periods)
+          {
+            <div class="step @MapStatusToString(period.Id, Model.CurrentPeriod, Model.ApplicationIsSuccessful)">
+              <div class="content">
+                <div class="title">@period.Title</div>
+                <div class="description">@period.Summary</div>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <form class="column ui form fb-period">
+      <div class="three fields">
+        <div class="inline field">
+          <label>申请阶段</label>
+          <select
+            class="ui dropdown"
+            name="period"
+            asp-for="PeriodSelection"
+            asp-items="Model.PeriodSelections">
+          </select>
+        </div>
+        <div class="inline field">
+          <label>总面试结果</label>
+          <select
+            class="ui dropdown"
+            name="status"
+            asp-for="ApplicationIsSuccessful"
+            asp-items="Model.ApplicationStates">
+          </select>
+        </div>
+        <div class="inline field">
+          <div class="ui checkbox">
+            <input type="checkbox" class="hidden" name="sendNotification" value="true">
+            <label>发送通知</label>
+          </div>
+          <div class="ui green button">更新状态</div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="row">
+    <div class="column">
+      <div class="ui styled fluid accordion">
+        @if (Model.Periods != null)
+        {
+          @foreach (var period in Model.Periods)
+          {
+            var enabled = period.Id == Model.CurrentPeriod ? "" : "disabled";
+            var active = period.Id == Model.CurrentPeriod ? "active" : "";
+            var visible = period.Id == Model.CurrentPeriod ? "visible" : "hidden";
+            <div class="title @active">
+              <i class="dropdown icon"></i>
+              @period.Title
+            </div>
+            <div class="content @active">
+              <div class="transition @visible">
+                <p>@period.Description</p>
+                @if (period.Datas != null && period.Datas.Any())
+                {
+                  <form class="ui form fb-data" id="data">
+                    @foreach (var data in period.Datas)
+                    {
+                      <div class="field">
+                        <label>@data.Title</label>
+                        <textarea name="data[@data.Id]"
+                              placeholder="@data.Title"
+                              @enabled>@data.Value</textarea>
+                        @if (!String.IsNullOrEmpty(data.Description))
+                        {
+                          <div class="ui pointing label">
+                            @data.Description
+                          </div>
+                        }
+                      </div>
+                    }
+                    <div class="ui hidden success icon message">
+                      <i class="exclamation triangle icon"></i>
+                      <div class="content">
+                        <div class="header">修改成功</div>
+                      </div>
+                    </div>
+                    <div class="ui hidden error icon message">
+                      <i class="exclamation triangle icon"></i>
+                      <div class="content">
+                        <div class="header"></div>
+                      </div>
+                    </div>
+                    <div class="ui green @enabled button">
+                      @if (enabled != "disabled")
+                      {
+                        <text>保存</text>
+                      }
+                      else
+                      {
+                        <text>不能修改历史数据</text>
+                      }
+                    </div>
+                  </form>
+                }
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+@section Styles
+{
+  <style type="text/css">
+    .ui.steps .step.failed > .icon:before,
+    .ui.ordered.steps .step.failed:before {
+      color: #DB2828;
+    }
+
+    .ui.steps .step.failed > .icon:before,
+    .ui.ordered.steps .step.failed:before {
+      font-family: 'Icons';
+      content: '\f00d';
+      /* '' */
+    }
+  </style>
+}
+@section Scripts
+{
+  <script lang="js">
+    $(document).ready(function () {
+      $('.ui.accordion').accordion();
+    });
+  </script>
+  <script lang="js">
+    $(document).ready(function () {
+      $('select.dropdown').dropdown();
+      $('.ui.checkbox').checkbox();
+      $('form.fb-period .button').click(function () {
+        var form = $('form.fb-period')[0];
+        $(form).addClass('loading disabled');
+        $(form).removeClass('success error');
+        axios.post('/Admin/UpdateUserApplyPeriod/@Model.Id', new FormData(form))
+          .then(function (res) {
+            if(res.data.succeeded) {
+              document.location.reload();
+            } else {
+              alert(res.data.message);
+            }
+          })
+          .catch(function (err) {
+            alert(err && err.message);
+          })
+          .finally(function () {
+            $(form).removeClass('loading disabled');
+          })
+      })
+      $('form.fb-data > .button').click(function () {
+        var form = $(this).parent()[0];
+        $(form).addClass('loading disabled');
+        $(form).removeClass('success error');
+        axios.post('/Admin/UpdateUserApply/@Model.Id', new FormData($(this).parent()[0]))
+          .then(function (res) {
+            if (res.data.succeeded) {
+              $(form).addClass('success');
+            } else {
+              $(form).addClass('error');
+              $('.message.error .header', form)
+                .html(res.data.message);
+            }
+            $(form).removeClass('loading disabled');
+          })
+          .catch(function (err) {
+            $(form).addClass('error');
+            $('.message.error .header', form)
+              .html(err && err.message);
+            $(form).removeClass('loading disabled');
+          });
+      });
+    });
+  </script>
+}

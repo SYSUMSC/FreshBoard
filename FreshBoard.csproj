@@ -7,6 +7,7 @@
     <UserSecretsId>f66949b4-ea09-4f33-8fd6-310f856a5805</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AspNetCoreRateLimit" Version="3.0.5" />
     <PackageReference Include="JavaScriptEngineSwitcher.ChakraCore" Version="3.1.8" />
     <PackageReference Include="JavaScriptEngineSwitcher.ChakraCore.Native.linux-x64" Version="3.1.8" />
     <PackageReference Include="JavaScriptEngineSwitcher.ChakraCore.Native.win-x64" Version="3.1.8" />

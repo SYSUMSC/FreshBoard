@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,10 @@ namespace FreshBoard.Services
     public interface IEmailSender
     {
         Task SendEmailAsync(string email, string subject, string message);
+        Task SendNotificationAsync(string email, string title);
+        Task SendStatusChangeAsync(string email, string changeDescription);
+        Task SendStatusChangeAsync(string email, string periodA, string periodB);
+        Task SendStatusChangeAsync(string email, bool status, string period);
     }
 
     public class EmailSender : IEmailSender
@@ -44,6 +49,26 @@ namespace FreshBoard.Services
             };
 
             await smtp.SendMailAsync(msg);
+        }
+
+        public async Task SendNotificationAsync(string email, string title)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task SendStatusChangeAsync(string email, string changeDescription)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task SendStatusChangeAsync(string email, string periodA, string periodB)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task SendStatusChangeAsync(string email, bool status, string period)
+        {
+            throw new NotImplementedException();
         }
     }
 }
