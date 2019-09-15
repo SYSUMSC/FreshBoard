@@ -83,11 +83,7 @@ namespace FreshBoard.Controllers
                     })
                 .ToArrayAsync();
             var user = await _userManager.FindByIdAsync(id);
-            // 本行查询是必要的，以保证加载相关的申请信息
-            var application = await _dbContext.Application
-                .Where(e => e.UserId == user.Id)
-                .Include(e => e.Period)
-                .SingleOrDefaultAsync();
+            
             var periods = (await _dbContext.ApplicationPeriod
                 .OrderBy(p => p.Order)
                 .GroupJoin(_dbContext.ApplicationPeriodDataType,
@@ -145,11 +141,7 @@ namespace FreshBoard.Controllers
             try
             {
                 var user = await _userManager.FindByIdAsync(id);
-                // 本行查询是必要的，以保证加载相关的申请信息
-                var application = await _dbContext.Application
-                    .Where(e => e.UserId == user.Id)
-                    .Include(e => e.Period)
-                    .SingleOrDefaultAsync();
+                
                 // 确保用户存在有效申请
                 if (user.Application == null)
                 {
@@ -205,11 +197,7 @@ namespace FreshBoard.Controllers
             try
             {
                 var user = await _userManager.FindByIdAsync(id);
-                // 本行查询是必要的，以保证加载相关的申请信息
-                var application = await _dbContext.Application
-                    .Where(e => e.UserId == user.Id)
-                    .Include(e => e.Period)
-                    .SingleOrDefaultAsync();
+                
                 // 确保用户存在有效申请
                 if (user.Application == null)
                 {

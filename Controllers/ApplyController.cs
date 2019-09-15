@@ -43,7 +43,7 @@ namespace FreshBoard.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
-            var application = await _dbContext.Application.FindAsync(user.Id);
+            
             var periods = (await _dbContext.ApplicationPeriod
                 .OrderBy(p => p.Order)
                 .GroupJoin(_dbContext.ApplicationPeriodDataType,
@@ -107,10 +107,8 @@ namespace FreshBoard.Controllers
             try
             {
                 var user = await _userManager.GetUserAsync(User);
-                // 本行查询是必要的，以保证加载相关的申请信息
-                var application = await _dbContext.Application.FindAsync(user.Id);
+                
                 // 确保用户存在有效申请
-                // if ((await _dbContext.Application.FindAsync(user.Id)) == null)
                 if (user.Application == null)
                 {
                     user.Application = new Application
