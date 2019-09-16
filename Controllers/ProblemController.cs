@@ -1,8 +1,11 @@
+using System;
+using System.IO;
 using System.Threading.Tasks;
 using FreshBoard.Data;
 using FreshBoard.Middlewares;
 using FreshBoard.Services;
 using FreshBoard.Views.Puzzle;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -68,6 +71,17 @@ namespace FreshBoard.Controllers
                 Level = problem.Level,
                 ShowContent = true
             });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Upload(IFormFile file)
+        {
+            var midPath = Guid.NewGuid().ToString().Replace("-", "");
+            if (!Directory.Exists($"wwwroot/upload/{midPath}")) Directory.CreateDirectory($"wwwroot/upload/{midPath}");
+            var path = Path.Combine(midPath, file.FileName);
+            await using var fileStream = new FileStream($"wwwroot/upload/{path}", FileMode.Create);
+            await file.CopyToAsync(fileStream);
+            return Content($"/upload/{midPath}/{file.FileName}");
         }
 
         [HttpPost]

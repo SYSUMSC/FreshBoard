@@ -40,5 +40,28 @@
         <textarea asp-for="Answer"
             placeholder="输入该题目的答案"></textarea>
     </div>
+    <div id='upload' class="field">
+        <label>文件上传</label>
+        <input onchange="upload()" type="file" />
+    </div>
     <button class="ui button" type="submit">提交</button>
 </form>
+
+@section Scripts {
+    <script>
+        function upload() {
+            var file = $('input[type=file]');
+            var formData = new FormData();
+            formData.append('file', file[0].files[0]);
+            fetch('/Problem/Upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.text())
+            .then(data => {
+                $('#upload').append(`<p>上传成功，文件 URI：${data}</p>`);
+            })
+            .catch(() => alert('上传失败'));
+        }
+    </script>
+}
