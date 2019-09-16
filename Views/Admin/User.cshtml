@@ -182,12 +182,12 @@
   <script lang="js">
     $(document).ready(function () {
       $('.ui.accordion').accordion();
+      $('select.dropdown').dropdown();
+      $('.ui.checkbox').checkbox();
     });
   </script>
   <script lang="js">
     $(document).ready(function () {
-      $('select.dropdown').dropdown();
-      $('.ui.checkbox').checkbox();
       $('form.fb-period .button').click(function () {
         var form = $('form.fb-period')[0];
         $(form).addClass('loading disabled');

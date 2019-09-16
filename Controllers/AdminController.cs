@@ -62,6 +62,14 @@ namespace FreshBoard.Controllers
                     HasPrivilege = u.HasPrivilege
                 })
                 .ToListAsync();
+            model.PossiblePeriods = await _dbContext.ApplicationPeriod
+                .OrderBy(p => p.Order)
+                .Select(period => new UsersModel.PeriodItem
+                {
+                    Name = period.Title,
+                    Id = period.Id
+                })
+                .ToListAsync();
 
             return View(model);
         }
@@ -267,6 +275,94 @@ namespace FreshBoard.Controllers
             }
             await _dbContext.SaveChangesAsync();
             return Json(new { succeeded = true });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> BatchUpdateStateAsync(IEnumerable<string> ids,
+            int period,
+            bool? status,
+            bool sendNotification = false)
+        {
+            IEnumerable<FreshBoardUser> users = await Task.WhenAll(ids.Select(id => _dbContext.Users.FindAsync(id).AsTask()));
+            IEnumerable<Task> sendTasks = new HashSet<Task>();
+            foreach (var user in users)
+            {
+                // 确保用户存在有效申请
+                if (user.Application == null)
+                {
+                    user.Application = new Application
+                    {
+                        User = user,
+                        PeriodId = 1,
+                        IsSuccessful = null
+                    };
+                }
+                // 处理阶段更新
+                var prevPeriod = user.Application.Period?.Title ?? "申请";
+                user.Application.Period = await _dbContext.ApplicationPeriod.FindAsync(period);
+                user.Application.IsSuccessful = status;
+                // 发送通知
+                if (sendNotification == true)
+                {
+                    // 发送邮件通知
+                    if (user.EmailConfirmed)
+                    {
+                        if (status != null)
+                        {
+                            if (status == false)
+                                sendTasks.Append(_emailSender.SendStatusChangeAsync(
+                                    user.PhoneNumber,
+                                    false,
+                                    user.Application.Period?.Title ?? "申请"));
+                            else if (status == true)
+                                sendTasks.Append(_emailSender.SendStatusChangeAsync(
+                                    user.PhoneNumber,
+                                    "全部面试通过"));
+                        }
+                        else
+                        {
+                            sendTasks.Append(_emailSender.SendStatusChangeAsync(
+                                user.PhoneNumber,
+                                prevPeriod,
+                                user.Application.Period?.Title ?? "申请"));
+                        }
+                    }
+
+                    // 发送短信通知
+                    if (user.PhoneNumberConfirmed)
+                    {
+                        if (status != null)
+                        {
+                            if (status == false)
+                                sendTasks.Append(_smsSender.SendStatusChangeAsync(
+                                    user.PhoneNumber,
+                                    false,
+                                    user.Application.Period?.Title ?? "申请"));
+                            else if (status == true)
+                                sendTasks.Append(_smsSender.SendStatusChangeAsync(
+                                    user.PhoneNumber,
+                                    "全部面试通过"));
+                        }
+                        else
+                        {
+                            sendTasks.Append(_smsSender.SendStatusChangeAsync(
+                                user.PhoneNumber,
+                                prevPeriod,
+                                user.Application.Period?.Title ?? "申请"));
+                        }
+                    }
+                }
+            }
+            await _dbContext.SaveChangesAsync();
+            try
+            {
+                await Task.WhenAll(sendTasks);
+                return Json(new { succeeded = true });
+            }
+            catch
+            {
+                return Json(new { succeeded = true, message = "通知发送失败" });
+            }
         }
     }
 }

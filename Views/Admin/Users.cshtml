@@ -3,7 +3,7 @@
   ViewBag.Title = "用户管理";
 }
 
-<form id="form">
+<form class="ui form" id="form">
   <table class="ui compact celled table">
     <thead>
       <tr>
@@ -35,11 +35,38 @@
       <tr>
         <th></th>
         <th colspan="4">
-          <div class="ui small disabled button">
-            修改申请阶段
-          </div>
           <div class="ui small button" id="button-grant-admin">
             授予管理员权限
+          </div>
+        </th>
+      </tr>
+      <tr>
+        <th></th>
+        <th colspan="4">
+          <div class="three fields">
+            <div class="inline field">
+              <label>申请阶段</label>
+              <select
+                class="ui dropdown"
+                name="period"
+                asp-items="Model.PeriodSelections">
+              </select>
+            </div>
+            <div class="inline field">
+              <label>总面试结果</label>
+              <select
+                class="ui dropdown"
+                name="status"
+                asp-items="Model.ApplicationStates">
+              </select>
+            </div>
+            <div class="inline field">
+              <div class="ui checkbox">
+                <input type="checkbox" class="hidden" name="sendNotification" value="true">
+                <label>发送通知</label>
+              </div>
+              <div class="ui green button" id="button-update-state">更新状态</div>
+            </div>
           </div>
         </th>
       </tr>
@@ -47,6 +74,7 @@
   </table>
 </form>
 
+@*
 <!-- 修改申请阶段 -->
 <div class="ui modal">
   <i class="close icon"></i>
@@ -74,18 +102,35 @@
     </div>
   </div>
 </div>
+*@
 
 @section Scripts
 {
+  <script lang="js">
+    $(document).ready(function () {
+      $('.ui.checkbox').checkbox();
+      $('select.dropdown').dropdown();
+    });
+  </script>
     <script lang="js">
     $(document).ready(function () {
       $('#button-grant-admin').click(function () {
-        axios.post('/Admin/BatchToggleAdmin', new FormData(form))
+        axios.post('/Admin/BatchToggleAdmin', new FormData($('#form')[0]))
           .then(function (res) {
-            if(res&&res.data&&res.data.succeeded)
+            if(res && res.data && res.data.succeeded)
               document.location.reload();
             else
-              alert(res&&res.data&&res.data.message);
+              alert(res && res.data && res.data.message);
+          })
+          .catch(alert);
+      });
+      $('#button-update-state').click(function () {
+        axios.post('/Admin/BatchUpdateState', new FormData($('#form')[0]))
+          .then(function (res) {
+            if(res && res.data && res.data.succeeded)
+              document.location.reload();
+            else
+              alert(res && res.data && res.data.message);
           })
           .catch(alert);
       });
