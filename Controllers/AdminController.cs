@@ -256,5 +256,17 @@ namespace FreshBoard.Controllers
                 return Json(new { succeeded = false, message = ex.Message });
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> BatchToggleAdminAsync(IEnumerable<string> ids)
+        {
+            IEnumerable<FreshBoardUser> users = await Task.WhenAll(ids.Select(id => _dbContext.Users.FindAsync(id).AsTask()));
+            foreach (var user in users)
+            {
+                user.HasPrivilege = !user.HasPrivilege;
+            }
+            await _dbContext.SaveChangesAsync();
+            return Json(new { succeeded = true });
+        }
     }
 }

@@ -20,7 +20,7 @@
       <tr>
         <td class="collapsing">
           <div class="ui fitted checkbox">
-            <input type="checkbox" name="users[]" value="@user.Id"> <label></label>
+            <input type="checkbox" name="ids[]" value="@user.Id"> <label></label>
           </div>
         </td>
         <!-- <td>@user.Name</td> -->
@@ -38,7 +38,7 @@
           <div class="ui small disabled button">
             修改申请阶段
           </div>
-          <div class="ui small disabled button" id="button-grant-admin">
+          <div class="ui small button" id="button-grant-admin">
             授予管理员权限
           </div>
         </th>
@@ -74,3 +74,21 @@
     </div>
   </div>
 </div>
+
+@section Scripts
+{
+    <script lang="js">
+    $(document).ready(function () {
+      $('#button-grant-admin').click(function () {
+        axios.post('/Admin/BatchToggleAdmin', new FormData(form))
+          .then(function (res) {
+            if(res&&res.data&&res.data.succeeded)
+              document.location.reload();
+            else
+              alert(res&&res.data&&res.data.message);
+          })
+          .catch(alert);
+      });
+    });
+  </script>
+}
