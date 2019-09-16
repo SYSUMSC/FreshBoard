@@ -59,7 +59,7 @@ namespace FreshBoard.Controllers
                         (u.Application.Period.Title ??
                         _dbContext.ApplicationPeriod.OrderBy(p => p.Order).FirstOrDefault().Title) :
                         (u.Application.IsSuccessful == true ? "成功" : "失败"),
-                    HasPrivilege = u.Privilege == 1
+                    HasPrivilege = u.HasPrivilege
                 })
                 .ToListAsync();
 
@@ -83,7 +83,7 @@ namespace FreshBoard.Controllers
                     })
                 .ToArrayAsync();
             var user = await _userManager.FindByIdAsync(id);
-            
+
             var periods = (await _dbContext.ApplicationPeriod
                 .OrderBy(p => p.Order)
                 .GroupJoin(_dbContext.ApplicationPeriodDataType,
@@ -141,7 +141,7 @@ namespace FreshBoard.Controllers
             try
             {
                 var user = await _userManager.FindByIdAsync(id);
-                
+
                 // 确保用户存在有效申请
                 if (user.Application == null)
                 {
@@ -197,7 +197,7 @@ namespace FreshBoard.Controllers
             try
             {
                 var user = await _userManager.FindByIdAsync(id);
-                
+
                 // 确保用户存在有效申请
                 if (user.Application == null)
                 {

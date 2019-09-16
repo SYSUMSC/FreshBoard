@@ -29,7 +29,7 @@
               {
                 <a href="/User" class="item ui green label">@User.Identity.Name</a>
                 <a href="/SignOut" class="item ui inverted basic button">登出</a>
-                @if((await UserManager.GetUserAsync(User))?.Privilege==1)
+                @if((await UserManager.GetUserAsync(User))?.HasPrivilege ?? false)
                 {
                   <a href="/Admin" class="item ui inverted basic button">管理</a>
                 }

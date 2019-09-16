@@ -31,6 +31,10 @@ namespace FreshBoard.Data
                 .HasOne(e => e.Application)
                 .WithOne(e => e.User);
 
+            modelBuilder.Entity<FreshBoardUser>()
+                .Property(e => e.HasPrivilege)
+                .HasColumnName("Privilege");
+
             modelBuilder.Entity<Notification>(entity =>
             {
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();

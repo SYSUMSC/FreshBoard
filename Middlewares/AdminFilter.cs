@@ -15,7 +15,7 @@ namespace FreshBoard.Middlewares
         {
             var userManager = context.HttpContext.RequestServices.GetService<UserManager<FreshBoardUser>>();
             var user = await userManager.GetUserAsync(context.HttpContext.User);
-            if ((user?.Privilege ?? 0) == 1) await next();
+            if ((user?.HasPrivilege ?? false) == true) await next();
 
             context.Result = new RedirectToActionResult("Error", "Home", new { code = 403 });
         }

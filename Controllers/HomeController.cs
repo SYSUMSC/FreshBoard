@@ -124,7 +124,7 @@ namespace FreshBoard.Controllers
                 UserName = email,
                 Email = email,
                 PhoneNumber = phone,
-                Privilege = (await _userManager.Users.CountAsync()) == 0 ? 1 : 0
+                HasPrivilege = (await _userManager.Users.CountAsync()) == 0 ? true : false
             };
 
             var result = await _userManager.CreateAsync(user, password);

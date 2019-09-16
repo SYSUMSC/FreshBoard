@@ -17,7 +17,7 @@ namespace FreshBoard.Data.Identity
         /// <summary>
         /// 用户权限 1 -- admin, other -- 普通权限
         /// </summary>
-        public int Privilege { get; set; }
+        public bool HasPrivilege { get; set; }
 
         public virtual ICollection<UserData> UserData { get; set; }
             = new HashSet<UserData>();
