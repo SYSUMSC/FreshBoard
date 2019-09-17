@@ -1,9 +1,11 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using FreshBoard.Data;
 using FreshBoard.Middlewares;
 using FreshBoard.Services;
+using FreshBoard.Views.Problem;
 using FreshBoard.Views.Puzzle;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +17,11 @@ namespace FreshBoard.Controllers
     public class ProblemController : Controller
     {
         private readonly IPuzzleService _puzzleService;
-        public ProblemController(IPuzzleService puzzleService)
+        private readonly FreshBoardDbContext _dbContext;
+        public ProblemController(IPuzzleService puzzleService, FreshBoardDbContext dbContext)
         {
             _puzzleService = puzzleService;
+            _dbContext = dbContext;
         }
 
         [HttpGet]
@@ -114,6 +118,27 @@ namespace FreshBoard.Controllers
             model.MessageType = MessageType.Warning;
             model.ShowContent = true;
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Ground(int page = 1)
+        {
+            ViewBag.CurrentPage = page;
+            var records = from c in _dbContext.PuzzleRecord 
+                where c.Id > (page - 1) * 50
+                join x in _dbContext.Problem on c.Id equals x.Id
+                join y in _dbContext.Users on c.UserId equals y.Id
+                select new GroundModel
+                {
+                    Id = c.Id,
+                    Level = x.Level,
+                    ProblemId = x.Id,
+                    ProblemName = x.Title,
+                    UserId = y.Id,
+                    UserName = y.UserName,
+                    Answer = c.Content
+                };
+            return View(await records.Take(50).ToListAsync());
         }
     }
 }
