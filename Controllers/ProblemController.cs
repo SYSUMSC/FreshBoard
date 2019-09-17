@@ -126,7 +126,7 @@ namespace FreshBoard.Controllers
             ViewBag.CurrentPage = page;
             var records = from c in _dbContext.PuzzleRecord
                           where c.Id > (page - 1) * 50
-                          let x = _dbContext.Problem.First(i => i.Id == c.Id)
+                          let x = _dbContext.Problem.First(i => i.Id == c.ProblemId)
                           let y = _dbContext.Users.First(i => i.Id == c.UserId)
                           orderby c.Id
                           select new GroundModel
