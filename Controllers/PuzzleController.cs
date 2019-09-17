@@ -99,7 +99,7 @@ namespace FreshBoard.Controllers
 
             if (problem.Answer == model.Answer)
             {
-                user.PuzzleProgress++;
+                user.PuzzleProgress = problem.Level;
                 await _userManager.UpdateAsync(user);
                 await _puzzleService.RecordSubmission(problem.Id, user.Id, model.Answer, 1);
                 var (newModel, succeeded) = await GetProblem(user);
