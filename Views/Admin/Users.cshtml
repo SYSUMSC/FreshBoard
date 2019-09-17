@@ -11,6 +11,7 @@
         <th>邮箱</th>
         <th>手机号</th>
         <th>申请阶段</th>
+        <th>解密进度</th>
         <th>权限</th>
       </tr>
     </thead>
@@ -27,6 +28,7 @@
         <td><a asp-action="User" asp-route-id="@user.Id">@user.Email</a></td>
         <td>@user.Phone</td>
         <td>@user.Period</td>
+        <td>@user.PuzzleProgress</td>
         <td>@user.HasPrivilege</td>
       </tr>
       }

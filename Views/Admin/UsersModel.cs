@@ -31,6 +31,7 @@ namespace FreshBoard.Views.Admin
             public string Email { get; set; } = string.Empty;
             public string Phone { get; set; } = string.Empty;
             public string Period { get; set; } = string.Empty;
+            public int PuzzleProgress { get; set; }
             public bool HasPrivilege { get; set; }
         }
 

@@ -59,7 +59,8 @@ namespace FreshBoard.Controllers
                         (u.Application.Period.Title ??
                         _dbContext.ApplicationPeriod.OrderBy(p => p.Order).FirstOrDefault().Title) :
                         (u.Application.IsSuccessful == true ? "成功" : "失败"),
-                    HasPrivilege = u.HasPrivilege
+                    HasPrivilege = u.HasPrivilege,
+                    PuzzleProgress = u.PuzzleProgress
                 })
                 .ToListAsync();
             model.PossiblePeriods = await _dbContext.ApplicationPeriod
