@@ -124,20 +124,21 @@ namespace FreshBoard.Controllers
         public async Task<IActionResult> Ground(int page = 1)
         {
             ViewBag.CurrentPage = page;
-            var records = from c in _dbContext.PuzzleRecord 
-                where c.Id > (page - 1) * 50
-                join x in _dbContext.Problem on c.Id equals x.Id
-                join y in _dbContext.Users on c.UserId equals y.Id
-                select new GroundModel
-                {
-                    Id = c.Id,
-                    Level = x.Level,
-                    ProblemId = x.Id,
-                    ProblemName = x.Title,
-                    UserId = y.Id,
-                    UserName = y.UserName,
-                    Answer = c.Content
-                };
+            var records = from c in _dbContext.PuzzleRecord
+                          where c.Id > (page - 1) * 50
+                          let x = _dbContext.Problem.First(i => i.Id == c.Id)
+                          let y = _dbContext.Users.First(i => i.Id == c.UserId)
+                          orderby c.Id
+                          select new GroundModel
+                          {
+                              Id = c.Id,
+                              Level = x.Level,
+                              ProblemId = x.Id,
+                              ProblemName = x.Title,
+                              UserId = y.Id,
+                              UserName = y.UserName,
+                              Answer = c.Content
+                          };
             return View(await records.Take(50).ToListAsync());
         }
     }
