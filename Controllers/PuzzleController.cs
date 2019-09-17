@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FreshBoard.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public class PuzzleController : Controller
     {
         private readonly IPuzzleService _puzzleService;
@@ -56,9 +57,9 @@ namespace FreshBoard.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
-            var model = await GetProblem(user);
+            var (model, _) = await GetProblem(user);
 
-            return View(model.Model);
+            return View(model);
         }
 
         [HttpPost]
