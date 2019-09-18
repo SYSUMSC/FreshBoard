@@ -128,7 +128,7 @@ namespace FreshBoard.Controllers
                           where c.Id > (page - 1) * 50
                           let x = _dbContext.Problem.First(i => i.Id == c.ProblemId)
                           let y = _dbContext.Users.First(i => i.Id == c.UserId)
-                          orderby c.Id
+                          orderby c.Id descending
                           select new GroundModel
                           {
                               Id = c.Id,
