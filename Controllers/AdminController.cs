@@ -60,7 +60,15 @@ namespace FreshBoard.Controllers
                         _dbContext.ApplicationPeriod.OrderBy(p => p.Order).FirstOrDefault().Title) :
                         (u.Application.IsSuccessful == true ? "成功" : "失败"),
                     HasPrivilege = u.HasPrivilege,
-                    PuzzleProgress = u.PuzzleProgress
+                    PuzzleProgress = u.PuzzleProgress,
+                    PersonDataInvalid = _dbContext.UserDataType
+                        .GroupJoin(_dbContext.UserData,
+                            t => new { t.Id, UserId = u.Id },
+                            v => new { Id = v.DataTypeId, UserId = v.UserId ?? "" },
+                            (dataType, dataValues) => new { DataType = dataType, DataValues = dataValues })
+                        .SelectMany(r => r.DataValues.DefaultIfEmpty(),
+                            (r, dataValue) => dataValue.Value)
+                        .Count(r => string.IsNullOrEmpty(r)) > 0
                 })
                 .ToListAsync();
             model.PossiblePeriods = await _dbContext.ApplicationPeriod

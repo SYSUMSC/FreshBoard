@@ -33,6 +33,7 @@ namespace FreshBoard.Views.Admin
             public string Period { get; set; } = string.Empty;
             public int PuzzleProgress { get; set; }
             public bool HasPrivilege { get; set; }
+            public bool PersonDataInvalid { get; set; }
         }
 
         public class PeriodItem
