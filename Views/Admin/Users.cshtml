@@ -12,6 +12,8 @@
         <th>手机号</th>
         <th>个人信息</th>
         <th>申请阶段</th>
+        <th>一面记录</th>
+        <th>二面记录</th>
         <th>解密进度</th>
         <th>权限</th>
       </tr>
@@ -30,6 +32,8 @@
         <td>@user.Phone</td>
         <td>@(user.PersonDataInvalid ? "无效" : "有效")</td>
         <td>@user.Period</td>
+        <td>@(user.FirstRecord ? "有" : "无")</td>
+        <td>@(user.SecondRecord ? "有" : "无")</td>
         <td>@user.PuzzleProgress</td>
         <td>@user.HasPrivilege</td>
       </tr>
@@ -38,7 +42,7 @@
     <tfoot class="full-width">
       <tr>
         <th></th>
-        <th colspan="4">
+        <th colspan="8">
           <div class="ui small button" id="button-grant-admin">
             切换管理员权限
           </div>
@@ -46,7 +50,7 @@
       </tr>
       <tr>
         <th></th>
-        <th colspan="4">
+        <th colspan="8">
           <div class="three fields">
             <div class="inline field">
               <label>申请阶段</label>

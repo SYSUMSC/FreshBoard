@@ -68,7 +68,9 @@ namespace FreshBoard.Controllers
                             (dataType, dataValues) => new { DataType = dataType, DataValues = dataValues })
                         .SelectMany(r => r.DataValues.DefaultIfEmpty(),
                             (r, dataValue) => dataValue.Value)
-                        .Count(r => string.IsNullOrEmpty(r)) > 0
+                        .Count(r => string.IsNullOrEmpty(r)) > 0,
+                    FirstRecord = u.Application.Datas.Any(i => i.DataTypeId == 5 && !string.IsNullOrEmpty(i.Value)),
+                    SecondRecord = u.Application.Datas.Any(i => i.DataTypeId == 7 && !string.IsNullOrEmpty(i.Value)),
                 })
                 .ToListAsync();
             model.PossiblePeriods = await _dbContext.ApplicationPeriod

@@ -34,6 +34,8 @@ namespace FreshBoard.Views.Admin
             public int PuzzleProgress { get; set; }
             public bool HasPrivilege { get; set; }
             public bool PersonDataInvalid { get; set; }
+            public bool FirstRecord { get; set; }
+            public bool SecondRecord { get; set; }
         }
 
         public class PeriodItem
