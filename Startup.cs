@@ -96,11 +96,11 @@ namespace FreshBoard
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
-            services.AddHostedService<GitBackgroundTask>()
+            services.AddTransient<GitService>()
                 .Configure<GitTaskOptions>(options =>
                 {
-                    options.GitRepoUrl = "https://github.com/SYSU-MSC-Studio/Blogs.git";
-                    options.WorkingDirectory = Path.Combine(Environment.CurrentDirectory, "BlogsRepo");
+                    options.GitOrg = "SYSUMSC";
+                    options.GitRepo = "Blogs";
                 });
         }
 
