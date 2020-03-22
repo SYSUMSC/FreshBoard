@@ -31,9 +31,9 @@
 </table>
 
 <a asp-action="Ground" asp-route-page="@(ViewBag.CurrentPage - 1)">
-  <button class="ui button">上一页</button>
+  <div class="ui button">上一页</div>
 </a>
 <span>@ViewBag.CurrentPage</span>
 <a asp-action="Ground" asp-route-page="@(ViewBag.CurrentPage + 1)">
-  <button class="ui button">下一页</button>
+  <div class="ui button">下一页</div>
 </a>

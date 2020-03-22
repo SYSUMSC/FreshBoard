@@ -1,17 +1,12 @@
 using System;
-using System.IO;
 using System.Linq;
-using System.Net.WebSockets;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using FreshBoard.Data;
 using FreshBoard.Data.Identity;
 using FreshBoard.Hubs;
+using FreshBoard.Middlewares;
 using FreshBoard.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -24,12 +19,14 @@ namespace FreshBoard
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -90,7 +87,11 @@ namespace FreshBoard
             services.AddScoped<IPuzzleService, PuzzleService>();
             services.AddSession();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            var mvcBuilder = services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
+#if DEBUG
+            if (Environment.IsDevelopment())
+                mvcBuilder.AddRazorRuntimeCompilation();
+#endif
 
             services.AddSignalR();
 
@@ -102,12 +103,13 @@ namespace FreshBoard
                     options.GitOrg = "SYSUMSC";
                     options.GitRepo = "Blogs";
                 });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
+            if (Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -136,18 +138,8 @@ namespace FreshBoard
             app.UseCookiePolicy();
             app.UseSession();
             app.UseWebSockets();
-            app.Use(async (context, next) =>
-            {
-                if (context.WebSockets.IsWebSocketRequest && context.Request.Path == "/MSCHome")
-                {
-                    var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                    await Echo(context, webSocket);
-                }
-                else
-                {
-                    await next();
-                }
-            });
+
+            app.UseWebSocketPuzzle();
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -157,67 +149,6 @@ namespace FreshBoard
                     endpoints.MapDefaultControllerRoute();
                     endpoints.MapHub<ChatHub>("/ChatHub");
                 });
-        }
-
-
-        private async Task Echo(HttpContext context, WebSocket webSocket)
-        {
-            var buffer = new byte[128];
-            var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-            var hasGreeting = false;
-            var hasKey = false;
-            var guid = Guid.NewGuid().ToString();
-            while (!result.CloseStatus.HasValue)
-            {
-                var text = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray()).ToLower();
-
-                if ((text.Contains("hello") || text.Contains("hi")) && text.Contains("msc"))
-                {
-                    hasGreeting = true;
-                    await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes("Hi~")), WebSocketMessageType.Text, true, CancellationToken.None);
-                }
-                else
-                {
-                    if (hasGreeting)
-                    {
-                        if ((text.Contains("answer") || text.Contains("solve") || text.Contains("solution") || text.Contains("hint") || text.Contains("key")) && (text.Contains("what") || text.Contains("where") || text.Contains("how")))
-                        {
-                            hasKey = true;
-                            await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes("Here is an important key: " + guid)), WebSocketMessageType.Text, true, CancellationToken.None);
-                        }
-                        else
-                        {
-                            if (hasKey)
-                            {
-                                if (text == guid)
-                                {
-                                    var db = context.RequestServices.GetRequiredService<FreshBoardDbContext>();
-                                    var answer = await db.Problem.FirstOrDefaultAsync(i => i.Level == 10 && i.Title == "Greetings");
-                                    if (answer != null)
-                                    {
-                                        await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes($"Wow! {guid}! That's it! Congratulations! Here is the answer: {answer.Answer}. Bye~")), WebSocketMessageType.Text, true, CancellationToken.None);
-                                    }
-                                    else
-                                    {
-                                        await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes($"Wow! {guid}! That's it! Congratulations! But unfortunately I don't know the answer. Bye~")), WebSocketMessageType.Text, true, CancellationToken.None);
-                                    }
-                                }
-                                else
-                                {
-                                    await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes("What's this?")), WebSocketMessageType.Text, true, CancellationToken.None);
-                                }
-                            }
-                            else
-                            {
-                                await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes("Sorry, I don't know what you are talking about.")), WebSocketMessageType.Text, true, CancellationToken.None);
-                            }
-                        }
-                    }
-                }
-
-                result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-            }
-            await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
         }
     }
 }
