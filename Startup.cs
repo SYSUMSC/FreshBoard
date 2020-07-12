@@ -86,6 +86,7 @@ namespace FreshBoard
                 .Configure<SmsOptions>(Configuration.GetSection("Sms"));
             services.AddScoped<IPuzzleService, PuzzleService>();
             services.AddSession();
+            services.AddScoped<WebSocketPuzzle>();
 
             var mvcBuilder = services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
 #if DEBUG
